@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared;
 using Tri_Wall.Shared.Interfaces;
 using TriWallApp.Services;
@@ -18,6 +19,7 @@ namespace TriWallApp
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+            builder.Services.AddFluentUIComponents();
 
             builder.Services.AddMauiBlazorWebView();
 

@@ -1,0 +1,14 @@
+[
+  {
+    "TypeOfParameter": "GetInvHeader",
+    "DataSetName": "InvHeader"
+  },
+  {
+    "TypeOfParameter": "GetItem",
+    "DataSetName": "ItemLine"
+  },
+  {
+    "TypeOfParameter": "GetItemSerial",
+    "DataSetName": "SerialLine"
+  }
+]

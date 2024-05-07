@@ -1,3 +1,4 @@
+using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Interfaces;
 using Tri_Wall.WebApp.Server.Components;
 using Tri_Wall.WebApp.Server.Services;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddFluentUIComponents();
 builder.Services.AddScoped<IFormFactor, FormFactor>();
 var app = builder.Build();
 
