@@ -19,60 +19,61 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
 
     public async Task<ErrorOr<PostResponse>> Handle(AddDeliveryOrderCommand request, CancellationToken cancellationToken)
     {
-        unitOfWork.BeginTransaction();
-        Documents oGoodReceiptPO;
         Company oCompany;
         oCompany = connection.Connect();
-        oGoodReceiptPO = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
-        oGoodReceiptPO.CardCode = request.CardCode;
-        oGoodReceiptPO.ContactPersonCode = request.ContactPersonCode;
-        oGoodReceiptPO.NumAtCard = request.NumAtCard;
-        oGoodReceiptPO.Series = request.Series;
-        oGoodReceiptPO.DocDate = request.DocDate;
-        oGoodReceiptPO.DocDueDate = request.TaxDate;
-        oGoodReceiptPO.Comments = request.Remarks;
-        oGoodReceiptPO.BPL_IDAssignedToInvoice = request.BranchID;
-        oGoodReceiptPO.UserFields.Fields.Item("U_WebID").Value = Guid.NewGuid();
+        unitOfWork.BeginTransaction();
+        Documents oDeliveryOrder;
+        oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
+        oDeliveryOrder.CardCode = request.CardCode;
+        oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
+        oDeliveryOrder.NumAtCard = request.NumAtCard;
+        oDeliveryOrder.Series = request.Series;
+        oDeliveryOrder.DocDate = request.DocDate;
+        oDeliveryOrder.DocDueDate = request.TaxDate;
+        oDeliveryOrder.Comments = request.Remarks;
+        oDeliveryOrder.BPL_IDAssignedToInvoice = request.BranchID;
+        oDeliveryOrder.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
         foreach (var l in request.Lines!)
         {
-            oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
-            oGoodReceiptPO.Lines.Quantity = l.Qty;
-            oGoodReceiptPO.Lines.UnitPrice = l.Price;
-            oGoodReceiptPO.Lines.VatGroup = l.VatCode;
-            oGoodReceiptPO.Lines.WarehouseCode = l.WarehouseCode;
+            oDeliveryOrder.Lines.ItemCode = l.ItemCode;
+            oDeliveryOrder.Lines.Quantity = l.Qty;
+            oDeliveryOrder.Lines.UnitPrice = l.Price;
+            oDeliveryOrder.Lines.VatGroup = l.VatCode;
+            oDeliveryOrder.Lines.WarehouseCode = l.WarehouseCode;
             if (l.BaseDocEntry != 0)
             {
-                oGoodReceiptPO.Lines.BaseEntry = Convert.ToInt32(l.BaseDocEntry);
-                oGoodReceiptPO.Lines.BaseType = 17;
-                oGoodReceiptPO.Lines.BaseLine = l.BaseLineNumber;
+                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseDocEntry);
+                oDeliveryOrder.Lines.BaseType = 17;
+                oDeliveryOrder.Lines.BaseLine = l.BaseLineNumber;
             }
 
             if (l.ManageItem == "S")
             {
                 foreach (var serial in l.Serials)
                 {
-                    oGoodReceiptPO.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SysNumber);
-                    oGoodReceiptPO.Lines.SerialNumbers.Add();
+                    oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SysNumber);
+                    oDeliveryOrder.Lines.SerialNumbers.Add();
                 }
             }
             else if (l.ManageItem == "B")
             {
                 foreach (var batch in l.Batches)
                 {
-                    oGoodReceiptPO.Lines.BatchNumbers.BatchNumber = batch.BatchOrSerialCode;
-                    oGoodReceiptPO.Lines.BatchNumbers.Quantity = batch.Qty;
-                    oGoodReceiptPO.Lines.BatchNumbers.Add();
+                    oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchOrSerialCode;
+                    oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;
+                    oDeliveryOrder.Lines.BatchNumbers.Add();
                 }
             }
 
-            oGoodReceiptPO.Lines.Add();
+            oDeliveryOrder.Lines.Add();
         }
-        if (oGoodReceiptPO.Add() == 0)
+        if (oDeliveryOrder.Add() == 0)
         {
             unitOfWork.Commit();
-            return await Task.FromResult(new PostResponse(0, "", "", "", "").ToErrorOr());
+            return await Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
         }
         unitOfWork.Rollback();
-        return await Task.FromResult(new PostResponse(1, oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
+        return await Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(), oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
+
     }
 }

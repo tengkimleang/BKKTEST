@@ -6,13 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Tri_Wall.API</RootNamespace>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <PublishAot>true</PublishAot>
+    <!-- <PublishAot>true</PublishAot> -->
     <UserSecretsId>100107f4-8afc-4b6a-8c69-e173ece68b04</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Tri-Wall.Application\Tri_Wall.Application.csproj" />
     <ProjectReference Include="..\Tri-Wall.Infrastructure\Tri_Wall.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.9.1" />
   </ItemGroup>
 
 </Project>

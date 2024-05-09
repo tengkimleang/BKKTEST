@@ -17,6 +17,10 @@ public class Connection : IConnection, IUnitOfWork
 
     public void BeginTransaction()
     {
+        if (_company.InTransaction)
+        {
+            _company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
+        }
         _company.StartTransaction();
     }
 

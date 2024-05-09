@@ -12,6 +12,7 @@ namespace Tri_Wall.API;
 [JsonSerializable(typeof(PostResponse))]
 [JsonSerializable(typeof(RegisterRequest))]
 [JsonSerializable(typeof(GetAllQuery))]
+[JsonSerializable(typeof(Guid))]
 internal partial class AppJsonSeriaizerContext : JsonSerializerContext
 {
 
