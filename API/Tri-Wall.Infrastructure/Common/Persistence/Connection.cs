@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using SAPbobsCOM;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Domain.Connections;
+using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Infrastructure.Common.Persistence;
 

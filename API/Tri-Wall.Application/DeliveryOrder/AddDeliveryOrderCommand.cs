@@ -1,17 +1,14 @@
 ﻿using ErrorOr;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.DeliveryOrder;
 
 public class AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
 {
-    [Required(ErrorMessage = "CardCode is Require")]
     public string CardCode { get; set; } = null!;
     public int ContactPersonCode { get; set; }
     public string NumAtCard { get; set; } = "";
-    [Required(ErrorMessage = "Series is Require")]
     public int Series { get; set; }
     public DateTime DocDate { get; set; } = DateTime.Today;
     public DateTime TaxDate { get; set; } = DateTime.Today;
@@ -19,7 +16,6 @@ public class AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
     public int BranchID { get; set; }
     public string ARDocNum { get; set; } = string.Empty;
     public int DocEntry { get; set; }
-    [Required(ErrorMessage = "Lines is Require")]
     public List<DeliveryItemLine>? Lines { get; set; }
 }
 public class DeliveryItemLine

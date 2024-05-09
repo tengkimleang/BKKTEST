@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tri_Wall.Domain.Connections;
+namespace Tri_Wall.Domain.Common;
 
-public class ConnectionSettings
+public record ConnectionSettings
 {
     public const string SectionName = "ConnectionStrings";
     public int DbServerType { get; init; }

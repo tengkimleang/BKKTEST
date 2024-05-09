@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Domain.Connections;
+using Tri_Wall.Domain.Common;
 using Tri_Wall.Domain.DataProviders;
+using Tri_Wall.Infrastructure.Common.JwtSetting;
 using Tri_Wall.Infrastructure.Common.Persistence;
 using Tri_Wall.Infrastructure.Common.QueryData;
 
@@ -25,6 +26,7 @@ public static class DependencyInjection
     {
         // Add connection settings to the service collection
         services.Configure<ConnectionSettings>(configure.GetSection(ConnectionSettings.SectionName));
+        services.Configure<JwtSettings>(configure.GetSection(JwtSettings.SectionName));
         // Add connection provider to the service collection
         services.AddSingleton<IConnection, Connection>();
         // Add Unit of Work to the service collection
@@ -32,7 +34,7 @@ public static class DependencyInjection
         //// Add JWT settings to the service collection
         //services.Configure<JwtSettings>(configure.GetSection(JwtSettings.SectionName));
         //// Add JWT token generator to the service collection
-        //services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<IJwtRegister, JwtRegister>();
         services.AddSingleton<IConvertRecordsetToDataTable, ConvertRecordsetToDataTable>();
         // Add data provider to the service collection
         services.TryAddSingleton<IDataProviderRepository, DataProviderRepository>();

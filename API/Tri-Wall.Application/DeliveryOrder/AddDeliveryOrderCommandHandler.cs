@@ -19,8 +19,7 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
 
     public async Task<ErrorOr<PostResponse>> Handle(AddDeliveryOrderCommand request, CancellationToken cancellationToken)
     {
-        Company oCompany;
-        oCompany = connection.Connect();
+        Company oCompany = connection.Connect();
         unitOfWork.BeginTransaction();
         Documents oDeliveryOrder;
         oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);

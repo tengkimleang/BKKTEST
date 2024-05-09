@@ -15,5 +15,12 @@ Content-Type: application/json
 
 {
     "CardCode": "Buy milk",
-    "ContactPersonCode": 1
+    "ContactPersonCode": 1,
+    "Series": 1,
+    "Lines": [
+        {
+            "ItemCode": "",
+            "Quantity": 1
+        }
+    ]
 }
