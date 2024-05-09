@@ -1,6 +1,0 @@
-@Tri_Wall.API_HostAddress = http://localhost:5241
-
-GET {{Tri_Wall.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

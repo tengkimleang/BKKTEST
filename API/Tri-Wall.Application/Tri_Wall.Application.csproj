@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Tri_Wall.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="MediatR" Version="12.2.0" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tri-Wall.Domain\Tri_Wall.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>..\Tri-Wall.SapSdk\SAPBusinessOneSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+	
+</Project>
