@@ -1,14 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tri_Wall.Application.Common.Interfaces;
 using Tri_Wall.Domain.Common;
-using Tri_Wall.Domain.DataProviders;
 using Tri_Wall.Infrastructure.Common.JwtSetting;
 using Tri_Wall.Infrastructure.Common.Persistence;
 using Tri_Wall.Infrastructure.Common.QueryData;

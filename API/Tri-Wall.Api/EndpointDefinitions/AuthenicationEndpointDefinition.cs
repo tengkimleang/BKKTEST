@@ -1,10 +1,7 @@
 ﻿
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Identity.Data;
 using Tri_Wall.Application.Authorize;
-using Tri_Wall.Application.DeliveryOrder;
-using Tri_Wall.Application.SaleOrder;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.API.EndpointDefinitions
