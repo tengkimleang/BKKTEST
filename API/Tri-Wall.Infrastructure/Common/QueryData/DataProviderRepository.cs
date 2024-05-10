@@ -3,6 +3,7 @@ using SAPbobsCOM;
 using System.Data;
 using System.Security.Cryptography.X509Certificates;
 using Tri_Wall.Application.Common.Interfaces;
+using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.DataProviders;
 
 namespace Tri_Wall.Infrastructure.Common.QueryData;

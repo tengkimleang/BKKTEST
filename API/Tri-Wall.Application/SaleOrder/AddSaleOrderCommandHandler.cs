@@ -1,7 +1,9 @@
 ﻿using ErrorOr;
 using MediatR;
 using SAPbobsCOM;
+using Throw;
 using Tri_Wall.Application.Common.Interfaces;
+using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.SaleOrder
@@ -17,9 +19,10 @@ namespace Tri_Wall.Application.SaleOrder
             this.connection = connection;
         }
 
-        public async Task<ErrorOr<PostResponse>> Handle(AddSaleOrderCommand request, CancellationToken cancellationToken)
+        public Task<ErrorOr<PostResponse>> Handle(AddSaleOrderCommand request, CancellationToken cancellationToken)
         {
             Company oCompany = connection.Connect();
+            oCompany.ThrowIfNull("Invalid Connection Company");
             unitOfWork.BeginTransaction();
             Documents oSaleOrder;
             oSaleOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oOrders);
@@ -41,13 +44,9 @@ namespace Tri_Wall.Application.SaleOrder
                 oSaleOrder.Lines.WarehouseCode = l.WarehouseCode;
                 oSaleOrder.Lines.Add();
             }
-            if (oSaleOrder.Add() == 0)
-            {
-                unitOfWork.Commit();
-                return await Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr()).ConfigureAwait(false);
-            }
-            unitOfWork.Rollback();
-            return await Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(), oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr()).ConfigureAwait(false);
+            (oSaleOrder.Add() != 0).Throw(oCompany.GetLastErrorDescription());
+            unitOfWork.Commit();
+            return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
         }
     }
 }

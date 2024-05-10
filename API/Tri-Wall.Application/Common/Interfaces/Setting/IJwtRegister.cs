@@ -1,7 +1,6 @@
-﻿
-using Tri_Wall.Domain.Common;
+﻿using Tri_Wall.Domain.Common;
 
-namespace Tri_Wall.Application.Common.Interfaces;
+namespace Tri_Wall.Application.Common.Interfaces.Setting;
 
 public interface IJwtRegister
 {
