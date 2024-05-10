@@ -7,7 +7,7 @@ namespace Tri_Wall.Application.SaleOrder
         public AddSaleOrderCommandValidator()
         {
             RuleFor(x => x.CardCode).NotEmpty().WithMessage("CardCode Need to Specify");
-            RuleFor(x => x.Series).NotEqual(0).WithMessage("Series need to Specify");
+            RuleFor(x => x.Series).Equal(0).WithMessage("Series need to Specify");
             RuleFor(x => x.Lines).NotNull().WithMessage("Item Line Not Null")
                 .ForEach(rule => rule.ChildRules(item =>
                 {

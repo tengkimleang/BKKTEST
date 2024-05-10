@@ -2,7 +2,7 @@
 
 using SAPbobsCOM;
 
-namespace Tri_Wall.Application.Common.Interfaces;
+namespace Tri_Wall.Application.Common.Interfaces.Setting;
 
 public interface IConnection
 {

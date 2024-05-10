@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using Tri_Wall.Application.Common.Interfaces;
+using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
 using Tri_Wall.Domain.DataProviders;
 

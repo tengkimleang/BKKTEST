@@ -2,8 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tri_Wall.Application.Common.Interfaces;
+using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
-using Tri_Wall.Infrastructure.Common.JwtSetting;
+using Tri_Wall.Infrastructure.Common.Setting;
 using Tri_Wall.Infrastructure.Common.Persistence;
 using Tri_Wall.Infrastructure.Common.QueryData;
 
@@ -25,8 +26,8 @@ public static class DependencyInjection
         services.AddSingleton<IConnection, Connection>();
         // Add Unit of Work to the service collection
         services.AddScoped<IUnitOfWork,Connection>();
-        //// Add JWT settings to the service collection
-        //services.Configure<JwtSettings>(configure.GetSection(JwtSettings.SectionName));
+        // Add Query Data to the service collection
+        services.AddControllers().AddNewtonsoftJson();
         //// Add JWT token generator to the service collection
         services.AddSingleton<IJwtRegister, JwtRegister>();
         services.AddSingleton<IConvertRecordsetToDataTable, ConvertRecordsetToDataTable>();

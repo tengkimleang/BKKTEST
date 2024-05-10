@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tri_Wall.Application.Common.Interfaces;
+using Tri_Wall.Application.Common.Interfaces.Setting;
 
 namespace Tri_Wall.Infrastructure.Common.QueryData
 {
