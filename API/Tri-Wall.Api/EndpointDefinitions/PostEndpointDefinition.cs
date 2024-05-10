@@ -43,7 +43,7 @@ namespace Tri_Wall.API.EndpointDefinitions
         {
             var validationResult = await validator.ValidateAsync(command).ConfigureAwait(false);
             if (!validationResult.IsValid)
-                return Results.BadRequest(new PostResponse(ErrorMsg: validationResult.Errors[0].ErrorMessage,ErrorCode: StatusCodes.Status400BadRequest.ToString()));
+                return Results.BadRequest(new PostResponse(ErrorMsg: validationResult.Errors[0].ErrorMessage, ErrorCode: StatusCodes.Status400BadRequest.ToString()));
 
             return (await mediator.Send(command).ConfigureAwait(false)).Match(
                 data => Results.Ok(data),
