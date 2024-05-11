@@ -5,12 +5,22 @@ Accept: application/json
 
 ###
 
-GET {{Tri_Wall.API_HostAddress}}/todos/1
-Accept: application/json
+POST {{Tri_Wall.API_HostAddress}}/getQuery
+Content-Type: application/json
+
+{
+    "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
+    "DBType": "FindPermission",
+    "Par1": "1",
+    "Par2": "1",
+    "Par3": "1",
+    "Par4": "1",
+    "Par5": "1"
+}
 
 ###
 
-POST {{Tri_Wall.API_HostAddress}}/deliveryOrder
+POST {{Tri_Wall.API_HostAddress}}/deliveryOrders
 Content-Type: application/json
 
 {

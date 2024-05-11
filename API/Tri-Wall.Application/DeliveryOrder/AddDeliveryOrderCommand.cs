@@ -4,7 +4,7 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.DeliveryOrder;
 
-public class AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
+public record AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
 {
     public string CardCode { get; set; } = null!;
     public int ContactPersonCode { get; set; }
@@ -16,24 +16,24 @@ public class AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
     public int BranchID { get; set; }
     public string ARDocNum { get; set; } = string.Empty;
     public int DocEntry { get; set; }
-    public List<DeliveryItemLine>? Lines { get; set; }
+    public List<DeliveryItemLine> Lines { get; set; } = null!;
 }
-public class DeliveryItemLine
+public record DeliveryItemLine
 {
     public int BaseDocEntry { get; set; }
     public int BaseLineNumber { get; set; }
     public string ItemCode { get; set; } = null!;
     public double Qty { get; set; }
     public double Price { get; set; }
-    public string VatCode { get; set; } = null!;
-    public string WarehouseCode { get; set; } = null!;
-    public string ManageItem { get; set; } = null!;
-    public string LineStatus { get; set; } = null!;
-    public List<DeliveryBatch> Batches { get; set; } = null!;
-    public List<DeliverySerial> Serials { get; set; } = null!;
+    public string? VatCode { get; set; }
+    public string? WarehouseCode { get; set; }
+    public string? ManageItem { get; set; }
+    public string? LineStatus { get; set; }
+    public List<DeliveryBatch>? Batches { get; set; }
+    public List<DeliverySerial>? Serials { get; set; }
 
 }
-public class DeliveryBatch
+public record DeliveryBatch
 {
     public string ItemCode { get; set; } = null!;
     public string BatchOrSerialCode { get; set; } = null!;
@@ -43,7 +43,7 @@ public class DeliveryBatch
     public string AdmissionDate { get; set; } = null!;
     public string SysNumber { get; set; } = null!;
 }
-public class DeliverySerial
+public record DeliverySerial
 {
     public string ItemCode { get; set; } = null!;
     public string BatchOrSerialCode { get; set; } = null!;

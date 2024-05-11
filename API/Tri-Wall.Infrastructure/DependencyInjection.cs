@@ -25,14 +25,15 @@ public static class DependencyInjection
         // Add connection provider to the service collection
         services.AddSingleton<IConnection, Connection>();
         // Add Unit of Work to the service collection
-        services.AddScoped<IUnitOfWork,Connection>();
+        services.AddScoped<IUnitOfWork, Connection>();
         // Add Query Data to the service collection
         services.AddControllers().AddNewtonsoftJson();
         //// Add JWT token generator to the service collection
         services.AddSingleton<IJwtRegister, JwtRegister>();
         services.AddSingleton<IConvertRecordsetToDataTable, ConvertRecordsetToDataTable>();
         // Add data provider to the service collection
-        services.TryAddSingleton<IDataProviderRepository, DataProviderRepository>();
+        services.AddSingleton<IDataProviderRepository, DataProviderRepository>();
+        services.AddSingleton<IReportLayout, ReportLayout>();
         // Add user repository to the service collection
 
         return services;

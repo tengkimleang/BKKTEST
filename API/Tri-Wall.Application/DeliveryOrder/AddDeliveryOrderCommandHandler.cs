@@ -50,7 +50,7 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
 
             if (l.ManageItem == "S")
             {
-                foreach (var serial in l.Serials)
+                foreach (var serial in l.Serials!)
                 {
                     oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SysNumber);
                     oDeliveryOrder.Lines.SerialNumbers.Add();
@@ -58,7 +58,7 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
             }
             else if (l.ManageItem == "B")
             {
-                foreach (var batch in l.Batches)
+                foreach (var batch in l.Batches!)
                 {
                     oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchOrSerialCode;
                     oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;

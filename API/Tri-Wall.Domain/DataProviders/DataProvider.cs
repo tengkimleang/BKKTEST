@@ -7,7 +7,7 @@ namespace Tri_Wall.Domain.DataProviders
         string DBType = "",
         string Par1 = "",
         string Par2 = "",
-        string Par3= "",
-        string Par4="",
-        string Par5="");
+        string Par3 = "",
+        string Par4 = "",
+        string Par5 = "");
 }
