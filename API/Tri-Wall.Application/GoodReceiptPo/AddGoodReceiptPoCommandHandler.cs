@@ -10,21 +10,19 @@ namespace Tri_Wall.Application.GoodReceiptPo;
 
 public class AddGoodReceiptPoCommandHandler : IRequestHandler<AddGoodReceiptPoCommand, ErrorOr<PostResponse>>
 {
-    private readonly IConnection connection;
     private readonly IUnitOfWork unitOfWork;
-    public AddGoodReceiptPoCommandHandler(IConnection connection, IUnitOfWork unitOfWork)
+    public AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork)
     {
-        this.connection = connection;
         this.unitOfWork = unitOfWork;
     }
     public Task<ErrorOr<PostResponse>> Handle(AddGoodReceiptPoCommand request, CancellationToken cancellationToken)
     {
-        Company oCompany = connection.Connect();
+        Company oCompany = unitOfWork.Connect();
         oCompany.ThrowIfNull("Company is null");
-        unitOfWork.BeginTransaction();
+        unitOfWork.BeginTransaction(oCompany);
         Documents oGoodReceiptPO;
         oGoodReceiptPO = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseDeliveryNotes);
-        if(!request.IsDraft) oGoodReceiptPO.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
+        if (!request.IsDraft) oGoodReceiptPO.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
         oGoodReceiptPO.CardCode = request.VendorCode;
         oGoodReceiptPO.ContactPersonCode = request.ContactPersonCode;
         oGoodReceiptPO.Series = request.Series;
@@ -64,8 +62,17 @@ public class AddGoodReceiptPoCommandHandler : IRequestHandler<AddGoodReceiptPoCo
 
             oGoodReceiptPO.Lines.Add();
         }
-        (oGoodReceiptPO.Add() != 0).Throw(oCompany.GetLastErrorDescription());
-        unitOfWork.Commit();
+        if (oGoodReceiptPO.Add() != 0)
+        {
+            unitOfWork.Rollback(oCompany);
+            return Task.FromResult(new PostResponse(
+                oCompany.GetLastErrorCode().ToString(),
+                oCompany.GetLastErrorDescription(),
+                "",
+                "",
+                "").ToErrorOr());
+        }
+        unitOfWork.Commit(oCompany);
         return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
     }
 }

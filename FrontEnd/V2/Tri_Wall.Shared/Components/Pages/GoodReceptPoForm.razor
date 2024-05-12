@@ -1,0 +1,127 @@
+﻿@page "/goodreceptpoform"
+@using System.Globalization
+@rendermode InteractiveWebAssembly
+<PageTitle>Counter</PageTitle>
+
+<FluentLayout Style="margin-top: 0px;">
+
+    <FluentHeader Style="background-color: transparent;padding: 0px;z-index: 0;" >
+        <FluentBreadcrumb>
+            <FluentBreadcrumbItem>
+                Good @stringDisplay PO
+            </FluentBreadcrumbItem>
+        </FluentBreadcrumb>
+        <FluentSpacer />
+        <FluentButton IconEnd="@(new Icons.Filled.Size24.Search())">
+            Search
+        </FluentButton>
+        &nbsp;&nbsp;
+        <FluentButton IconEnd="@(new Icons.Filled.Size24.Save())">
+            Save
+        </FluentButton>
+        &nbsp;&nbsp;
+        <FluentButton IconEnd="@(new Icons.Filled.Size24.Save())">
+            Save 1
+        </FluentButton>
+    </FluentHeader>
+    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+        <FluentBodyContent Class="body-content">
+            <div class="content">
+                <FluentGrid Spacing="2" OnBreakpointEnter="@OnBreakpointEnterHandler" AdaptiveRendering="true">
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Required Label="Series">
+                            <FluentOption Value="">Select Series</FluentOption>
+                            <FluentOption Value="Exploration">Exploration</FluentOption>
+                            <FluentOption Value="Diplomacy">Diplomacy</FluentOption>
+                            <FluentOption Value="Defense">Defense</FluentOption>
+                        </FluentSelect>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentTextField Label="Document Number" style="width: 100%;" Disabled></FluentTextField>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentDatePicker Label="DocDate" style="width: 100%;" />
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentDatePicker Label="TaxDate" style="width: 100%;" />
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentAutocomplete Required AutoComplete="off" TOption="string" Autofocus="true" Label="Customer"
+                            Width="100%" Placeholder="Customer" OnOptionsSearch="@OnSearchAsync" MaximumSelectedOptions="1"
+                            OptionText="@(item => item)" @bind-SelectedOptions="@SelectedItems" />
+                        @* item.Name *@
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentTextField Label="Name" Disabled style="width: 100%;"></FluentTextField>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Label="Contact">
+                            <FluentOption Value="">Select Contact</FluentOption>
+                            <FluentOption Value="Exploration">Exploration</FluentOption>
+                            <FluentOption Value="Diplomacy">Diplomacy</FluentOption>
+                            <FluentOption Value="Defense">Defense</FluentOption>
+                        </FluentSelect>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12">
+                        <div class="grid" style="width: 100%; overflow-x:auto;">
+                            <FluentDataGrid TGridItem="string"
+                            GridTemplateColumns="0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr" Style="height: 405px;width: 100%;">
+                                <PropertyColumn Title="No." Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="ItemCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="ItemName" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="Price" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="VatCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="Warehouse" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    TooltipText="@(c => "That is x GOLD!!")" />
+                            </FluentDataGrid>
+                        </div>
+                    </FluentGridItem>
+                </FluentGrid>
+            </div>
+        </FluentBodyContent>
+    </FluentStack>
+</FluentLayout>
+
+
+@code {
+    /*Data Grid */
+
+
+    /*Data Grid */
+
+    string stringDisplay = "Recept";
+    void OnBreakpointEnterHandler(GridItemSize size)
+    {
+        if (size == GridItemSize.Xs)
+        {
+            stringDisplay = "";
+        }
+        else
+        {
+            stringDisplay = "Recept";
+        }
+        Console.WriteLine($"Page Size: {size}");
+        @* DemoLogger.WriteLine($"Page Size: {size}"); *@
+    }
+    IEnumerable<string> SelectedItems = Array.Empty<string>();
+
+    private async Task OnSearchAsync(OptionsSearchEventArgs<string> e)
+    {
+        @* var allCountries = await Data.GetCountriesAsync();
+e.Items = allCountries.Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
+.OrderBy(i => i.Name); *@
+    }
+
+}

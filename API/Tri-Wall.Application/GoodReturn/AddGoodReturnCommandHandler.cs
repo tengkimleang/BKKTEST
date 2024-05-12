@@ -24,9 +24,9 @@ namespace Tri_Wall.Application.GoodReturn
             Company oCompany;
             oCompany = connection.Connect();
             oCompany.Throw("Invalid Connection to SAP");
-            unitOfWork.BeginTransaction();
-            oGoodReturn =(Documents)oCompany.GetBusinessObject((request.IsDraft)? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseReturns);
-            if(request.IsDraft) oGoodReturn.DocObjectCode = BoObjectTypes.oPurchaseReturns;
+            unitOfWork.BeginTransaction(oCompany);
+            oGoodReturn = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseReturns);
+            if (request.IsDraft) oGoodReturn.DocObjectCode = BoObjectTypes.oPurchaseReturns;
             oGoodReturn.CardCode = request.VendorCode;
             oGoodReturn.ContactPersonCode = request.ContactPersonCode;
             oGoodReturn.NumAtCard = request.NumAtCard;
@@ -76,7 +76,7 @@ namespace Tri_Wall.Application.GoodReturn
                 oGoodReturn.Lines.Add();
             }
             (oGoodReturn.Add() != 0).Throw(oCompany.GetLastErrorDescription());
-            unitOfWork.Commit();
+            unitOfWork.Commit(oCompany);
             return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
         }
     }

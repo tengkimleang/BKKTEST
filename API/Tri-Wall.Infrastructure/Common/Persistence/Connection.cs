@@ -10,24 +10,30 @@ public class Connection : IConnection, IUnitOfWork
 {
     private readonly ConnectionSettings _settings;
     public static Company _company = new();
+    public void Disconnect()
+    {
+        //cheecking coonection
+        if (!_company.Connected) return;
+        _company.Disconnect();
+    }
     public Connection(IOptions<ConnectionSettings> settings)
     {
         _settings = settings.Value;
         Connect();
     }
 
-    public void BeginTransaction()
+    public void BeginTransaction(Company company)
     {
-        if (_company.InTransaction)
+        if (company.InTransaction)
         {
-            _company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
+            company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
         }
-        _company.StartTransaction();
+        company.StartTransaction();
     }
 
-    public void Commit()
+    public void Commit(Company company)
     {
-        _company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
+        company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
     }
 
     public Company Connect()
@@ -52,19 +58,11 @@ public class Connection : IConnection, IUnitOfWork
         _company.Connect();
         return _company;
     }
-
-    public void Disconnect()
+    public void Rollback(Company company)
     {
-        //cheecking coonection
-        if (!_company.Connected) return;
-        _company.Disconnect();
-    }
-
-    public void Rollback()
-    {
-        if (_company.InTransaction)
+        if (company.InTransaction)
         {
-            _company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
+            company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack);
         }
     }
 }

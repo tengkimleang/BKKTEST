@@ -11,18 +11,16 @@ namespace Tri_Wall.Application.DeliveryOrder;
 public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCommand, ErrorOr<PostResponse>>
 {
     private readonly IUnitOfWork unitOfWork;
-    private readonly IConnection connection;
 
-    public AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork, IConnection connection)
+    public AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork)
     {
         this.unitOfWork = unitOfWork;
-        this.connection = connection;
     }
 
     public Task<ErrorOr<PostResponse>> Handle(AddDeliveryOrderCommand request, CancellationToken cancellationToken)
     {
-        Company oCompany = connection.Connect();
-        unitOfWork.BeginTransaction();
+        Company oCompany = unitOfWork.Connect();
+        unitOfWork.BeginTransaction(oCompany);
         Documents oDeliveryOrder;
         oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
         oDeliveryOrder.CardCode = request.CardCode;
@@ -32,7 +30,6 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
         oDeliveryOrder.DocDate = request.DocDate;
         oDeliveryOrder.DocDueDate = request.TaxDate;
         oDeliveryOrder.Comments = request.Remarks;
-        oDeliveryOrder.BPL_IDAssignedToInvoice = request.BranchID;
         oDeliveryOrder.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
         foreach (var l in request.Lines!)
         {
@@ -68,8 +65,12 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
 
             oDeliveryOrder.Lines.Add();
         }
-        (oDeliveryOrder.Add() != 0).Throw(oCompany.GetLastErrorDescription());
-        unitOfWork.Commit();
+        if (oDeliveryOrder.Add() != 0)
+        {
+            unitOfWork.Rollback(oCompany);
+            return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(), oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
+        }
+        unitOfWork.Commit(oCompany);
         return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
 
     }

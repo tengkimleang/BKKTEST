@@ -13,9 +13,6 @@ public record AddDeliveryOrderCommand : IRequest<ErrorOr<PostResponse>>
     public DateTime DocDate { get; set; } = DateTime.Today;
     public DateTime TaxDate { get; set; } = DateTime.Today;
     public string Remarks { get; set; } = "";
-    public int BranchID { get; set; }
-    public string ARDocNum { get; set; } = string.Empty;
-    public int DocEntry { get; set; }
     public List<DeliveryItemLine> Lines { get; set; } = null!;
 }
 public record DeliveryItemLine

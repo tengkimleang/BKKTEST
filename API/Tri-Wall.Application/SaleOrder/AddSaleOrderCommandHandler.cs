@@ -23,7 +23,7 @@ namespace Tri_Wall.Application.SaleOrder
         {
             Company oCompany = connection.Connect();
             oCompany.ThrowIfNull("Invalid Connection Company");
-            unitOfWork.BeginTransaction();
+            unitOfWork.BeginTransaction(oCompany);
             Documents oSaleOrder;
             oSaleOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oOrders);
             oSaleOrder.CardCode = request.CardCode;
@@ -45,7 +45,7 @@ namespace Tri_Wall.Application.SaleOrder
                 oSaleOrder.Lines.Add();
             }
             (oSaleOrder.Add() != 0).Throw(oCompany.GetLastErrorDescription());
-            unitOfWork.Commit();
+            unitOfWork.Commit(oCompany);
             return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
         }
     }

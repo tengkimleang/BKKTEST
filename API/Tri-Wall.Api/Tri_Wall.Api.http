@@ -20,17 +20,52 @@ Content-Type: application/json
 
 ###
 
+POST {{Tri_Wall.API_HostAddress}}/goodReceiptPo
+Content-Type: application/json
+
+{
+    "VendorCode": "V-A001-00",
+    "ContactPersonCode": 0,
+    "VendorNo": "",
+    "Series": 0,
+    "DocDate": "2024-05-11",
+    "TaxDate": "2024-05-11",
+    "Remarks": "",
+    "Lines": [
+        {
+            "ItemCode": "RIIP4401390INP",
+            "Qty": 10,
+            "Price": 10,
+            "VatCode": "P00",
+            "WarehouseCode": "AS01",
+            "ManageItem": "N",
+            "LineStatus": 0
+        }
+    ]
+}
+
+###
+
 POST {{Tri_Wall.API_HostAddress}}/deliveryOrders
 Content-Type: application/json
 
 {
-    "CardCode": "Buy milk",
-    "ContactPersonCode": 1,
-    "Series": 1,
+    "CardCode": "C-T008-00",
+    "ContactPersonCode": 0,
+    "NumAtCard": "PO-2401-00001",
+    "Series": 0,
+    "DocDate": "2024-05-11",
+    "TaxDate": "2024-05-11",
+    "Remarks": "",
     "Lines": [
         {
-            "ItemCode": "",
-            "Quantity": 1
+            "ItemCode": "T008-1SB0002-00",
+            "Qty": 200,
+            "Price": 300,
+            "VatCode": "S00",
+            "WarehouseCode": "FG01",
+            "ManageItem": "N",
+            "LineStatus": 0
         }
     ]
 }

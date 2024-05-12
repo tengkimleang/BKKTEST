@@ -1,10 +1,13 @@
 ﻿
 
+using SAPbobsCOM;
+
 namespace Tri_Wall.Application.Common.Interfaces;
 
 public interface IUnitOfWork
 {
-    void BeginTransaction();
-    void Commit();
-    void Rollback();
+    Company Connect();
+    void BeginTransaction(Company company);
+    void Commit(Company company);
+    void Rollback(Company company);
 }
