@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared;
-using Tri_Wall.Shared.Interfaces;
+using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.ViewModels;
 using TriWallApp.Services;
 
 namespace TriWallApp
@@ -29,6 +30,7 @@ namespace TriWallApp
 #endif
             // Add device specific services used by Razor Class Library (MyApp.Shared)
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
+            builder.Services.AddViewModels();
             return builder.Build();
         }
     }

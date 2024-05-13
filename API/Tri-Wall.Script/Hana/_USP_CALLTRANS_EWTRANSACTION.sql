@@ -527,7 +527,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 	ELSE IF :DTYPE='SERIES' THEN
 		IF :par1='59' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,B."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
@@ -539,7 +539,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='60' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
@@ -555,7 +555,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND B."Indicator"<>'Default';
 		ELSE IF :par1='22' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
@@ -571,23 +571,23 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='20' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
 				  FROM TRIWALL_TRAINKEY."OPDN" 
 				  WHERE "Series"=B."Series"
-				 )AS "DocNum" 
+				 )AS "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
 			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
-				B."Indicator"=YEAR(CURRENT_DATE) 
-				AND B."ObjectCode"=20 
+				A."Category"=YEAR(CURRENT_DATE)
+				AND TO_VARCHAR(B."ObjectCode")=20 
 				AND "SubNum"=MONTH(CURRENT_DATE) 
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='21' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
@@ -603,7 +603,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND B."Indicator"<>'Default';
 		ELSE IF :par1='17' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,B."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
@@ -613,7 +613,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='15' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,B."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
@@ -625,7 +625,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND B."Indicator"<>'Default';
 		ELSE IF :par1='16' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,B."NextNumber" As "DocNum"
 				,(SELECT 
@@ -643,7 +643,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		ELSE IF :par1='1250000001' THEN
 		--Inventory Transfer Request
 			SELECT 
-				 B."Series"
+				 B."Series" AS "Code"
 				,"SeriesName"
 				,B."BPLId" As "Branch"
 				,(SELECT 
@@ -661,7 +661,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		ELSE IF :par1='67' THEN
 		--Inventory Transfer Request
 			SELECT 
-				 B."Series"
+				 B."Series" AS "Code"
 				,"SeriesName"
 				,B."BPLId" As "Branch"
 				,(SELECT 
@@ -677,7 +677,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='1470000065' THEN
 			SELECT 
-				 B."Series"
+				 B."Series" AS "Code"
 				,"SeriesName"
 				,B."BPLId" As "Branch"
 				,C."BPLName"
@@ -695,7 +695,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND B."Indicator"<>'Default';
 		ELSE IF :par1='202' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,"NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
@@ -707,7 +707,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND B."Indicator"<>'Default';
 		ELSE IF :par1='13' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,A."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."NNM1"  A 
@@ -717,7 +717,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND A."Indicator"<>'Default';
 		ELSE IF :par1='14' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,A."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."NNM1" A 
@@ -727,7 +727,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND A."Indicator"<>'Default';
 		ELSE IF :par1='67' THEN
 			SELECT 
-				 "Series"
+				 "Series" AS "Code"
 				,"SeriesName"
 				,A."NextNumber" As "DocNum"
 			FROM TRIWALL_TRAINKEY."NNM1" A 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tri_Wall.Shared.Interfaces
+namespace Tri_Wall.Shared.Services
 {
     public interface IFormFactor
     {

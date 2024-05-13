@@ -2,8 +2,8 @@ using Microsoft.Extensions.Http.Resilience;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Polly;
 using Refit;
-using Tri_Wall.Shared;
-using Tri_Wall.Shared.Interfaces;
+using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.ViewModels;
 using Tri_Wall.WebApp.Server.Components;
 using Tri_Wall.WebApp.Server.Services;
 
@@ -13,11 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.Services.AddFluentUIComponents();
-builder.Services.AddScoped<IFormFactor, FormFactor>();
-builder.Services.AddRefitClient<IApiService>()
-    .ConfigureHttpClient(static client => client.BaseAddress = new Uri("http://localhost:5253"))
-    .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
+builder.Services.AddFluentUIComponents()
+    .AddScoped<IFormFactor, FormFactor>()
+    .AddViewModels();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,13 +44,13 @@ app.MapRazorComponents<App>()
 app.Run();
 
 
-sealed class WebOrMobileHttpRetryStrategyOptions : HttpRetryStrategyOptions
-{
-    public WebOrMobileHttpRetryStrategyOptions()
-    {
-        BackoffType = DelayBackoffType.Exponential;
-        MaxRetryAttempts = 3;
-        UseJitter = true;
-        Delay = TimeSpan.FromSeconds(1.5);
-    }
-}
+//sealed class WebOrMobileHttpRetryStrategyOptions : HttpRetryStrategyOptions
+//{
+//    public WebOrMobileHttpRetryStrategyOptions()
+//    {
+//        BackoffType = DelayBackoffType.Exponential;
+//        MaxRetryAttempts = 3;
+//        UseJitter = true;
+//        Delay = TimeSpan.FromSeconds(1.5);
+//    }
+//}

@@ -1,4 +1,4 @@
-﻿using Tri_Wall.Shared.Interfaces;
+﻿using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.WebApp.Server.Services
 {

@@ -31,6 +31,11 @@
                 <div class="content">
                     <FluentGrid Spacing="2" AdaptiveRendering="true">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                            <FluentAutocomplete Required AutoComplete="off" TOption="string" Autofocus="true" Label="Customer"
+                                                Width="100%" Placeholder="Customer" OnOptionsSearch="@OnSearchAsync" MaximumSelectedOptions="1"
+                                                OptionText="@(item => item)" @bind-SelectedOptions="@SelectedItems" />
+                        </FluentGridItem>
+                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Required Label="Series">
                                 <FluentOption Value="">Select Series</FluentOption>
                                 <FluentOption Value="Exploration">Exploration</FluentOption>
@@ -58,7 +63,7 @@
                                 <FluentOption Value="Defense">Defense</FluentOption>
                             </FluentSelect>
                         </FluentGridItem>
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        @* <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
@@ -83,7 +88,7 @@
                                 <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                 TooltipText="@(c => "That is x GOLD!!")" />
                             </FluentDataGrid>
-                        </div>
+                        </div> *@
                     </FluentGrid>
                 </div>
             </FluentBodyContent>
@@ -94,7 +99,13 @@
     [Parameter]
     public GoodReceiptPOLine Content { get; set; } = default!;
     string dataGrid = "width: 100%;height:305px";
-
+    IEnumerable<string> SelectedItems = Array.Empty<string>();
+    private async Task OnSearchAsync(OptionsSearchEventArgs<string> e)
+    {
+        @* var allCountries = await Data.GetCountriesAsync();
+e.Items = allCountries.Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
+.OrderBy(i => i.Name); *@
+    }
     [CascadingParameter]
     public FluentDialog Dialog { get; set; } = default!;
 
