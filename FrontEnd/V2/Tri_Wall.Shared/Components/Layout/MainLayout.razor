@@ -7,7 +7,7 @@
         </FluentPresenceBadge>
         &nbsp;&nbsp;Tri-Wall
         <FluentSpacer />
-        <FluentProfileMenu @rendermode="InteractiveServer" Image="_content/Tri_Wall.Shared/12345.jpg"
+        <FluentProfileMenu @rendermode="InteractiveWebAssembly" Image="_content/Tri_Wall.Shared/12345.jpg"
             Status="@PresenceStatus.Available" HeaderLabel="Microsoft" Initials="BG" FullName="Bill Gates"
             EMail="bill.gates@microsoft.com" Style="min-width: 330px;" />
     </FluentHeader>
@@ -26,12 +26,7 @@
     </FluentFooter>
 </FluentLayout>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
 <FluentToastProvider />
-<FluentDialogProvider />
+<FluentDialogProvider @rendermode="InteractiveWebAssembly" />
 <FluentTooltipProvider />
 <FluentMessageBarProvider />
