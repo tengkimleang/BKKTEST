@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Tri_Wall.Shared.ViewModels;
 
-namespace Tri_Wall.Shared.Views.Shared;
+namespace Tri_Wall.Shared.Shared;
 
 public abstract class MvvmComponentBase<TViewModel> : ComponentBase
     where TViewModel : IViewModelBase

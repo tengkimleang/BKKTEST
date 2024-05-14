@@ -7,6 +7,7 @@ using Tri_Wall.Domain.Common;
 using Tri_Wall.Infrastructure.Common.Setting;
 using Tri_Wall.Infrastructure.Common.Persistence;
 using Tri_Wall.Infrastructure.Common.QueryData;
+using Tri_Wall.Infrastructure.LoadConnection;
 
 namespace Tri_Wall.Infrastructure;
 
@@ -35,7 +36,7 @@ public static class DependencyInjection
         services.AddSingleton<IDataProviderRepository, DataProviderRepository>();
         services.AddSingleton<IReportLayout, ReportLayout>();
         // Add user repository to the service collection
-
+        //services.AddHostedService<LoadConnectionSapService>();
         return services;
     }
 }

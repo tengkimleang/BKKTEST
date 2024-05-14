@@ -42,15 +42,3 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(Tri_Wall.Shared._Imports).Assembly);
 
 app.Run();
-
-
-//sealed class WebOrMobileHttpRetryStrategyOptions : HttpRetryStrategyOptions
-//{
-//    public WebOrMobileHttpRetryStrategyOptions()
-//    {
-//        BackoffType = DelayBackoffType.Exponential;
-//        MaxRetryAttempts = 3;
-//        UseJitter = true;
-//        Delay = TimeSpan.FromSeconds(1.5);
-//    }
-//}

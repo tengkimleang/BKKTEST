@@ -785,16 +785,11 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		WHERE "CardCode"=:par1;
 	ELSE IF :DTYPE='GetItem' THEN
 		SELECT  
-			 "ItemCode" AS "ItemCode"
-			,"ItemName" AS "ItemName"
-			,(SELECT 
-				"Price" 
-			  FROM TRIWALL_TRAINKEY."ITM1" 
-			  WHERE 
-			  	"PriceList"=1 
-			  	AND "ItemCode"=OITM."ItemCode"
-			 ) AS "PriceUnit"
-		FROM TRIWALL_TRAINKEY."OITM";
+			 A."ItemCode" AS "ItemCode"
+			,A."ItemName" AS "ItemName"
+			,B."Price" AS "PriceUnit"
+		FROM TRIWALL_TRAINKEY."OITM" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS B ON B."ItemCode"=A."ItemCode" AND B."PriceList"=1;
 	ELSE IF :DTYPE='GennerateBatchOrSerial' THEN
 		SELECT 
 			  :par1

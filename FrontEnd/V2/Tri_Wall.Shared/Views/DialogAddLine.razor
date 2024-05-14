@@ -98,13 +98,14 @@
 @code {
     [Parameter]
     public GoodReceiptPOLine Content { get; set; } = default!;
-    string dataGrid = "width: 100%;height:305px";
+    string? dataGrid = "width: 100%;height:305px";
     IEnumerable<string> SelectedItems = Array.Empty<string>();
-    private async Task OnSearchAsync(OptionsSearchEventArgs<string> e)
+    private Task OnSearchAsync(OptionsSearchEventArgs<string> e)
     {
         @* var allCountries = await Data.GetCountriesAsync();
 e.Items = allCountries.Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
 .OrderBy(i => i.Name); *@
+        return Task.CompletedTask;
     }
     [CascadingParameter]
     public FluentDialog Dialog { get; set; } = default!;
