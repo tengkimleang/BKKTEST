@@ -31,9 +31,18 @@
                 <div class="content">
                     <FluentGrid Spacing="2" AdaptiveRendering="true">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentAutocomplete Required AutoComplete="off" TOption="string" Autofocus="true" Label="Customer"
-                                                Width="100%" Placeholder="Customer" OnOptionsSearch="@OnSearchAsync" MaximumSelectedOptions="1"
-                                                OptionText="@(item => item)" @bind-SelectedOptions="@SelectedItems" />
+                            <FluentAutocomplete Required
+                                                TOption="Items"
+                                                Width="100%"
+                                                Placeholder="Item Master Data"
+                                                OnOptionsSearch="OnSearch"
+                                                MaximumOptionsSearch="1"
+                                                Label="Item Code"
+                                                Virtualize="true"
+                                                Items="items"
+                                                MaximumSelectedOptions="1"
+                                                OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
+                                                @bind-SelectedOptions="@selectedVendor" />
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Required Label="Series">
@@ -97,21 +106,25 @@
 </FluentDialogBody>
 @code {
     [Parameter]
+    public IEnumerable<Items> items { get; set; } = default!;
+    [Parameter]
     public GoodReceiptPOLine Content { get; set; } = default!;
-    string? dataGrid = "width: 100%;height:305px";
-    IEnumerable<string> SelectedItems = Array.Empty<string>();
-    private Task OnSearchAsync(OptionsSearchEventArgs<string> e)
+    private IEnumerable<Items> selectedVendor = Array.Empty<Items>();
+    private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
-        @* var allCountries = await Data.GetCountriesAsync();
-e.Items = allCountries.Where(i => i.Name.StartsWith(e.Text, StringComparison.OrdinalIgnoreCase))
-.OrderBy(i => i.Name); *@
-        return Task.CompletedTask;
+        e.Items = items.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+                            i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+                            .OrderBy(i => i.ItemCode);
     }
+    string? dataGrid = "width: 100%;height:305px";
     [CascadingParameter]
     public FluentDialog Dialog { get; set; } = default!;
 
     private async Task SaveAsync()
     {
-        await Dialog.CloseAsync(Content);
+        await Dialog.CloseAsync(new GoodReceiptPOLine
+        {
+            ItemCode=selectedVendor.FirstOrDefault()?.ItemCode
+        });
     }
 }

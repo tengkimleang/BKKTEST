@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Refit;
 using Tri_Wall.Shared.Pages.GoodReceptPo;
 using Tri_Wall.Shared.Services;
@@ -19,8 +20,6 @@ public static class Dependencies
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         services.AddSingleton<ApiService>();
         services.AddScoped<GoodReceptPoViewModel>();
-        services.AddSingleton<ILoadMasterData, LoadMasterData>();
-        services.AddHostedService<LoadMasterDataService>();
         return services;
     }
 }

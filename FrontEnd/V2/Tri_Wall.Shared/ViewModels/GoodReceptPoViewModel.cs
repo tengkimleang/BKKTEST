@@ -1,31 +1,43 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.AspNetCore.Components;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Runtime.ConstrainedExecution;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.Shared;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class GoodReceptPoViewModel(ApiService apiService) : ViewModelBase
+public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-    private readonly ApiService apiService = apiService;
     [ObservableProperty]
-    IEnumerable<string> _selectedItems = Array.Empty<string>();
+    GoodReceiptPOForm _goodReceiptPOForm=new();
 
     [ObservableProperty]
-    ObservableCollection<Series> _series=new();
+    ObservableCollection<Series> _series = new();
 
-    public override async Task OnInitializedAsync()
+    [ObservableProperty]
+    ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
+
+    [ObservableProperty]
+    ObservableCollection<ContactPerson> _contactPeople = loadMasterData.GetContactPersons;
+
+    [ObservableProperty]
+    ObservableCollection<Items> _items = loadMasterData.GetItems;
+
+
+    public override async Task Loaded()
     {
-        Series =await CheckingValueT(Series, async () => 
-            new ObservableCollection<Series>(
-                (await apiService.GetSeries("20")).Data?? new()));
-    }
-    async Task<T> CheckingValueT<T>(T t, Func<Task<T>> func) where T : ICollection
-    {
-        if (t == null || t.Count == 0) return await func();
-        return t;
+        Series = await CheckingValueT(Series, async () =>
+                 (await apiService.GetSeries("20")).Data ?? new());
+        Vendors = await CheckingValueT(Vendors, async () =>
+                        (await apiService.GetVendors()).Data ?? new());
+        ContactPeople = await CheckingValueT(ContactPeople, async () =>
+                    (await apiService.GetContactPersons()).Data ?? new());
+        Items = await CheckingValueT(Items, async () =>
+                    (await apiService.GetItems()).Data ?? new());
     }
 }

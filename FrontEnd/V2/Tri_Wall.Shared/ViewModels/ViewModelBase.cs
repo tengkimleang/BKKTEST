@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections;
 
 namespace Tri_Wall.Shared.ViewModels;
 
@@ -11,7 +12,11 @@ public abstract partial class ViewModelBase : ObservableObject, IViewModelBase
     }
 
     protected virtual void NotifyStateChanged() => OnPropertyChanged((string?)null);
-
+    protected virtual async Task<T> CheckingValueT<T>(T t, Func<Task<T>> func) where T : ICollection
+    {
+        if (t == null || t.Count == 0) return await func();
+        return t;
+    }
     [RelayCommand]
     public virtual async Task Loaded()
     {

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
+using System.Collections.ObjectModel;
+using Tri_Wall.Shared.Models;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -9,10 +11,10 @@ public class LoadMasterDataService : BackgroundService
     {
         this.loadMasterData = loadMasterData;
     }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        //loadMasterData.LoadVendorMaster();
         await loadMasterData.LoadItemMaster();
+        await loadMasterData.LoadVendorMaster();
+        await loadMasterData.LoadContactPersonMaster();
     }
 }

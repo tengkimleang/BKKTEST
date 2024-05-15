@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
-    "DBType": "GetItem",
+    "DBType": "GetContactPersonByCardCode",
     "Par1": "",
     "Par2": "",
     "Par3": "",

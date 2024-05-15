@@ -17,7 +17,6 @@ public class LoadConnectionSapService : BackgroundService
     }
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        connection.Connect();
         return Task.CompletedTask;
     }
 }  

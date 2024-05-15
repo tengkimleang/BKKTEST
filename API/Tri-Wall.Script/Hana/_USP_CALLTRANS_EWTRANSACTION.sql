@@ -781,13 +781,14 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		SELECT  
 			"CntctCode" AS "ContactID"
 			,"Name" As "ContactName"
+			,"CardCode" AS "CardCode"
 		FROM TRIWALL_TRAINKEY."OCPR" 
-		WHERE "CardCode"=:par1;
+		WHERE "CardCode"=CASE WHEN :par1='' THEN "CardCode" ELSE :par1 END;
 	ELSE IF :DTYPE='GetItem' THEN
 		SELECT  
 			 A."ItemCode" AS "ItemCode"
 			,A."ItemName" AS "ItemName"
-			,B."Price" AS "PriceUnit"
+			,CAST(IFNULL(B."Price",0.00) AS float) AS "PriceUnit"
 		FROM TRIWALL_TRAINKEY."OITM" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS B ON B."ItemCode"=A."ItemCode" AND B."PriceList"=1;
 	ELSE IF :DTYPE='GennerateBatchOrSerial' THEN

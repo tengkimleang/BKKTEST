@@ -14,5 +14,8 @@ public class ApiService(IApiService apiService)
             "_USP_CALLTRANS_EWTRANSACTION", "GetItem"));
     public Task<ResponseData<ObservableCollection<Vendors>>> GetVendors()
         => apiService.GetVendors(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GetItem"));
+            "_USP_CALLTRANS_EWTRANSACTION", "GetVendor"));
+    public Task<ResponseData<ObservableCollection<ContactPerson>>> GetContactPersons()
+        => apiService.GetContactPersons(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetContactPersonByCardCode"));
 }
