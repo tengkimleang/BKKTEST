@@ -800,7 +800,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			||TO_VARCHAR(CURRENT_DATE,'dd')
 			||TO_VARCHAR(CURRENT_TIME,'hh:mm:ss') AS BatchOrSerial
 		FROM DUMMY;
-	ELSE IF :DTYPE='WhsCode' THEN
+	ELSE IF :DTYPE='GetWarehouseMasterData' THEN
 		SELECT 
 			 "WhsCode" AS "Code"
 			,"WhsName" AS "Name" 
@@ -2824,6 +2824,13 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		LEFT JOIN [BarCodeDatabase].[dbo].PermissionUser B ON B.PermissionId = A.Id 
 		WHERE B.UserCode =:Par1;*/
 		SELECT 'Comming Soon' AS "TEST" FROM DUMMY;
+	ELSE IF :DTYPE='GetVatCodePurchase' THEN
+		SELECT 
+			 "Code" AS "Code"
+			,CAST("Rate" AS double) AS "Rate"
+		FROM TRIWALL_TRAINKEY."OVTG"
+		WHERE "Category"='O' AND "Inactive"='N';
+	END IF;
 	END IF;
 	END IF;
 	END IF;

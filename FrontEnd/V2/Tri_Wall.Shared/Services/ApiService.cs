@@ -15,7 +15,13 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<Vendors>>> GetVendors()
         => apiService.GetVendors(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetVendor"));
-    public Task<ResponseData<ObservableCollection<ContactPerson>>> GetContactPersons()
+    public Task<ResponseData<ObservableCollection<ContactPersons>>> GetContactPersons()
         => apiService.GetContactPersons(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetContactPersonByCardCode"));
+    public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxPurchases()
+        => apiService.GetTaxPurchases(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetVatCodePurchase"));
+    public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses()
+        => apiService.GetWarehouses(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetWarehouseMasterData"));
 }

@@ -7,23 +7,46 @@ namespace Tri_Wall.Shared.Shared
     public class LoadMasterData(ApiService apiService) : ILoadMasterData
     {
         readonly ApiService apiService = apiService;
-        private ObservableCollection<Items> GetItems=new();
-        private ObservableCollection<Vendors> GetVendors= new();
-        private ObservableCollection<ContactPerson> GetContactPersons = new();
-        
+        private ObservableCollection<Items> _getItems=new();
+        private ObservableCollection<Vendors> _getVendors= new();
+        private ObservableCollection<ContactPersons> _getContactPersons = new();
+        private ObservableCollection<VatGroups> _getTaxPurchases = new();
+        private ObservableCollection<Warehouses> _getWarehouses = new();
 
-        ObservableCollection<Items> ILoadMasterData.GetItems => GetItems;
+        public ObservableCollection<VatGroups> GetTaxPurchases => _getTaxPurchases;
 
-        ObservableCollection<Vendors> ILoadMasterData.GetVendors => GetVendors;
+        public ObservableCollection<Warehouses> GetWarehouses => _getWarehouses;
 
-        ObservableCollection<ContactPerson> ILoadMasterData.GetContactPersons => GetContactPersons;
+        ObservableCollection<Items> ILoadMasterData.GetItems => _getItems;
+
+        ObservableCollection<Vendors> ILoadMasterData.GetVendors => _getVendors;
+
+        ObservableCollection<ContactPersons> ILoadMasterData.GetContactPersons => _getContactPersons;
 
         public async Task LoadContactPersonMaster()
         {
             var result = await apiService.GetContactPersons();
             if (result.ErrorCode == "")
             {
-                GetContactPersons = new ObservableCollection<ContactPerson>(result.Data ?? new());
+                _getContactPersons = new ObservableCollection<ContactPersons>(result.Data ?? new());
+            }
+        }
+
+        public async Task LoadGetTaxPurchaseMaster()
+        {
+            var result = await apiService.GetContactPersons();
+            if (result.ErrorCode == "")
+            {
+                _getContactPersons = new ObservableCollection<ContactPersons>(result.Data ?? new());
+            }
+        }
+
+        public async Task LoadGetWarehouseMaster()
+        {
+            var result = await apiService.GetContactPersons();
+            if (result.ErrorCode == "")
+            {
+                _getContactPersons = new ObservableCollection<ContactPersons>(result.Data ?? new());
             }
         }
 
@@ -32,7 +55,7 @@ namespace Tri_Wall.Shared.Shared
             var result = await apiService.GetItems();
             if (result.ErrorCode == "")
             {
-                GetItems = new ObservableCollection<Items>(result.Data ?? new());
+                _getItems = new ObservableCollection<Items>(result.Data ?? new());
             }
         }
 
@@ -41,7 +64,7 @@ namespace Tri_Wall.Shared.Shared
             var result = await apiService.GetVendors();
             if (result.ErrorCode == "")
             {
-                GetVendors = result.Data?? new();
+                _getVendors = result.Data?? new();
             }
         }
     }

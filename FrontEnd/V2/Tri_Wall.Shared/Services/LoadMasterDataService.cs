@@ -16,5 +16,7 @@ public class LoadMasterDataService : BackgroundService
         await loadMasterData.LoadItemMaster();
         await loadMasterData.LoadVendorMaster();
         await loadMasterData.LoadContactPersonMaster();
+        await loadMasterData.LoadGetTaxPurchaseMaster();
+        await loadMasterData.LoadGetWarehouseMaster();
     }
 }

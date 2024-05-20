@@ -1,7 +1,7 @@
 ﻿
 namespace Tri_Wall.Shared.Models;
 
-public record ContactPerson(
+public record ContactPersons(
     string ContactID,
     string ContactName,
     string CardCode

@@ -12,8 +12,12 @@ public interface ILoadMasterData
 {
     public ObservableCollection<Items> GetItems { get; }
     public ObservableCollection<Vendors> GetVendors { get; }
-    public ObservableCollection<ContactPerson> GetContactPersons { get; }
+    public ObservableCollection<ContactPersons> GetContactPersons { get; }
+    public ObservableCollection<VatGroups> GetTaxPurchases { get; }
+    public ObservableCollection<Warehouses> GetWarehouses { get; }
     Task LoadItemMaster();
     Task LoadVendorMaster();
     Task LoadContactPersonMaster();
+    Task LoadGetTaxPurchaseMaster();
+    Task LoadGetWarehouseMaster();
 }

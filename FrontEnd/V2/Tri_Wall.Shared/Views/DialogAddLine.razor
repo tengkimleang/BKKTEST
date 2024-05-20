@@ -1,5 +1,5 @@
 ﻿@rendermode InteractiveWebAssembly
-@implements IDialogContentComponent<GoodReceiptPOLine>
+@implements IDialogContentComponent<Dictionary<string,object>>
 <style>
     ::deep > fluent-dialog::part(control) {
         --dialog-width: 300px;
@@ -30,7 +30,7 @@
             <FluentBodyContent Class="body-content" Style="overflow:hidden;">
                 <div class="content">
                     <FluentGrid Spacing="2" AdaptiveRendering="true">
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                             <FluentAutocomplete Required
                                                 TOption="Items"
                                                 Width="100%"
@@ -39,65 +39,62 @@
                                                 MaximumOptionsSearch="1"
                                                 Label="Item Code"
                                                 Virtualize="true"
-                                                Items="items"
+                                                Items="_items"
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
-                                                @bind-SelectedOptions="@selectedVendor" />
+                                                @bind-SelectedOptions="@_selectedItem"
+                                                ValueChanged="OnValueChanged" />
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Required Label="Series">
-                                <FluentOption Value="">Select Series</FluentOption>
-                                <FluentOption Value="Exploration">Exploration</FluentOption>
-                                <FluentOption Value="Diplomacy">Diplomacy</FluentOption>
-                                <FluentOption Value="Defense">Defense</FluentOption>
-                            </FluentSelect>
+                            <FluentTextField Label="Price" Value="@_selectedItem.FirstOrDefault()?.PriceUnit" style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Label="Document Number" style="width: 100%;" Disabled></FluentTextField>
+                            <FluentTextField Label="Qty" style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker Label="DocDate" style="width: 100%;" />
+                            <FluentSelect Width="100%"
+                                          TOption="VatGroups"
+                                          Required
+                                          Label="Vat Code"
+                                          Items="_vatGroups"
+                                          OptionText="@(i=> i.Code)"
+                                          OptionValue="@(i=>i.Code)"
+                                          SelectedOption="_vatGroups?.FirstOrDefault()" />
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker Label="TaxDate" style="width: 100%;" />
+                            <FluentSelect Width="100%"
+                                          TOption="Warehouses"
+                                          Required
+                                          Label="Warehouse"
+                                          Items="_warehouses"
+                                          OptionText="@(i=> i.Code)"
+                                          OptionValue="@(i=>i.Name)"
+                                          SelectedOption="_warehouses?.FirstOrDefault()" />
                         </FluentGridItem>
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Label="Name" Disabled style="width: 100%;"></FluentTextField>
-                        </FluentGridItem>
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentSelect name="class" Id="classification" TOption="string" Width="100%" Label="Contact">
-                                <FluentOption Value="">Select Contact</FluentOption>
-                                <FluentOption Value="Exploration">Exploration</FluentOption>
-                                <FluentOption Value="Diplomacy">Diplomacy</FluentOption>
-                                <FluentOption Value="Defense">Defense</FluentOption>
-                            </FluentSelect>
-                        </FluentGridItem>
-                        @* <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
-                        </FluentGridItem>
-                        <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
-                        </FluentGridItem>
-                        <div class="grid" style="width: 100%; overflow:auto;">
-                            <FluentDataGrid TGridItem="string" ResizableColumns="true"
-                                            GridTemplateColumns="0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr" Style=@dataGrid>
-                                <PropertyColumn Title="No." Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="ItemCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="ItemName" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Price" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="VatCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Warehouse" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                            </FluentDataGrid>
-                        </div> *@
+                        @if (_isItemShow)
+                        {
+                            <div class="grid" style="width: 100%; overflow:auto;">
+                                <FluentDataGrid TGridItem="string" ResizableColumns="true"
+                                                GridTemplateColumns="0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr" Style=@dataGrid>
+                                    <PropertyColumn Title="No." Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="ItemCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="ItemName" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Price" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="VatCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Warehouse" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                </FluentDataGrid>
+                            </div>
+                        }
                     </FluentGrid>
                 </div>
             </FluentBodyContent>
@@ -105,26 +102,37 @@
     </FluentLayout>
 </FluentDialogBody>
 @code {
+    [CascadingParameter]
+    public FluentDialog Dialog { get; set; } = default!;
     [Parameter]
-    public IEnumerable<Items> items { get; set; } = default!;
-    [Parameter]
-    public GoodReceiptPOLine Content { get; set; } = default!;
-    private IEnumerable<Items> selectedVendor = Array.Empty<Items>();
+    public Dictionary<string, object> Content { get; set; } = default!;
+    private bool _isItemShow;
+    private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
+    private IEnumerable<Items> _items { 
+        get => Content ["item"] as IEnumerable<Items> ?? new List<Items>(); }
+    private IEnumerable<VatGroups>? _vatGroups { get => Content["taxPurchase"] as IEnumerable<VatGroups>; }
+    private IEnumerable<Warehouses>? _warehouses { get => Content["warehouse"] as IEnumerable<Warehouses>; }
+
     private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
-        e.Items = items.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = _items?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                             i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
                             .OrderBy(i => i.ItemCode);
     }
     string? dataGrid = "width: 100%;height:305px";
-    [CascadingParameter]
-    public FluentDialog Dialog { get; set; } = default!;
-
     private async Task SaveAsync()
     {
         await Dialog.CloseAsync(new GoodReceiptPOLine
-        {
-            ItemCode=selectedVendor.FirstOrDefault()?.ItemCode
+            {
+                ItemCode = _selectedItem.FirstOrDefault()?.ItemCode ?? ""
         });
+    }
+    void OnValueChanged(string newValue)
+    {
+        if (_selectedItem.Count() > 0)
+            _isItemShow = true;
+        // if (_selectedItem.FirstOrDefault()?.ItemType=="")
+        else
+            _isItemShow = false;
     }
 }

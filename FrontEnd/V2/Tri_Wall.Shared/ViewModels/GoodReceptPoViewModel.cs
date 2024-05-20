@@ -23,11 +23,16 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
 
     [ObservableProperty]
-    ObservableCollection<ContactPerson> _contactPeople = loadMasterData.GetContactPersons;
+    ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
 
     [ObservableProperty]
     ObservableCollection<Items> _items = loadMasterData.GetItems;
 
+    [ObservableProperty]
+    ObservableCollection<VatGroups> _taxPurchases = loadMasterData.GetTaxPurchases;
+
+    [ObservableProperty]
+    ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
     public override async Task Loaded()
     {
@@ -39,5 +44,9 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
                     (await apiService.GetContactPersons()).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
                     (await apiService.GetItems()).Data ?? new());
+        TaxPurchases = await CheckingValueT(TaxPurchases, async () =>
+                    (await apiService.GetTaxPurchases()).Data ?? new());
+        Warehouses = await CheckingValueT(Warehouses, async () =>
+                    (await apiService.GetWarehouses()).Data ?? new());
     }
 }

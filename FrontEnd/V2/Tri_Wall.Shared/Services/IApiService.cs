@@ -16,6 +16,12 @@ public interface IApiService
     public Task<ResponseData<ObservableCollection<Vendors>>> GetVendors(
         [Body] GetRequest getRequest);
     [Post("/getQuery")]
-    public Task<ResponseData<ObservableCollection<ContactPerson>>> GetContactPersons(
+    public Task<ResponseData<ObservableCollection<ContactPersons>>> GetContactPersons(
+        [Body] GetRequest getRequest);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxPurchases(
+        [Body] GetRequest getRequest);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses(
         [Body] GetRequest getRequest);
 }
