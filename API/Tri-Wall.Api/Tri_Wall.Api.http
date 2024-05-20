@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
-    "DBType": "GetWarehouseMasterData",
+    "DBType": "GetItem",
     "Par1": "",
     "Par2": "",
     "Par3": "",

@@ -7,7 +7,6 @@
         padding: 2rem !important;
     }
 </style>
-
 @* Header *@
 <FluentDialogHeader ShowDismiss="true">
     <FluentStack VerticalAlignment="VerticalAlignment.Center">
@@ -59,7 +58,8 @@
                                           Items="_vatGroups"
                                           OptionText="@(i=> i.Code)"
                                           OptionValue="@(i=>i.Code)"
-                                          SelectedOption="_vatGroups?.FirstOrDefault()" />
+                                          SelectedOption="_vatGroups?.FirstOrDefault()"
+                                          @bind-Value="@DataResult.VatCode" />
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect Width="100%"
@@ -67,11 +67,12 @@
                                           Required
                                           Label="Warehouse"
                                           Items="_warehouses"
-                                          OptionText="@(i=> i.Code)"
-                                          OptionValue="@(i=>i.Name)"
-                                          SelectedOption="_warehouses?.FirstOrDefault()" />
+                                          OptionText="@(i=> i.Name)"
+                                          OptionValue="@(i=>i.Code)"
+                                          SelectedOption="_warehouses?.FirstOrDefault()" 
+                                          @bind-Value="@DataResult.WarehouseCode"/>
                         </FluentGridItem>
-                        @if (_isItemShow)
+                        @if (_isItemBatch)
                         {
                             <div class="grid" style="width: 100%; overflow:auto;">
                                 <FluentDataGrid TGridItem="string" ResizableColumns="true"
@@ -84,13 +85,25 @@
                                                     TooltipText="@(c => "That is x GOLD!!")" />
                                     <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                     TooltipText="@(c => "That is x GOLD!!")" />
-                                    <PropertyColumn Title="Price" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    <PropertyColumn Title="Batch" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                     TooltipText="@(c => "That is x GOLD!!")" />
-                                    <PropertyColumn Title="VatCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                </FluentDataGrid>
+                            </div>
+                        }
+                        @if (_isItemSerial)
+                        {
+                            <div class="grid" style="width: 100%; overflow:auto;">
+                                <FluentDataGrid TGridItem="string" ResizableColumns="true"
+                                                GridTemplateColumns="0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr" Style=@dataGrid>
+                                    <PropertyColumn Title="No." Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                     TooltipText="@(c => "That is x GOLD!!")" />
-                                    <PropertyColumn Title="Warehouse" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    <PropertyColumn Title="ItemCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                     TooltipText="@(c => "That is x GOLD!!")" />
-                                    <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                    <PropertyColumn Title="ItemName" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
+                                                    TooltipText="@(c => "That is x GOLD!!")" />
+                                    <PropertyColumn Title="Serial" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
                                                     TooltipText="@(c => "That is x GOLD!!")" />
                                 </FluentDataGrid>
                             </div>
@@ -106,7 +119,9 @@
     public FluentDialog Dialog { get; set; } = default!;
     [Parameter]
     public Dictionary<string, object> Content { get; set; } = default!;
-    private bool _isItemShow;
+    private GoodReceiptPOLine DataResult { get; set; } = new();
+    private bool _isItemBatch;
+    private bool _isItemSerial;
     private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
     private IEnumerable<Items> _items { 
         get => Content ["item"] as IEnumerable<Items> ?? new List<Items>(); }
@@ -122,17 +137,32 @@
     string? dataGrid = "width: 100%;height:305px";
     private async Task SaveAsync()
     {
-        await Dialog.CloseAsync(new GoodReceiptPOLine
-            {
-                ItemCode = _selectedItem.FirstOrDefault()?.ItemCode ?? ""
-        });
+        await Dialog.CloseAsync(DataResult);
     }
     void OnValueChanged(string newValue)
     {
         if (_selectedItem.Count() > 0)
-            _isItemShow = true;
-        // if (_selectedItem.FirstOrDefault()?.ItemType=="")
+        {
+            if (_selectedItem.FirstOrDefault()?.ItemType == "S")
+            {
+                _isItemSerial = true;
+                _isItemBatch = false;
+            }
+            else if (_selectedItem.FirstOrDefault()?.ItemType == "B")
+            {
+                _isItemSerial = false;
+                _isItemBatch = true;
+            }
+            else
+            {
+                _isItemBatch = false;
+                _isItemSerial = false;
+            }
+        }
         else
-            _isItemShow = false;
+        {
+            _isItemBatch = false;
+            _isItemSerial = false;
+        }
     }
 }

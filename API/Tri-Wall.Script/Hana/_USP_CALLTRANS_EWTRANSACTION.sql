@@ -789,6 +789,11 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			 A."ItemCode" AS "ItemCode"
 			,A."ItemName" AS "ItemName"
 			,CAST(IFNULL(B."Price",0.00) AS float) AS "PriceUnit"
+			,CASE WHEN A."ManSerNum"='Y' THEN
+			 	'S'
+			 WHEN A."ManBtchNum"='Y' THEN
+			 	'B'
+			 ELSE 'N' END AS "ItemType"	
 		FROM TRIWALL_TRAINKEY."OITM" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS B ON B."ItemCode"=A."ItemCode" AND B."PriceList"=1;
 	ELSE IF :DTYPE='GennerateBatchOrSerial' THEN
