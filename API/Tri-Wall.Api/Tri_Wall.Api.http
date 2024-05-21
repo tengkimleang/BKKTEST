@@ -1,11 +1,12 @@
-@Tri_Wall.API_HostAddress = http://localhost:5253
+@API_HostAddress = http://localhost:5253
 
-GET {{Tri_Wall.API_HostAddress}}/todos/
+
+GET {{API_HostAddress}}/todos/
 Accept: application/json
 
 ###
 
-POST {{Tri_Wall.API_HostAddress}}/getQuery
+POST {{API_HostAddress}}/getQuery
 Content-Type: application/json
 
 {
@@ -20,7 +21,7 @@ Content-Type: application/json
 
 ###
 
-POST {{Tri_Wall.API_HostAddress}}/goodReceiptPo
+POST {{API_HostAddress}}/goodReceiptPo
 Content-Type: application/json
 
 {
@@ -46,7 +47,7 @@ Content-Type: application/json
 
 ###
 
-POST {{Tri_Wall.API_HostAddress}}/deliveryOrders
+POST {{API_HostAddress}}/deliveryOrders
 Content-Type: application/json
 
 {

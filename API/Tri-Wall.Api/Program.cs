@@ -8,16 +8,17 @@ builder.Services
     .AddInfrastructure(builder.Configuration);
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:7251");
-    });
-    //options.AddPolicy("AllowAll",
-    //builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    // options.AddPolicy("CorsPolicy", policy =>
+    // {
+    //     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5253");
+    // });
+    options.AddPolicy("AllowAll",
+    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();
-app.UseCors("CorsPolicy");
+// app.UseCors("CorsPolicy");
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
