@@ -32,6 +32,7 @@ Content-Type: application/json
     "DocDate": "2024-05-11",
     "TaxDate": "2024-05-11",
     "Remarks": "",
+    "isDraft": true,
     "Lines": [
         {
             "ItemCode": "RIIP4401390INP",
@@ -48,6 +49,32 @@ Content-Type: application/json
 ###
 
 POST {{API_HostAddress}}/deliveryOrders
+Content-Type: application/json
+
+{
+    "CardCode": "C-T008-00",
+    "ContactPersonCode": 0,
+    "NumAtCard": "PO-2401-00001",
+    "Series": 0,
+    "DocDate": "2024-05-11",
+    "TaxDate": "2024-05-11",
+    "Remarks": "",
+    "Lines": [
+        {
+            "ItemCode": "T008-1SB0002-00",
+            "Qty": 200,
+            "Price": 300,
+            "VatCode": "S00",
+            "WarehouseCode": "FG01",
+            "ManageItem": "N",
+            "LineStatus": 0
+        }
+    ]
+}
+
+###
+
+POST {{API_HostAddress}}/purchaseOrders
 Content-Type: application/json
 
 {

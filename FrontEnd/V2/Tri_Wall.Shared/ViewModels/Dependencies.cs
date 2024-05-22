@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Refit;
-using Tri_Wall.Shared.Pages.GoodReceptPo;
 using Tri_Wall.Shared.Services;
-using Tri_Wall.Shared.Shared;
 
 namespace Tri_Wall.Shared.ViewModels;
 

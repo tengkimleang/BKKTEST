@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Tri_Wall.Application.Common.Interfaces;
 
 namespace Tri_Wall.Application.GoodReceiptPo
 {
@@ -17,7 +18,6 @@ namespace Tri_Wall.Application.GoodReceiptPo
                     item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
                     item.RuleFor(i => i.Price).GreaterThan(0).WithMessage("Price should bigger than 0");
                 }));
-
         }
     }
 }

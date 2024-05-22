@@ -11,9 +11,11 @@ namespace Tri_Wall.Application.GoodReceiptPo;
 public class AddGoodReceiptPoCommandHandler : IRequestHandler<AddGoodReceiptPoCommand, ErrorOr<PostResponse>>
 {
     private readonly IUnitOfWork unitOfWork;
-    public AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork)
+    private readonly IDataProviderRepository queryProvider;
+    public AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork, IDataProviderRepository queryProvider)
     {
         this.unitOfWork = unitOfWork;
+        this.queryProvider = queryProvider;
     }
     public Task<ErrorOr<PostResponse>> Handle(AddGoodReceiptPoCommand request, CancellationToken cancellationToken)
     {

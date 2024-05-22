@@ -20,14 +20,17 @@ public class GoodReceiptPOForm
 public class GoodReceiptPOLine
 {
     [Required(ErrorMessage ="Item Code is Require")]
-    public string ItemCode { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Qty is Bigger than zero")]
+    public string? ItemCode { get; set; }
+    [Range(0, double.MaxValue,ErrorMessage = "Quantity must be greater than 0.")]
     public double Qty { get; set; }
+    [Required]
+    [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public double Price { get; set; }
-    public string VatCode { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Warehouse code is require")]
-    public string WarehouseCode { get; set; } = string.Empty;
-    public string ManageItem { get; set; } = string.Empty;
+    [Required(ErrorMessage = "VAT Code is required.")]
+    public string? VatCode { get; set; }
+    [Required(ErrorMessage = "Warehouse Code is required.")]
+    public string? WarehouseCode { get; set; }
+    public string? ManageItem { get; set; }
     public List<BatchReceiptPO>? Batches { get; set; }
     public List<SerialReceiptPO>? Serials { get; set; }
 }
@@ -37,9 +40,9 @@ public class BatchReceiptPO
     public string BatchCode { get; set; } = string.Empty;
     [Required(ErrorMessage ="Qty need to bigger than zero")]
     public double Qty { get; set; }
-    public DateTime ExpDate { get; set; }
-    public DateTime ManfectureDate { get; set; }
-    public DateTime AdmissionDate { get; set; }
+    public DateTime? ExpDate { get; set; }
+    public DateTime? ManfectureDate { get; set; }
+    public DateTime? AdmissionDate { get; set; }
     public string LotNo { get; set; }=string.Empty;
 }
 
@@ -49,6 +52,6 @@ public class SerialReceiptPO
     public string SerialCode { get; set; } = string.Empty;
     public double Qty { get; set; } = 1;
     public string MfrNo { get; set; } = string.Empty;
-    public DateTime MfrDate { get; set; }
-    public DateTime ExpDate { get; set; }
+    public DateTime? MfrDate { get; set; }
+    public DateTime? ExpDate { get; set; }
 }
