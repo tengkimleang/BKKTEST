@@ -14,7 +14,7 @@ namespace Tri_Wall.Shared.ViewModels;
 public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     [ObservableProperty]
-    GoodReceiptPOForm _goodReceiptPOForm=new();
+    GoodReceiptPoHeader _goodReceiptPOForm=new();
 
     [ObservableProperty]
     ObservableCollection<Series> _series = new();

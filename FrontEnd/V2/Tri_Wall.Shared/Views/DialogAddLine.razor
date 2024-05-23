@@ -1,5 +1,11 @@
 ﻿@rendermode InteractiveWebAssembly
 @implements IDialogContentComponent<Dictionary<string,object>>
+@inject IToastService ToastService
+<style>
+    .fluent-toast-provider {
+        z-index: 10050 !important; /* Adjust this value as needed */
+    }
+</style>
 @* Header *@
 <FluentDialogHeader ShowDismiss="true">
     <FluentStack VerticalAlignment="VerticalAlignment.Center">
@@ -19,12 +25,8 @@
         <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
             <FluentBodyContent Class="body-content" Style="overflow-x:auto;overflow-y:hidden">
                 <div class="content">
-                    <FluentGrid Spacing="2" OnBreakpointEnter="@OnBreakpointEnterHandler" AdaptiveRendering="true">
-                        <CascadingValue Value="@editContext">
-                            <FluentGridItem xs="12" sm="12" lg="12" xl="12">
-                                <FluentValidationSummary style="color:#BC2F32" />
-                            </FluentGridItem>
-                        </CascadingValue>    
+                    <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+
                         <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                             <FluentAutocomplete Required
                                                 TOption="Items"
@@ -38,13 +40,14 @@
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
                                                 @bind-SelectedOptions="@_selectedItem"
-                                                ValueChanged="OnValueChanged" />
+                                                ValueChanged="UpdateItemDetails" />
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentNumberField Label="Price" @bind-Value="@DataResult.Price" style="width: 100%;"></FluentNumberField>
+                            <FluentNumberField Label="Price" @bind-Value="@DataResult.Price" style="width: 100%;">
+                            </FluentNumberField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentNumberField TValue="double" @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
+                            <FluentNumberField @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
                             </FluentNumberField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -69,18 +72,19 @@
                                           SelectedOption="_warehouses?.FirstOrDefault()"
                                           @bind-Value="@DataResult.WarehouseCode" />
                         </FluentGridItem>
+
                     </FluentGrid>
                     @if (_isItemBatch)
                     {
-                        <FluentButton Style="margin-top:20px" OnClick="OnAddLineBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
-                        <FluentDataGrid TGridItem=@BatchReceiptPO ResizableColumns="true"
+                        <FluentDataGrid TGridItem=@BatchReceiptPo ResizableColumns="true"
                                         GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
                                         Items="batchReceiptPOs.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> OnDeleteLineBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
                             </TemplateColumn>
@@ -107,15 +111,15 @@
                     }
                     @if (_isItemSerial)
                     {
-                        <FluentButton Style="margin-top:20px" OnClick="OnAddLineBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
-                        <FluentDataGrid TGridItem=@SerialReceiptPO ResizableColumns="true"
+                        <FluentDataGrid TGridItem=@SerialReceiptPo ResizableColumns="true"
                                         GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
                                         Items="serialReceiptPO.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> OnDeleteLineBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
                             </TemplateColumn>
@@ -123,7 +127,7 @@
                                 <FluentTextField @bind-Value=@context.SerialCode Placeholder="Batch Code" />
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
-                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty" TValue="double" >
+                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty" TValue="double">
                                     <FluentValidationMessage For="@(() => DataResult.Qty)" />
                                 </FluentNumberField>
                             </TemplateColumn>
@@ -139,118 +143,8 @@
                             </TemplateColumn>
                         </FluentDataGrid>
                     }
-
                 </div>
             </FluentBodyContent>
         </FluentStack>
     </FluentLayout>
 </FluentDialogBody>
-@code {
-    [ObsoleteAttribute]
-    protected override void OnInitialized()
-    {
-        editContext = new EditContext(DataResult);
-        editContext.EnableDataAnnotationsValidation();
-    }
-    [CascadingParameter]
-    public FluentDialog Dialog { get; set; } = default!;
-    [Parameter]
-    public Dictionary<string, object> Content { get; set; } = default!;
-    private EditContext? editContext;
-    private GoodReceiptPOLine DataResult { get; set; } = new();
-    private List<BatchReceiptPO> batchReceiptPOs = new();
-    private List<SerialReceiptPO> serialReceiptPO = new List<SerialReceiptPO>();
-    private bool _isItemBatch;
-    private bool _isItemSerial;
-    private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
-    private IEnumerable<Items> _items { get => Content["item"] as IEnumerable<Items> ?? new List<Items>(); }
-    private IEnumerable<VatGroups>? _vatGroups { get => Content["taxPurchase"] as IEnumerable<VatGroups>; }
-    private IEnumerable<Warehouses>? _warehouses { get => Content["warehouse"] as IEnumerable<Warehouses>; }
-    
-    
-    private void OnSearch(OptionsSearchEventArgs<Items> e)
-    {
-        e.Items = _items?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                            i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
-                            .OrderBy(i => i.ItemCode);
-    }
-    string? dataGrid = "width: 100%;";
-    private async Task SaveAsync()
-    {
-        var result = editContext!.Validate();
-        if(result)
-            await Dialog.CloseAsync(DataResult);
-        else StateHasChanged();
-    }
-    void OnValueChanged(string newValue)
-    {
-        if (_selectedItem != null && _selectedItem.Count() > 0)
-        {
-            var firstItem = _selectedItem.FirstOrDefault();
-            DataResult.Price = double.Parse(firstItem?.PriceUnit ?? "0");
-            DataResult.ItemCode = firstItem?.ItemCode;
-            if (firstItem != null && firstItem.ItemType == "S")
-            {
-                batchReceiptPOs = new();
-                _isItemSerial = true;
-                _isItemBatch = false;
-            }
-            else if (firstItem != null && firstItem.ItemType == "B")
-            {
-                batchReceiptPOs = new();
-                _isItemSerial = false;
-                _isItemBatch = true;
-            }
-            else
-            {
-                _isItemBatch = false;
-                _isItemSerial = false;
-            }
-        }
-        else
-        {
-            _isItemBatch = false;
-            _isItemSerial = false;
-        }
-    }
-    void OnAddLineBatchOrSerial()
-    {
-        if (_isItemBatch)
-        {
-            batchReceiptPOs.Add(new BatchReceiptPO
-                {
-                    BatchCode = "",
-                });
-        }
-        else if (_isItemSerial)
-        {
-            if (serialReceiptPO.Count() < DataResult.Qty)
-                serialReceiptPO.Add(new SerialReceiptPO
-                    {
-                        SerialCode = "",
-                    });
-        }
-    }
-    void OnDeleteLineBatchOrSerial(int index)
-    {
-        if (_isItemBatch)
-        {
-            batchReceiptPOs.RemoveAt(index);
-        }
-        else if (_isItemSerial)
-        {
-            serialReceiptPO.RemoveAt(index);
-        }
-    }
-    void OnBreakpointEnterHandler(GridItemSize size)
-    {
-        if (size == GridItemSize.Xs)
-        {
-            dataGrid = "width: 1200px;height:205px";
-        }
-        else
-        {
-            dataGrid = "width: 100%;height:405px";
-        }
-    }
-}

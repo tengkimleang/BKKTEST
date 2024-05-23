@@ -1,8 +1,7 @@
 ﻿@page "/goodreceptpoform"
-@inject IDialogService dialogService
 @inherits MvvmComponentBase<GoodReceptPoViewModel>
 @rendermode InteractiveWebAssembly
-<PageTitle>Counter</PageTitle>
+<PageTitle>Good Recept PO</PageTitle>
 
 <FluentLayout Style="margin-top: 0px;">
 
@@ -28,7 +27,7 @@
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <FluentBodyContent Class="body-content" Style="height:90% !important;">
             <div class="content">
-                <FluentGrid Spacing="2" OnBreakpointEnter="@OnBreakpointEnterHandler" AdaptiveRendering="true">
+                <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentSelect Width="100%"
                                       TOption="Series"
@@ -78,7 +77,7 @@
                         <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
-                        <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="OpenAsync">
+                        <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="OpenDialogAsync">
                             Add Line
                         </FluentButton>
                     </FluentGridItem>
