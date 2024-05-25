@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Net;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.GoodReceiptPo;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -24,4 +25,6 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses()
         => apiService.GetWarehouses(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetWarehouseMasterData"));
+    public Task<PostResponse> PostGoodReceptPo(GoodReceiptPoHeader goodReceiptPoHeader)
+        => apiService.PostGoodReceptPo(goodReceiptPoHeader);
 }

@@ -1,6 +1,7 @@
 ﻿using Refit;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.GoodReceiptPo;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -24,4 +25,7 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses(
         [Body] GetRequest getRequest);
+    [Post("/goodReceiptPo")]
+    public Task<PostResponse> PostGoodReceptPo(
+        [Body] GoodReceiptPoHeader request);
 }

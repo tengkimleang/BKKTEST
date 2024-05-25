@@ -10,7 +10,9 @@ namespace Tri_Wall.Shared.Models.GoodReceiptPo;
 public class GoodReceiptPoLine
 {
     public string ItemCode { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
     public double? Qty { get; set; }
+    public int LineNum { get; set; }
     public double? Price { get; set; }
     public string? VatCode { get; set; }
     public string? WarehouseCode { get; set; }
@@ -32,7 +34,7 @@ public class BatchReceiptPo
 public class SerialReceiptPo
 {
     public string SerialCode { get; set; } = string.Empty;
-    public double Qty { get; set; } = 1;
+    public int Qty { get; set; } = 1;
     public string MfrNo { get; set; } = string.Empty;
     public DateTime? MfrDate { get; set; }
     public DateTime? ExpDate { get; set; }

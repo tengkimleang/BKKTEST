@@ -19,7 +19,7 @@ public partial class DialogAddLine
 
     private GoodReceiptPoLine DataResult { get; set; } = new();
     private List<BatchReceiptPo> batchReceiptPOs = new();
-    private List<SerialReceiptPo> serialReceiptPO = new List<SerialReceiptPo>();
+    private List<SerialReceiptPo> serialReceiptPO = new();
     private bool _isItemBatch;
     private bool _isItemSerial;
     private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
@@ -27,6 +27,18 @@ public partial class DialogAddLine
     private IEnumerable<VatGroups>? _vatGroups => Content["taxPurchase"] as IEnumerable<VatGroups>;
     private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
     string? dataGrid = "width: 100%;";
+
+    override protected void OnInitialized()
+    {
+        if (Content.ContainsKey("line"))
+        {
+            DataResult = Content["line"] as GoodReceiptPoLine ?? new GoodReceiptPoLine();
+            batchReceiptPOs = DataResult.Batches ?? new List<BatchReceiptPo>();
+            serialReceiptPO = DataResult.Serials ?? new List<SerialReceiptPo>();
+            _selectedItem = _items.Where(i => i.ItemCode == DataResult.ItemCode);
+            UpdateItemDetails(DataResult.ItemCode);
+        }
+    }
 
     private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
@@ -44,11 +56,15 @@ public partial class DialogAddLine
         {
             foreach (var error in result.Errors)
             {
-                ToastService.ShowError(error.ErrorMessage);
+                ToastService!.ShowError(error.ErrorMessage);
             }
             return;
         }
-        await Dialog.CloseAsync(DataResult);
+        await Dialog.CloseAsync(new Dictionary<string, object>
+        {
+            { "data", DataResult },
+            { "isUpdate", Content.ContainsKey("line") }
+        });
     }
 
     private void UpdateItemDetails(string newValue)
@@ -56,6 +72,7 @@ public partial class DialogAddLine
         var firstItem = _selectedItem.FirstOrDefault();
         DataResult.Price = double.Parse(firstItem?.PriceUnit ?? "0");
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
+        DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.ManageItem = firstItem?.ItemType;
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";

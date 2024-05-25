@@ -1,13 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using System.Collections;
+using Microsoft.FluentUI.AspNetCore.Components;
 using System.Collections.ObjectModel;
-using System.Runtime.ConstrainedExecution;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Services;
-using Tri_Wall.Shared.Shared;
 
 namespace Tri_Wall.Shared.ViewModels;
 
@@ -48,5 +47,11 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
                     (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
                     (await apiService.GetWarehouses()).Data ?? new());
+    }
+    [RelayCommand]
+    async Task<PostResponse> Submit()
+    {
+        var a=await apiService.PostGoodReceptPo(GoodReceiptPOForm);
+        return a;
     }
 }

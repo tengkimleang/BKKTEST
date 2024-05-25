@@ -7,7 +7,7 @@
 
     <FluentHeader Style="background-color: transparent;padding: 0px;z-index: 0;">
         <FluentBreadcrumb>
-            <FluentBreadcrumbItem>
+            <FluentBreadcrumbItem>          
                 Good @stringDisplay PO
             </FluentBreadcrumbItem>
         </FluentBreadcrumb>
@@ -16,7 +16,7 @@
             Search
         </FluentButton>
         &nbsp;&nbsp;
-        <FluentButton IconEnd="@(new Icons.Filled.Size24.Save())">
+        <FluentButton OnClick="OnSaveTransaction" IconEnd="@(new Icons.Filled.Size24.Save())">
             Save
         </FluentButton>
         &nbsp;&nbsp;
@@ -36,16 +36,16 @@
                                       OptionText="@(i=> i.SeriesName)"
                                       OptionValue="@(i=>i.Code)"
                                       SelectedOption="@ViewModel.Series.FirstOrDefault()"
-                                      @bind-Value="series" />
+                                      @bind-Value="@ViewModel.GoodReceiptPOForm.Series" />
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentTextField Value="@series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                        <FluentTextField Value="@ViewModel.GoodReceiptPOForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker Label="DocDate" style="width: 100%;" />
+                        <FluentDatePicker @bind-Value="@ViewModel.GoodReceiptPOForm.DocDate" Label="DocDate" style="width: 100%;" />
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker Label="TaxDate" style="width: 100%;" />
+                        <FluentDatePicker @bind-Value="@ViewModel.GoodReceiptPOForm.TaxDate" Label="TaxDate" style="width: 100%;" />
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                         <FluentAutocomplete Required 
@@ -77,30 +77,33 @@
                         <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
-                        <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="OpenDialogAsync">
+                        <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="async (e)=> await OpenDialogAsync(new()).ConfigureAwait(false)">
                             Add Line
                         </FluentButton>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <div class="grid" style="width: 100%; overflow:auto;">
-                            <FluentDataGrid TGridItem="string" ResizableColumns="true"
-                                            GridTemplateColumns="0.5fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr" Style=@dataGrid>
-                                <PropertyColumn Title="No." Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="ItemCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="ItemName" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Qty" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Price" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="VatCode" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Warehouse" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
-                                <PropertyColumn Title="Manage Item" Property="@(c => c)" Sortable="true" Align="Align.Start" Tooltip="true"
-                                                TooltipText="@(c => "That is x GOLD!!")" />
+                            <FluentDataGrid TGridItem=@GoodReceiptPoLine 
+                                            ResizableColumns="true"
+                                            GridTemplateColumns="0.25fr 1fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
+                                            Style=@dataGrid
+                                            Items="ViewModel.GoodReceiptPOForm.Lines?.AsQueryable()">
+                                <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
+                                <TemplateColumn Tooltip="true" Title="Action">
+                                    <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLine(ViewModel.GoodReceiptPOForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                        Delete
+                                    </FluentButton>
+                                    <FluentButton Style="color:#036ac4" OnClick="(e)=> OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Delete())">
+                                        Edit
+                                    </FluentButton>
+                                </TemplateColumn>
+                                <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
+                                <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
+                                <PropertyColumn Title="Qty" Property="@(c => c.Qty)"  Tooltip="true" />
+                                <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true" />
+                                <PropertyColumn Title="VatCode" Property="@(c => c.VatCode)" Tooltip="true" />
+                                <PropertyColumn Title="Warehouse" Property="@(c => c.WarehouseCode)" Tooltip="true" />
+                                <PropertyColumn Title="Manage Item" Property="@(c => c.ManageItem)" Tooltip="true" />
                             </FluentDataGrid>
                         </div>
                     </FluentGridItem>

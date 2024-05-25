@@ -1,6 +1,5 @@
 ﻿@rendermode InteractiveWebAssembly
 @implements IDialogContentComponent<Dictionary<string,object>>
-@inject IToastService ToastService
 <style>
     .fluent-toast-provider {
         z-index: 10050 !important; /* Adjust this value as needed */
@@ -127,8 +126,7 @@
                                 <FluentTextField @bind-Value=@context.SerialCode Placeholder="Batch Code" />
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
-                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty" TValue="double">
-                                    <FluentValidationMessage For="@(() => DataResult.Qty)" />
+                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
                                 </FluentNumberField>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Manfecture Code">

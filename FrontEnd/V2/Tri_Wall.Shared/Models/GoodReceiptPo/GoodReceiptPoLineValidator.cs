@@ -13,6 +13,9 @@ public class GoodReceiptPoLineValidator : AbstractValidator<GoodReceiptPoLine>
             .WithMessage("Serial is Require")
             .Must((x, serials) => x.ManageItem == "S" ? serials?.Sum(b => b.Qty) == x.Qty : true)
             .WithMessage("Serial is not bigger than Qty")
+            .Must((x, serials) => x.ManageItem == "S" ? serials!.GroupBy(s => s.SerialCode).All(g => g.Count() == 1) : true)
+            .WithMessage("Duplicate serial numbers are not allowed.")
+            .When(x => x.ManageItem == "S" && x.Serials != null)
             .ForEach(rule => rule.ChildRules(item =>
             {
                 item.RuleFor(i => i.SerialCode).NotEmpty().WithMessage("SerialCode must not be empty");
