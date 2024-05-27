@@ -91,6 +91,14 @@ public partial class GoodReceptPoForm
             }
             return;
         }
-        await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+        try
+        {
+            await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            string errorMessage = ex.InnerException?.Message ?? ex.Message;
+            ToastService!.ShowError(errorMessage);
+        }
     }
 }

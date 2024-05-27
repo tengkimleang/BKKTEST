@@ -8,7 +8,7 @@ namespace Tri_Wall.Application.GoodReceiptPo
         public AddGoodReceiptPoCommandValidator()
         {
             RuleFor(x => x.VendorCode).NotEmpty().WithMessage("VendorCode is required");
-            RuleFor(x => x.Series).Equal(0).WithMessage("Series is required");
+            RuleFor(x => x.Series).GreaterThan(0).WithMessage("Series is required");
             RuleFor(x => x.DocDate).NotNull().WithMessage("DocDate is required");
             RuleFor(x => x.TaxDate).NotNull().WithMessage("TaxDate   is required");
             RuleFor(x => x.Lines).NotNull().WithMessage("Item Line is required")

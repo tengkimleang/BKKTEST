@@ -2834,7 +2834,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			 "Code" AS "Code"
 			,CAST("Rate" AS double) AS "Rate"
 		FROM TRIWALL_TRAINKEY."OVTG"
-		WHERE "Category"='O' AND "Inactive"='N';
+		WHERE "Category"='I' AND "Inactive"='N';
 	END IF;
 	END IF;
 	END IF;

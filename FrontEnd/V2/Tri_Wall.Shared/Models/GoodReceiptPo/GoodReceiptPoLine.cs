@@ -25,9 +25,9 @@ public class BatchReceiptPo
 {
     public string BatchCode { get; set; } = string.Empty;
     public double Qty { get; set; }
-    public DateTime? ExpDate { get; set; }
-    public DateTime? ManfectureDate { get; set; }
-    public DateTime? AdmissionDate { get; set; }
+    public DateTime? ExpDate { get; set; } = DateTime.Today;
+    public DateTime? ManfectureDate { get; set; } = DateTime.Today;
+    public DateTime? AdmissionDate { get; set; } = DateTime.Today;
     public string LotNo { get; set; } = string.Empty;
 }
 
@@ -36,6 +36,6 @@ public class SerialReceiptPo
     public string SerialCode { get; set; } = string.Empty;
     public int Qty { get; set; } = 1;
     public string MfrNo { get; set; } = string.Empty;
-    public DateTime? MfrDate { get; set; }
-    public DateTime? ExpDate { get; set; }
+    public DateTime? MfrDate { get; set; } = DateTime.Today;
+    public DateTime? ExpDate { get; set; } = DateTime.Today;
 }
