@@ -25,6 +25,12 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses(
         [Body] GetRequest getRequest);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(
+        [Body] GetRequest getRequest);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GoodReceiptPoHeader>>> GetListGoodReceiptPo(
+        [Body] GetRequest getRequest);
     [Post("/goodReceiptPo")]
     public Task<PostResponse> PostGoodReceptPo(
         [Body] GoodReceiptPoHeader request);

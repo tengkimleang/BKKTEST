@@ -31,14 +31,14 @@ public record GoodReceiptPoLine(
 public record Batch(
     string BatchCode,
     double Qty,
-    DateTime ExpDate,
-    DateTime ManfectureDate,
-    DateTime AdmissionDate,
+    DateTime? ExpDate,
+    DateTime? ManfectureDate,
+    DateTime? AdmissionDate,
     string LotNo);
 
 public record Serial(
     string SerialCode,
     double Qty,
     string MfrNo,
-    DateTime MfrDate,
-    DateTime ExpDate);
+    DateTime? MfrDate,
+    DateTime? ExpDate);

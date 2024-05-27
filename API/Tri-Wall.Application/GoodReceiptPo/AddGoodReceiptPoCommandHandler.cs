@@ -3,68 +3,73 @@ using MediatR;
 using SAPbobsCOM;
 using Throw;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.GoodReceiptPo;
 
-public class AddGoodReceiptPoCommandHandler : IRequestHandler<AddGoodReceiptPoCommand, ErrorOr<PostResponse>>
+public class AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork, IDataProviderRepository queryProvider)
+    : IRequestHandler<AddGoodReceiptPoCommand, ErrorOr<PostResponse>>
 {
-    private readonly IUnitOfWork unitOfWork;
-    private readonly IDataProviderRepository queryProvider;
-    public AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork, IDataProviderRepository queryProvider)
-    {
-        this.unitOfWork = unitOfWork;
-        this.queryProvider = queryProvider;
-    }
+    private readonly IDataProviderRepository queryProvider = queryProvider;
+
     public Task<ErrorOr<PostResponse>> Handle(AddGoodReceiptPoCommand request, CancellationToken cancellationToken)
     {
-        Company oCompany = unitOfWork.Connect();
+        var oCompany = unitOfWork.Connect();
         oCompany.ThrowIfNull("Company is null");
         unitOfWork.BeginTransaction(oCompany);
-        Documents oGoodReceiptPO;
-        oGoodReceiptPO = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseDeliveryNotes);
-        if (!request.IsDraft) oGoodReceiptPO.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
-        oGoodReceiptPO.CardCode = request.VendorCode;
-        oGoodReceiptPO.ContactPersonCode = request.ContactPersonCode;
-        oGoodReceiptPO.Series = request.Series;
-        oGoodReceiptPO.DocDate = request.DocDate;
-        oGoodReceiptPO.DocDueDate = request.TaxDate;
-        oGoodReceiptPO.Comments = request.Remarks;
-        oGoodReceiptPO.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
+        var oGoodReceiptPo = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseDeliveryNotes);
+        if (!request.IsDraft) oGoodReceiptPo.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
+        oGoodReceiptPo.CardCode = request.VendorCode;
+        oGoodReceiptPo.ContactPersonCode = request.ContactPersonCode;
+        oGoodReceiptPo.Series = request.Series;
+        oGoodReceiptPo.DocDate = request.DocDate;
+        oGoodReceiptPo.DocDueDate = request.TaxDate;
+        oGoodReceiptPo.Comments = request.Remarks;
+        oGoodReceiptPo.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
         foreach (var l in request.Lines!)
         {
-            oGoodReceiptPO.Lines.ItemCode = l.ItemCode;
-            oGoodReceiptPO.Lines.Quantity = l.Qty;
-            oGoodReceiptPO.Lines.UnitPrice = l.Price;
-            oGoodReceiptPO.Lines.VatGroup = l.VatCode;
-            oGoodReceiptPO.Lines.WarehouseCode = l.WarehouseCode;
+            oGoodReceiptPo.Lines.ItemCode = l.ItemCode;
+            oGoodReceiptPo.Lines.Quantity = l.Qty;
+            oGoodReceiptPo.Lines.UnitPrice = l.Price;
+            oGoodReceiptPo.Lines.VatGroup = l.VatCode;
+            oGoodReceiptPo.Lines.WarehouseCode = l.WarehouseCode;
 
-            if (l.ManageItem == "S")
-                foreach (var serial in l.Serials)
+            switch (l)
+            {
+                case {ManageItem:"S",Serials:not null}:
                 {
-                    oGoodReceiptPO.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
-                    oGoodReceiptPO.Lines.SerialNumbers.Quantity = 1;
-                    oGoodReceiptPO.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrNo == null ? "" : serial.MfrNo;
-                    oGoodReceiptPO.Lines.SerialNumbers.ManufactureDate = Convert.ToDateTime(serial.MfrDate);
-                    oGoodReceiptPO.Lines.SerialNumbers.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
-                    oGoodReceiptPO.Lines.SerialNumbers.Add();
-                }
-            else if (l.ManageItem == "B")
-                foreach (var batch in l.Batches)
-                {
-                    oGoodReceiptPO.Lines.BatchNumbers.AddmisionDate = DateTime.Now;
-                    oGoodReceiptPO.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
-                    oGoodReceiptPO.Lines.BatchNumbers.Quantity = batch.Qty;
-                    oGoodReceiptPO.Lines.BatchNumbers.ExpiryDate = batch.ExpDate;
-                    oGoodReceiptPO.Lines.BatchNumbers.ManufacturingDate = Convert.ToDateTime(batch.ManfectureDate);
-                    oGoodReceiptPO.Lines.BatchNumbers.InternalSerialNumber = batch.LotNo;
-                    oGoodReceiptPO.Lines.BatchNumbers.Add();
-                }
+                    foreach (var serial in l.Serials)
+                    {
+                        oGoodReceiptPo.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
+                        oGoodReceiptPo.Lines.SerialNumbers.Quantity = serial.Qty;
+                        oGoodReceiptPo.Lines.SerialNumbers.ManufacturerSerialNumber =serial.MfrNo;
+                        oGoodReceiptPo.Lines.SerialNumbers.ManufactureDate = Convert.ToDateTime(serial.MfrDate);
+                        oGoodReceiptPo.Lines.SerialNumbers.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
+                        oGoodReceiptPo.Lines.SerialNumbers.Add();
+                    }
 
-            oGoodReceiptPO.Lines.Add();
+                    break;
+                }
+                case { ManageItem: "B", Batches: not null }:
+                {
+                    foreach (var batch in l.Batches)
+                    {
+                        oGoodReceiptPo.Lines.BatchNumbers.AddmisionDate = DateTime.Now;
+                        oGoodReceiptPo.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
+                        oGoodReceiptPo.Lines.BatchNumbers.Quantity = batch.Qty;
+                        oGoodReceiptPo.Lines.BatchNumbers.ExpiryDate = (DateTime)batch.ExpDate!;
+                        oGoodReceiptPo.Lines.BatchNumbers.ManufacturingDate = Convert.ToDateTime(batch.ManfectureDate);
+                        oGoodReceiptPo.Lines.BatchNumbers.InternalSerialNumber = batch.LotNo;
+                        oGoodReceiptPo.Lines.BatchNumbers.Add();
+                    }
+
+                    break;
+                }
+            }
+
+            oGoodReceiptPo.Lines.Add();
         }
-        if (oGoodReceiptPO.Add() != 0)
+        if (oGoodReceiptPo.Add() != 0)
         {
             unitOfWork.Rollback(oCompany);
             return Task.FromResult(new PostResponse(

@@ -1,21 +1,25 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
-using Tri_Wall.Shared.Views;
+using Tri_Wall.Shared.Views.GoodReceptPo;
 
-namespace Tri_Wall.Shared.Pages.GoodReceptPo;
+namespace Tri_Wall.Shared.Pages;
 
-public partial class GoodReceptPoForm
+public partial class DeliveryOrderForm
 {
     [Inject]
     public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
-    private string stringDisplay = "Recept";
+    
+    private string stringDisplay = "Delivery Order";
+    
     string? dataGrid = "width: 100%;height:405px";
+    
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
+    bool visible = false;
+    
     async Task OpenDialogAsync(GoodReceiptPoLine goodReceiptPoLine)
     {
         var dictionary = new Dictionary<string, object>
@@ -38,18 +42,18 @@ public partial class GoodReceptPoForm
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if(ViewModel.GoodReceiptPOForm.Lines==null) ViewModel.GoodReceiptPOForm.Lines = new List<GoodReceiptPoLine>();
-            if(data["data"] is GoodReceiptPoLine _goodReceiptPoLine)
+            if(ViewModel.GoodReceiptPoForm.Lines==null) ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
+            if(data["data"] is GoodReceiptPoLine receiptPoLine)
             {
-                if (_goodReceiptPoLine.LineNum == 0)
+                if (receiptPoLine.LineNum == 0)
                 {
-                    _goodReceiptPoLine.LineNum = ViewModel.GoodReceiptPOForm.Lines.Count + 1;
-                    ViewModel.GoodReceiptPOForm.Lines.Add(_goodReceiptPoLine);
+                    receiptPoLine.LineNum = ViewModel.GoodReceiptPoForm.Lines.Count + 1;
+                    ViewModel.GoodReceiptPoForm.Lines.Add(receiptPoLine);
                 }
                 else
                 {
-                    var index = ViewModel.GoodReceiptPOForm.Lines.FindIndex(i => i.LineNum == _goodReceiptPoLine.LineNum);
-                    ViewModel.GoodReceiptPOForm.Lines[index] = _goodReceiptPoLine;
+                    var index = ViewModel.GoodReceiptPoForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
+                    ViewModel.GoodReceiptPoForm.Lines[index] = receiptPoLine;
                 }
             }
         }
@@ -66,23 +70,24 @@ public partial class GoodReceptPoForm
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
+            stringDisplay = "DO";
             dataGrid = "width: 700px;height:205px";
         }
         else
         {
-            stringDisplay = "Recept";
+            stringDisplay = "Delivery Order";
             dataGrid = "width: 100%;height:405px";
         }
     }
     private void DeleteLine(int index)
     {
-        ViewModel.GoodReceiptPOForm.Lines!.RemoveAt(index);
+        ViewModel.GoodReceiptPoForm.Lines!.RemoveAt(index);
     }
     async Task OnSaveTransaction()
     {
-        ViewModel.GoodReceiptPOForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        var result = await Validator!.ValidateAsync(ViewModel.GoodReceiptPOForm).ConfigureAwait(false);
+        ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+        ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
+        var result = await Validator!.ValidateAsync(ViewModel.GoodReceiptPoForm).ConfigureAwait(false);
         if (!result.IsValid)
         {
             foreach (var error in result.Errors)
@@ -93,12 +98,23 @@ public partial class GoodReceptPoForm
         }
         try
         {
+            visible = true;
+            
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+            
+            if(ViewModel.PostResponses.ErrorCode=="")
+                ToastService.ShowSuccess("Success");
+            else
+                ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+            visible = false;
         }
         catch (Exception ex)
         {
             string errorMessage = ex.InnerException?.Message ?? ex.Message;
             ToastService!.ShowError(errorMessage);
+            visible = false;
         }
     }
+
+    protected void OnCloseOverlay() => visible = true;
 }

@@ -25,6 +25,12 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses()
         => apiService.GetWarehouses(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetWarehouseMasterData"));
+    public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(string type)
+        => apiService.GetTotalItemCount(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "TotalItemCount",type));
+    public Task<ResponseData<ObservableCollection<GoodReceiptPoHeader>>> GetListGoodReceiptPo(string perPage)
+        => apiService.GetListGoodReceiptPo(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GoodReceiptPoHeader",perPage));
     public Task<PostResponse> PostGoodReceptPo(GoodReceiptPoHeader goodReceiptPoHeader)
         => apiService.PostGoodReceptPo(goodReceiptPoHeader);
 }

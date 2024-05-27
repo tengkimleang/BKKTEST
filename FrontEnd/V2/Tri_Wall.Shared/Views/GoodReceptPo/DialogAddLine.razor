@@ -1,5 +1,5 @@
 ﻿@rendermode InteractiveWebAssembly
-@implements IDialogContentComponent<Dictionary<string,object>>
+@implements IDialogContentComponent<Dictionary<string, object>>
 <style>
     .fluent-toast-provider {
         z-index: 10050 !important; /* Adjust this value as needed */
@@ -8,7 +8,7 @@
 @* Header *@
 <FluentDialogHeader ShowDismiss="true">
     <FluentStack VerticalAlignment="VerticalAlignment.Center">
-        <FluentIcon Value="@(new Icons.Regular.Size24.AddCircle())" />
+        <FluentIcon Value="@(new Icons.Regular.Size24.AddCircle())"/>
         <FluentLabel Typo="Typography.PaneHeader">
             @Dialog.Instance.Parameters.Title
         </FluentLabel>
@@ -22,7 +22,7 @@
 <FluentDialogBody Style="overflow-y:scroll;">
     <FluentLayout Style="margin-top: 0px;">
         <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
-            <FluentBodyContent Class="body-content" Style="overflow-x:auto;overflow-y:hidden">
+            <FluentBodyContent Class="body-content" Style="overflow: auto">
                 <div class="content">
                     <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 
@@ -39,7 +39,7 @@
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
                                                 @bind-SelectedOptions="@_selectedItem"
-                                                ValueChanged="UpdateItemDetails" />
+                                                ValueChanged="UpdateItemDetails"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentNumberField Label="Price" @bind-Value="@DataResult.Price" style="width: 100%;">
@@ -55,10 +55,10 @@
                                           Required
                                           Label="Vat Code"
                                           Items="_vatGroups"
-                                          OptionText="@(i=> i.Code)"
-                                          OptionValue="@(i=>i.Code)"
+                                          OptionText="@(i => i.Code)"
+                                          OptionValue="@(i => i.Code)"
                                           SelectedOption="_vatGroups?.FirstOrDefault()"
-                                          @bind-Value="@DataResult.VatCode" />
+                                          @bind-Value="@DataResult.VatCode"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect Width="100%"
@@ -66,10 +66,10 @@
                                           Required
                                           Label="Warehouse"
                                           Items="_warehouses"
-                                          OptionText="@(i=> i.Name)"
-                                          OptionValue="@(i=>i.Code)"
+                                          OptionText="@(i => i.Name)"
+                                          OptionValue="@(i => i.Code)"
                                           SelectedOption="_warehouses?.FirstOrDefault()"
-                                          @bind-Value="@DataResult.WarehouseCode" />
+                                          @bind-Value="@DataResult.WarehouseCode"/>
                         </FluentGridItem>
 
                     </FluentGrid>
@@ -83,18 +83,18 @@
                                         Items="batchReceiptPOs.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Batch Code">
-                                <FluentTextField @bind-Value=@context.BatchCode Placeholder="Batch Code" />
+                                <FluentTextField @bind-Value=@context.BatchCode Placeholder="Batch Code"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Lot Code">
                                 <FluentTextField @bind-Value=@context.LotNo Placeholder="LotNo"></FluentTextField>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
-                                <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double" />
+                                <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Expire Date">
                                 <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date">
@@ -118,12 +118,12 @@
                                         Items="serialReceiptPO.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Serial Code">
-                                <FluentTextField @bind-Value=@context.SerialCode Placeholder="Batch Code" />
+                                <FluentTextField @bind-Value=@context.SerialCode Placeholder="Batch Code"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
                                 <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">

@@ -5,6 +5,7 @@ namespace Tri_Wall.Shared.Models.GoodReceiptPo;
 
 public class GoodReceiptPoHeader
 {
+    public string DocumentNumber { get; set; } = string.Empty;
     public string VendorCode { get; set; } = string.Empty;
     public string ContactPersonCode { get; set; } = "0";
     public string VendorNo { get; set; } = string.Empty;

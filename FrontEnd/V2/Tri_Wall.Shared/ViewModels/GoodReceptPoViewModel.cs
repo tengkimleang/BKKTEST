@@ -10,7 +10,7 @@ namespace Tri_Wall.Shared.ViewModels;
 public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     [ObservableProperty]
-    GoodReceiptPoHeader _goodReceiptPOForm=new();
+    GoodReceiptPoHeader _goodReceiptPoForm=new();
 
     [ObservableProperty]
     ObservableCollection<Series> _series = new();
@@ -30,6 +30,15 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [ObservableProperty]
     ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
+    [ObservableProperty]
+    PostResponse _postResponses = new();
+    
+    [ObservableProperty]
+    ObservableCollection<TotalItemCount> _totalItemCount=new();
+    
+    [ObservableProperty]
+    ObservableCollection<GoodReceiptPoHeader> _listGoodReceiptPoHeaders = new();
+    
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
@@ -44,11 +53,18 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
                     (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
                     (await apiService.GetWarehouses()).Data ?? new());
+        TotalItemCount = (await apiService.GetTotalItemCount("GoodReceiptPo")).Data ?? new();
     }
     [RelayCommand]
     async Task Submit()
     {
-        GoodReceiptPOForm.ContactPersonCode = "0";
-        var a = await apiService.PostGoodReceptPo(GoodReceiptPOForm);
+        GoodReceiptPoForm.ContactPersonCode = "0";
+        PostResponses = await apiService.PostGoodReceptPo(GoodReceiptPoForm);
+    }
+    
+    [RelayCommand]
+    async Task OnGetGoodReceiptPo(string perPage)
+    {
+        ListGoodReceiptPoHeaders = (await apiService.GetListGoodReceiptPo(perPage)).Data ?? new();
     }
 }

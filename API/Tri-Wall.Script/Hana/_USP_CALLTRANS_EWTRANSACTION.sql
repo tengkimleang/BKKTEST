@@ -2834,7 +2834,22 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			 "Code" AS "Code"
 			,CAST("Rate" AS double) AS "Rate"
 		FROM TRIWALL_TRAINKEY."OVTG"
-		WHERE "Category"='I' AND "Inactive"='N';
+		WHERE "Category"='O' AND "Inactive"='N';
+	ELSE IF :DTYPE='TotalItemCount' THEN
+		IF :par1='GoodReceiptPo' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."OPDN";
+		END IF;
+	ELSE IF :DTYPE='GoodReceiptPoHeader' THEN
+		SELECT 
+			 "DocNum" AS "DocumentNumber"
+			,"DocDate" AS "DocDate"
+			,"CardCode" AS "VendorCode"
+			,"Comments" AS "Remarks"
+			,"TaxDate" AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."OPDN" 
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :par1;
+	END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;
