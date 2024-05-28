@@ -9,4 +9,3 @@ This is a simple application to test the use of the Tri-Wall API.
 4. Run the command `dotnet run` to start the application
 
 ## Author
-- [Lucas M. Maciel](
