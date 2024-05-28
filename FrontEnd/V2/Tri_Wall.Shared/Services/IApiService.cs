@@ -29,7 +29,7 @@ public interface IApiService
     public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(
         [Body] GetRequest getRequest);
     [Post("/getQuery")]
-    public Task<ResponseData<ObservableCollection<GoodReceiptPoHeader>>> GetListGoodReceiptPo(
+    public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(
         [Body] GetRequest getRequest);
     [Post("/goodReceiptPo")]
     public Task<PostResponse> PostGoodReceptPo(

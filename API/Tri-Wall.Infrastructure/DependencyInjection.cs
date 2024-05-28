@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tri_Wall.Application.Common.Interfaces;
 using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;

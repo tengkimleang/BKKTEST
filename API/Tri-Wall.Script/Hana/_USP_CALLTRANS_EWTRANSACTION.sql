@@ -2840,6 +2840,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."OPDN";
 		END IF;
 	ELSE IF :DTYPE='GoodReceiptPoHeader' THEN
+	
+		DECLARE offset INT;
+		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+
 		SELECT 
 			 "DocNum" AS "DocumentNumber"
 			,"DocDate" AS "DocDate"
@@ -2847,7 +2851,8 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,"Comments" AS "Remarks"
 			,"TaxDate" AS "TaxDate"
 		FROM TRIWALL_TRAINKEY."OPDN" 
-		ORDER BY "DocEntry" LIMIT 10 OFFSET :par1;
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		
 	END IF;
 	END IF;
 	END IF;

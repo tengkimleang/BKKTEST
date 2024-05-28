@@ -37,7 +37,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     ObservableCollection<TotalItemCount> _totalItemCount=new();
     
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeader> _listGoodReceiptPoHeaders = new();
+    ObservableCollection<GetListData> _getListData = new();
     
     public override async Task Loaded()
     {
@@ -65,6 +65,14 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [RelayCommand]
     async Task OnGetGoodReceiptPo(string perPage)
     {
-        ListGoodReceiptPoHeaders = (await apiService.GetListGoodReceiptPo(perPage)).Data ?? new();
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo(perPage)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

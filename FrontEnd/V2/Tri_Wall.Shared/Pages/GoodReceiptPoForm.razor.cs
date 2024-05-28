@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
@@ -116,25 +117,38 @@ public partial class GoodReceiptPoForm
             ToastService!.ShowError(errorMessage);
             visible = false;
         }
-    }    
-    Task<ObservableCollection<GoodReceiptPoHeader>> GetData(int page)
+    }
+    Task OnSeleted(string e)
     {
-        ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(page.ToString());
-        return Task.FromResult(ViewModel.ListGoodReceiptPoHeaders);
+        
+        Console.WriteLine(e);
+        DialogService.CloseAsync(new DialogResult { Data = e };
+        return Task.CompletedTask;
+    }
+    
+    Task OnDelete(string e)
+    {
+        Console.WriteLine(e);
+        return Task.CompletedTask;
+    }
+    
+    async Task<ObservableCollection<GetListData>> GetListData(int p)
+    {
+        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
+        return ViewModel.GetListData;
     }
     async Task OpenListDataAsyncAsync()
     {
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },
-            { "getData", new Func<int, Task<ObservableCollection<GoodReceiptPoHeader>>>((p) =>
-            {
-              ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
-              return Task.FromResult(ViewModel.ListGoodReceiptPoHeaders);
-            }) }
+            { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) },
+            { "isDelete", true },
+            { "isSelete", true },
+            {"onSelete",new Func<string,Task>(OnSeleted)},
+            {"onDelete",new Func<string,Task>(OnDelete)},
         };
-
-        var dialog = await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
+        await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
             Title = "List Good receipt PO",
             PreventDismissOnOverlayClick = true,
@@ -142,25 +156,6 @@ public partial class GoodReceiptPoForm
             Width = "80%",
             Height = "80%"
         }).ConfigureAwait(false);
-
-        var result = await dialog.Result.ConfigureAwait(false);
-        if (!result.Cancelled && result.Data is Dictionary<string, object> data)
-        {
-            if(ViewModel.GoodReceiptPoForm.Lines==null) ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
-            if(data["data"] is GoodReceiptPoLine receiptPoLine)
-            {
-                if (receiptPoLine.LineNum == 0)
-                {
-                    receiptPoLine.LineNum = ViewModel.GoodReceiptPoForm.Lines.Count + 1;
-                    ViewModel.GoodReceiptPoForm.Lines.Add(receiptPoLine);
-                }
-                else
-                {
-                    var index = ViewModel.GoodReceiptPoForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
-                    ViewModel.GoodReceiptPoForm.Lines[index] = receiptPoLine;
-                }
-            }
-        }
     }
     
 }

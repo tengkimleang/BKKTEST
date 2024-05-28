@@ -1,10 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Models;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models; 
 
 namespace Tri_Wall.Shared.Views.GoodReceptPo;
 
@@ -16,41 +15,41 @@ public partial class ListGoodReceiptPo
 
     [Parameter]
     public Dictionary<string, object> Content { get; set; } = default!;
+    
     private IEnumerable<TotalItemCount> TotalItemCounts => Content["totalItemCount"] as IEnumerable<TotalItemCount> ?? new List<TotalItemCount>();
+    private bool IsDelete => Content.ContainsKey("isDelete");
+    private bool IsSelete => Content.ContainsKey("isSelete");
     
-    private Func<int, Task<ObservableCollection<GoodReceiptPoHeader>>> GetListData => Content["getData"] as Func<int, Task<ObservableCollection<GoodReceiptPoHeader>>>;
+    private Func<int, Task<ObservableCollection<GetListData>>> GetListData => Content["getData"] as Func<int, Task<ObservableCollection<GetListData>>>?? default!;
+
+    private Func<string,Task> OnSeleteAsync => Content["onSelete"] as Func<string,Task> ?? default!;
     
-    string? dataGrid = "width: 100%;";
+    private Func<string,Task> OnDeleteAsync => Content["onDelete"] as Func<string,Task> ?? default!;
+
+    private string? dataGrid = "width: 100%;height:300px;";
     
-    private IEnumerable<GoodReceiptPoHeader> _goodReceiptPoHeaders= new List<GoodReceiptPoHeader>();
+    private IEnumerable<GetListData> _goodReceiptPoHeaders= new List<GetListData>();
     
     PaginationState pagination = new();
+    
     protected override async Task OnInitializedAsync()
     {
         await pagination.SetTotalItemCountAsync(Convert.ToInt32(TotalItemCounts.FirstOrDefault()?.AllItem)).ConfigureAwait(false);
         await pagination.SetCurrentPageIndexAsync(0).ConfigureAwait(false);
+        _goodReceiptPoHeaders =await GetListData(0);
     }
 
     private async Task LoadData(int page)
     {
-        Console.WriteLine(page);
-        _goodReceiptPoHeaders = new List<GoodReceiptPoHeader>();
-        Console.WriteLine("Hello");
         _goodReceiptPoHeaders =await GetListData(page);
-        // Call your API and update your data here
-        // For example:
-        // var data = await Api.GetData(pagination.CurrentPageIndex, pagination.PageSize);
-        // Update your data source with the new data
     }
-    private async Task SaveAsync()
+    
+    private async Task SelectAsync(string docNum)
     {
-        await Dialog.CloseAsync(new Dictionary<string, object>
-        {
-            { "data", null },
-            { "isUpdate", Content.ContainsKey("line") }
-        });
+        await Dialog.CloseAsync();
+        await OnSeleteAsync(docNum);
     }
-
+    
     private void UpdateGridSize(GridItemSize size)
     {
         dataGrid = size == GridItemSize.Xs ? "width: 1200px;height:205px" : "width: 100%;height:405px";

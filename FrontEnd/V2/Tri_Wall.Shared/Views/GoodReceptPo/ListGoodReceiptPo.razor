@@ -16,7 +16,9 @@
 </FluentDialogHeader>
 @* Footer *@
 <FluentDialogFooter>
-    <FluentButton Appearance="Appearance.Accent" OnClick="SaveAsync">Save</FluentButton>
+    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+        <FluentPaginator CurrentPageIndexChanged="LoadData" State="@pagination"/>
+    </FluentGridItem>
 </FluentDialogFooter>
 @* Body *@
 <FluentDialogBody Style="overflow-y:scroll;">
@@ -41,28 +43,55 @@
                                 Search
                             </FluentButton>
                         </FluentGridItem>
-                        <div class="grid" style="width: 100%; overflow:auto;">
-                            <FluentDataGrid TGridItem=@GoodReceiptPoHeader
+                        <FluentGridItem xs="12" sm="12" lg="12" xl="12" Style="overflow: auto;">
+                            <FluentDataGrid TGridItem=@GetListData
                                             Items="_goodReceiptPoHeaders.AsQueryable()"
                                             ResizableColumns="true"
-                                            GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr"
+                                            GridTemplateColumns="2fr 1fr 0.5fr 1fr 1fr 1fr"
                                             Style=@dataGrid>
                                 <TemplateColumn Tooltip="true" Title="Action">
-                                    <FluentButton IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
-                                        Select
-                                    </FluentButton>
+                                    @if(IsSelete)
+                                    {
+                                        <FluentButton IconEnd="@(new Icons.Regular.Size24.ApprovalsApp())" 
+                                                      OnClick="(e=> SelectAsync(context.DocumentNumber))">
+                                            Select
+                                        </FluentButton>
+                                    }
+                                    @if (IsDelete)
+                                    {
+                                        <FluentButton IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))"
+                                                      OnClick="(e=>OpenDialog(context.DocumentNumber))">
+                                            Delete
+                                        </FluentButton>
+                                    }
                                 </TemplateColumn>
-                                <PropertyColumn Title="Document Number" Property="@(c => c.DocumentNumber)" Tooltip="true" />
-                                <PropertyColumn Title="Date" Property="@(c => c.DocDate)" Tooltip="true" />
-                                <PropertyColumn Title="Vendor" Property="@(c => c.VendorCode)" Tooltip="true" />
-                                <PropertyColumn Title="Remark" Property="@(c => c.Remarks)" Tooltip="true" />
-                                <PropertyColumn Title="Due Date" Property="@(c => c.TaxDate)" Tooltip="true" />
+                                <PropertyColumn Title="Document Number" Property="@(c => c.DocumentNumber)" Tooltip="true"/>
+                                <PropertyColumn Title="Date" Property="@(c => c.DocDate)" Tooltip="true"/>
+                                <PropertyColumn Title="Vendor" Property="@(c => c.VendorCode)" Tooltip="true"/>
+                                <PropertyColumn Title="Remark" Property="@(c => c.Remarks)" Tooltip="true"/>
+                                <PropertyColumn Title="Due Date" Property="@(c => c.TaxDate)" Tooltip="true"/>
                             </FluentDataGrid>
-                        </div>
-                        <FluentPaginator CurrentPageIndexChanged="LoadData" State="@pagination"/>
+                        </FluentGridItem>
                     </FluentGrid>
                 </div>
             </FluentBodyContent>
         </FluentStack>
     </FluentLayout>
 </FluentDialogBody>
+@code {
+    private async Task OpenDialog(string docNum)
+    {
+        var dialogInstance = await DialogService.ShowDialogAsync(
+            @<p>Are you sure to Delete</p>
+            , new DialogParameters
+            {
+                Title = "Render Fragment Content",
+            });
+        var result = await dialogInstance.Result;
+        if (!result.Cancelled)
+        {
+            await OnDeleteAsync(docNum);
+            await DialogService.ShowSuccessAsync($"You entered", "Success");
+        }
+    }
+}
