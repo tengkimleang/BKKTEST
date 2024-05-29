@@ -7,16 +7,12 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.API;
 
 [Route("/layoutEndpoint")]
-public class LayoutController : ApiController
+public class LayoutController(
+    ISender mediator,
+    IValidator<LayoutCommand> validator,
+    IWebHostEnvironment webHostEnvironment)
+    : ApiController
 {
-    private readonly ISender _mediator;
-    private readonly IValidator<LayoutCommand> validator;
-    public LayoutController(ISender mediator, IValidator<LayoutCommand> validator)
-    {
-        _mediator = mediator;
-        this.validator = validator;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(LayoutCommand command)
     {
@@ -28,8 +24,10 @@ public class LayoutController : ApiController
                 ErrorMsg: validationResult.Errors[0].ErrorMessage,
                 ErrorCode: StatusCodes.Status400BadRequest.ToString()));
         }
+        
+        command.Path= Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "Layouts");
 
-        var getData = await _mediator.Send(command);
+        var getData = await mediator.Send(command);
         return getData.Match<IActionResult>(
             data => Ok(data),
             err => BadRequest(new PostResponse
