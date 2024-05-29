@@ -17,6 +17,7 @@ public partial class GoodReceiptPoForm
     private string stringDisplay = "Recept";
     
     string? dataGrid = "width: 100%;height:405px";
+    bool isView=false;
     protected void OnCloseOverlay() => visible = true;
     
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
@@ -122,7 +123,8 @@ public partial class GoodReceiptPoForm
     {
         
         Console.WriteLine(e);
-        DialogService.CloseAsync(new DialogResult { Data = e };
+        isView=true;
+        StateHasChanged();
         return Task.CompletedTask;
     }
     
@@ -131,7 +133,12 @@ public partial class GoodReceiptPoForm
         Console.WriteLine(e);
         return Task.CompletedTask;
     }
-    
+    Task OnView()
+    {
+        isView = false;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
@@ -143,10 +150,10 @@ public partial class GoodReceiptPoForm
         {
             { "totalItemCount", ViewModel.TotalItemCount },
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) },
-            { "isDelete", true },
+            //{ "isDelete", true },
             { "isSelete", true },
             {"onSelete",new Func<string,Task>(OnSeleted)},
-            {"onDelete",new Func<string,Task>(OnDelete)},
+            //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {

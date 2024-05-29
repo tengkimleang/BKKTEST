@@ -57,10 +57,10 @@
                                             Select
                                         </FluentButton>
                                     }
-                                    @if (IsDelete)
+                                    @if (IsDelete!=false)
                                     {
                                         <FluentButton IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))"
-                                                      OnClick="(e=>OpenDialog(context.DocumentNumber))">
+                                                      >
                                             Delete
                                         </FluentButton>
                                     }
@@ -79,19 +79,8 @@
     </FluentLayout>
 </FluentDialogBody>
 @code {
-    private async Task OpenDialog(string docNum)
-    {
-        var dialogInstance = await DialogService.ShowDialogAsync(
-            @<p>Are you sure to Delete</p>
-            , new DialogParameters
-            {
-                Title = "Render Fragment Content",
-            });
-        var result = await dialogInstance.Result;
-        if (!result.Cancelled)
-        {
-            await OnDeleteAsync(docNum);
-            await DialogService.ShowSuccessAsync($"You entered", "Success");
-        }
-    }
+    // private async Task OpenDialog(string docNum)
+    // {
+        
+    // }
 }

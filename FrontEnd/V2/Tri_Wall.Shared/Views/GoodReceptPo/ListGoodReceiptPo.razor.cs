@@ -26,7 +26,7 @@ public partial class ListGoodReceiptPo
     
     private Func<string,Task> OnDeleteAsync => Content["onDelete"] as Func<string,Task> ?? default!;
 
-    private string? dataGrid = "width: 100%;height:300px;";
+    private string? dataGrid = "width: 1240px;height:300px;";
     
     private IEnumerable<GetListData> _goodReceiptPoHeaders= new List<GetListData>();
     
