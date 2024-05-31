@@ -1,8 +1,5 @@
-@API_HostAddress = http://localhost:5253
+﻿@API_HostAddress = http://localhost:5253
 
-
-GET {{API_HostAddress}}/todos/
-Accept: application/json
 
 ###
 
@@ -10,13 +7,13 @@ POST {{API_HostAddress}}/getQuery
 Content-Type: application/json
 
 {
-    "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
-    "DBType": "GoodReceiptPoHeader",
-    "Par1": "2",
-    "Par2": "",
-    "Par3": "",
-    "Par4": "",
-    "Par5": ""
+  "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
+  "DBType": "GoodReceiptPoHeader",
+  "Par1": "2",
+  "Par2": "",
+  "Par3": "",
+  "Par4": "",
+  "Par5": ""
 }
 
 ###
