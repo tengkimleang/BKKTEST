@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tri_Wall.Application.Layout;
 using Tri_Wall.Domain.Common;
 
-namespace Tri_Wall.API;
+namespace Tri_Wall.API.Controllers;
 
 [Route("/layoutEndpoint")]
 public class LayoutController(

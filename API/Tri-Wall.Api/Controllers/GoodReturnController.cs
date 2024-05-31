@@ -7,16 +7,9 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.API;
 
 [Route("/goodReturn")]
-public class GoodReturnController : ApiController
+public class GoodReturnController(ISender mediator, IValidator<AddGoodReturnCommand> validator)
+    : ApiController
 {
-    private readonly ISender _mediator;
-    private readonly IValidator<AddGoodReturnCommand> validator;
-    public GoodReturnController(ISender mediator, IValidator<AddGoodReturnCommand> validator)
-    {
-        _mediator = mediator;
-        this.validator = validator;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(AddGoodReturnCommand command)
     {
@@ -29,7 +22,7 @@ public class GoodReturnController : ApiController
                 ErrorCode: StatusCodes.Status400BadRequest.ToString()));
         }
 
-        var getData = await _mediator.Send(command);
+        var getData = await mediator.Send(command);
         return getData.Match<IActionResult>(
             data => Ok(data),
             err => BadRequest(new PostResponse

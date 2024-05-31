@@ -7,14 +7,8 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.API;
 
 [Route("/deliveryOrders")]
-public class DeliveryOrdersController : ApiController
+public class DeliveryOrdersController(ISender mediator) : ApiController
 {
-    private readonly ISender _mediator;
-    public DeliveryOrdersController(ISender mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Create(AddDeliveryOrderCommand command, IValidator<AddDeliveryOrderCommand> validator)
     {
@@ -27,7 +21,7 @@ public class DeliveryOrdersController : ApiController
                 ErrorCode: StatusCodes.Status400BadRequest.ToString()));
         }
 
-        var getData = await _mediator.Send(command);
+        var getData = await mediator.Send(command);
         return getData.Match<IActionResult>(
             data => Ok(data),
             err => BadRequest(new PostResponse
