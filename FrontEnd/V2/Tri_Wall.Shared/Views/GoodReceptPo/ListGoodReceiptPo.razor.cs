@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Models; 
+using Tri_Wall.Shared.Models.Gets;
 
 namespace Tri_Wall.Shared.Views.GoodReceptPo;
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.Gets;
 
 namespace Tri_Wall.Shared.Services;
 

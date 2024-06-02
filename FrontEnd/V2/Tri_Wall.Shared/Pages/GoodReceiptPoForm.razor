@@ -1,4 +1,5 @@
 ﻿@page "/goodreceptpoform"
+@using Tri_Wall.Shared.Models.Gets
 @inherits MvvmComponentBase<GoodReceptPoViewModel>
 @rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
@@ -16,14 +17,17 @@
             </FluentBreadcrumb>
             <FluentSpacer />
             <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
+                Copy From
+            </FluentButton>
+            <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
                 Search
             </FluentButton>
             &nbsp;&nbsp;
-            <FluentButton OnClick="OnSaveTransaction" IconEnd="@(new Icons.Filled.Size24.Save())">
+            <FluentButton OnClick="(e)=>OnSaveTransaction()" IconEnd="@(new Icons.Filled.Size24.Save())">
                 Save
             </FluentButton>
             &nbsp;&nbsp;
-            <FluentButton IconEnd="@(new Icons.Filled.Size24.PrintAdd())">
+            <FluentButton OnClick="@((e)=>OnSaveTransaction("print"))" IconEnd="@(new Icons.Filled.Size24.PrintAdd())">
                 Save Print
             </FluentButton>
         </FluentHeader>
@@ -120,7 +124,10 @@ else
 {
     <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm
         AddNew="OnView"
-        Search="OpenListDataAsyncAsync" />
+        Search="OpenListDataAsyncAsync"
+        OnViewBatchOrSerial="OnGetBatchOrSerial"
+        GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
+        GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
 }
 <FluentOverlay @bind-Visible=@visible
                Opacity="0.4"

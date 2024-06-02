@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Services;
 
@@ -38,7 +39,16 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     
     [ObservableProperty]
     ObservableCollection<GetListData> _getListData = new();
-    
+
+    [ObservableProperty]
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+
+    [ObservableProperty]
+    ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+
+    [ObservableProperty]
+    ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
+
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
@@ -55,6 +65,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
                     (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("GoodReceiptPo")).Data ?? new();
     }
+
     [RelayCommand]
     async Task Submit()
     {
@@ -74,5 +85,13 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    [RelayCommand]
+    async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
+    {
+        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry)).Data ?? new();
+        GoodReceiptPoLineByDocNums = (await apiService.GoodReceiptPoHeaderLineByDocNum(docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry)).Data ?? new();
     }
 }

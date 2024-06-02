@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 
@@ -87,7 +86,7 @@ public partial class GoodReceiptPoForm
     {
         ViewModel.GoodReceiptPoForm.Lines!.RemoveAt(index);
     }
-    async Task OnSaveTransaction()
+    async Task OnSaveTransaction(string type="")
     {
         ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
         ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
@@ -105,12 +104,18 @@ public partial class GoodReceiptPoForm
             visible = true;
             
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
-            
-            if(ViewModel.PostResponses.ErrorCode=="")
+
+            if (ViewModel.PostResponses.ErrorCode == "")
+            {
                 ToastService.ShowSuccess("Success");
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+            }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+            selectedVendor=new List<Vendors>();
+            ViewModel.GoodReceiptPoForm= new GoodReceiptPoHeader();
             visible = false;
+
         }
         catch (Exception ex)
         {
@@ -121,9 +126,9 @@ public partial class GoodReceiptPoForm
     }
     Task OnSeleted(string e)
     {
-        
         Console.WriteLine(e);
-        isView=true;
+        ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        isView =true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -138,6 +143,22 @@ public partial class GoodReceiptPoForm
         isView = false;
         StateHasChanged();
         return Task.CompletedTask;
+    }
+    async Task OnGetBatchOrSerial()
+    {
+        Console.WriteLine(ViewModel.GetBatchOrSerials.Count());
+        var dictionary = new Dictionary<string, object>
+        {
+            { "getData", ViewModel.GetBatchOrSerials },
+        };
+        await DialogService!.ShowDialogAsync<ListBatchOrSerial>(dictionary, new DialogParameters
+        {
+            Title = "List Batch Or Serial",
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = false,
+            Width = "80%",
+            Height = "80%"
+        }).ConfigureAwait(false);
     }
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {

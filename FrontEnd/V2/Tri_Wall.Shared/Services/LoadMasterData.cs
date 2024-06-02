@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.Shared

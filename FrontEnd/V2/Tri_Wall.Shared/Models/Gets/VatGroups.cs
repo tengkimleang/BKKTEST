@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tri_Wall.Shared.Models;
+namespace Tri_Wall.Shared.Models.Gets;
 
-public record Warehouses(
+public record VatGroups(
     string Code,
-    string Name,
-    string BranchName
+    string Rate
     );

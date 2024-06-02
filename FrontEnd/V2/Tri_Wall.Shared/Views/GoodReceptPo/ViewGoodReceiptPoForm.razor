@@ -1,4 +1,5 @@
-﻿@rendermode InteractiveWebAssembly
+﻿@using Tri_Wall.Shared.Models.Gets
+@rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
 
 <FluentLayout Style="margin-top: 0px;">
@@ -25,37 +26,44 @@
             <div class="content">
                 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentTextField Value="" Label="Series" style="width: 100%;" ReadOnly></FluentTextField>
+                        <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.SeriesName ?? "")" Label="Series" style="width: 100%;" ReadOnly></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentTextField Value="" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                        <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.DocNum ?? "")" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker ReadOnly Label="DocDate" style="width: 100%;" />
+                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.DocDate ?? "") : null)" ReadOnly Label="DocDate" style="width: 100%;" />
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker ReadOnly Label="TaxDate" style="width: 100%;" />
+                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.TaxDate ?? "") : null)" ReadOnly Label="TaxDate" style="width: 100%;" />
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Value="" Label="Customer" style="width: 100%;" ReadOnly></FluentTextField>
+                            <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.Vendor ?? "")" Label="Vendor" style="width: 100%;" ReadOnly></FluentTextField>
                         </FluentGridItem>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Value="" Label="Contact Person" style="width: 100%;" ReadOnly></FluentTextField>
+                            <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.ContactPerson ?? "")" Label="Contact Person" style="width: 100%;" ReadOnly></FluentTextField>
                         </FluentGridItem>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentTextField ReadOnly Label="Ref Inv" style="width: 100%;"></FluentTextField>
+                        <FluentTextField ReadOnly Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.RefInv ?? "")" Label="Ref Inv" style="width: 100%;"></FluentTextField>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentButton IconEnd="@(new Icons.Filled.Size24.ViewDesktop())"
+                                      OnClick="(e)=>OnViewBatchOrSerial()">
+                            View Batch Or Serail
+                        </FluentButton>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <div class="grid" style="width: 100%; overflow:auto;">
-                            <FluentDataGrid TGridItem=@GoodReceiptPoLine
+                            <FluentDataGrid TGridItem=@GoodReceiptPoLineByDocNum
                                             ResizableColumns="true"
+                                            Items="@(GoodReceiptPoLineByDocNums?.AsQueryable() ?? new List<GoodReceiptPoLineByDocNum>().AsQueryable())"
                                             GridTemplateColumns="0.25fr 1fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
                                             Style=@dataGrid>
-                                <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
+                                <PropertyColumn Title="No ." Property="@(c => c.BaseLineNumber)" Sortable="true" Tooltip="true" />
                                 <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
                                 <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
                                 <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true" />

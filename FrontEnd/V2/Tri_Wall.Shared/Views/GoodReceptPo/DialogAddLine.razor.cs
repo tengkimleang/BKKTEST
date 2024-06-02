@@ -1,9 +1,9 @@
 ﻿
 using Tri_Wall.Shared.Models.GoodReceiptPo;
-using Tri_Wall.Shared.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Tri_Wall.Shared.Models.Gets;
 namespace Tri_Wall.Shared.Views.GoodReceptPo;
 
 public partial class DialogAddLine
