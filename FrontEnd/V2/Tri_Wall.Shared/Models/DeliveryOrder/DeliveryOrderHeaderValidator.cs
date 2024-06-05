@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
 
-namespace Tri_Wall.Shared.Models.GoodReceiptPo;
+namespace Tri_Wall.Shared.Models.DeliveryOrder;
 
-public class GoodReceiptPoHeaderValidator : AbstractValidator<GoodReceiptPoHeader>
+public class DeliveryOrderHeaderValidator : AbstractValidator<DeliveryOrderHeader>
 {
-    public GoodReceiptPoHeaderValidator()
+    public DeliveryOrderHeaderValidator()
     {
-        RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Vendor is require");
+        RuleFor(x => x.CustomerCode).NotEmpty().WithMessage("Vendor is require");
         RuleFor(x => x.Series).NotEmpty().WithMessage("Series is require");
         RuleFor(x => x.DocDate).NotEmpty().WithMessage("DocDate is require");
         RuleFor(x => x.TaxDate).NotEmpty().WithMessage("TaxDate is require");
         RuleFor(x => x.Lines).NotEmpty().WithMessage("Lines is require")
-            .ForEach(rule => rule.SetValidator(new GoodReceiptPoLineValidator()));
+            .ForEach(rule => rule.SetValidator(new DeliveryOrderLineValidator()));
     }
 }

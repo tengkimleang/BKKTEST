@@ -23,7 +23,7 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
         unitOfWork.BeginTransaction(oCompany);
         Documents oDeliveryOrder;
         oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
-        oDeliveryOrder.CardCode = request.CardCode;
+        oDeliveryOrder.CardCode = request.CustomerCode;
         oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
         oDeliveryOrder.NumAtCard = request.NumAtCard;
         oDeliveryOrder.Series = request.Series;
@@ -38,18 +38,18 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
             oDeliveryOrder.Lines.UnitPrice = l.Price;
             oDeliveryOrder.Lines.VatGroup = l.VatCode;
             oDeliveryOrder.Lines.WarehouseCode = l.WarehouseCode;
-            if (l.BaseDocEntry != 0)
+            if (l.BaseEntry != 0)
             {
-                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseDocEntry);
+                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
                 oDeliveryOrder.Lines.BaseType = 17;
-                oDeliveryOrder.Lines.BaseLine = l.BaseLineNumber;
+                oDeliveryOrder.Lines.BaseLine = l.BaseLine;
             }
 
             if (l.ManageItem == "S")
             {
                 foreach (var serial in l.Serials!)
                 {
-                    oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SysNumber);
+                    oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
                     oDeliveryOrder.Lines.SerialNumbers.Add();
                 }
             }
@@ -57,7 +57,7 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
             {
                 foreach (var batch in l.Batches!)
                 {
-                    oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchOrSerialCode;
+                    oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
                     oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;
                     oDeliveryOrder.Lines.BatchNumbers.Add();
                 }

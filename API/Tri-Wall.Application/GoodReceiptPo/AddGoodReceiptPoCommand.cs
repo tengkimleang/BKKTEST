@@ -25,6 +25,8 @@ public record GoodReceiptPoLine(
     string VatCode,
     string WarehouseCode,
     string ManageItem,
+    int BaseEntry,
+    int BaseLine,
     List<Batch>? Batches,
     List<Serial>? Serials);
 

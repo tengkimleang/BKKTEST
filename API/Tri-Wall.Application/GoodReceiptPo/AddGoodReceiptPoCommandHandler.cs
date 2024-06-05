@@ -33,7 +33,12 @@ public class AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork, IDataProvide
             oGoodReceiptPo.Lines.UnitPrice = l.Price;
             oGoodReceiptPo.Lines.VatGroup = l.VatCode;
             oGoodReceiptPo.Lines.WarehouseCode = l.WarehouseCode;
-
+            if (l.BaseEntry != 0)
+            {
+                oGoodReceiptPo.Lines.BaseEntry = l.BaseEntry;
+                oGoodReceiptPo.Lines.BaseType = 22;
+                oGoodReceiptPo.Lines.BaseLine = l.BaseLine;
+            }
             switch (l)
             {
                 case {ManageItem:"S",Serials:not null}:

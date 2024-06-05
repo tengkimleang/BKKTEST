@@ -12,6 +12,8 @@ public partial class GoodReceiptPoForm
 {
     [Inject]
     public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
+    [Inject]
+    public IValidator<GoodReceiptPoLine>? ValidatorLine { get; init; }
     
     private string stringDisplay = "Recept";
     
@@ -33,7 +35,7 @@ public partial class GoodReceiptPoForm
             { "line", goodReceiptPoLine }
         };
 
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLine>(dictionary, new DialogParameters
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodReceiptPo>(dictionary, new DialogParameters
         {
             Title = (goodReceiptPoLine == null) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
@@ -50,8 +52,8 @@ public partial class GoodReceiptPoForm
             {
                 if (receiptPoLine.LineNum == 0)
                 {
-                    receiptPoLine.LineNum = ViewModel.GoodReceiptPoForm.Lines.Count + 1;
-                    ViewModel.GoodReceiptPoForm.Lines.Add(receiptPoLine);
+                    receiptPoLine.LineNum = ViewModel.GoodReceiptPoForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.GoodReceiptPoForm.Lines?.Add(receiptPoLine);
                 }
                 else
                 {
@@ -107,15 +109,14 @@ public partial class GoodReceiptPoForm
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
+                selectedVendor=new List<Vendors>();
+                ViewModel.GoodReceiptPoForm= new GoodReceiptPoHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-            selectedVendor=new List<Vendors>();
-            ViewModel.GoodReceiptPoForm= new GoodReceiptPoHeader();
             visible = false;
-
         }
         catch (Exception ex)
         {
@@ -162,6 +163,7 @@ public partial class GoodReceiptPoForm
     }
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
+        //OnGetPurchaseOrder
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
@@ -185,5 +187,60 @@ public partial class GoodReceiptPoForm
             Height = "80%"
         }).ConfigureAwait(false);
     }
-    
+
+    async Task ListCopyFromPurchaseOrder()
+    {
+        var dictionary = new Dictionary<string, object>
+        {
+            { "totalItemCount", ViewModel.TotalItemCountPurchaseOrder },
+            { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListDataPurchaseOrder) },
+            //{ "isDelete", true },
+            //{"onDelete",new Func<string,Task>(OnDelete)},
+            { "isSelete", true },
+            {"onSelete",new Func<string,Task>(OnSeletedPurchaseOrder)},
+        };
+        await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
+        {
+            Title = "List Purchase Order",
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = false,
+            Width = "80%",
+            Height = "80%"
+        }).ConfigureAwait(false);
+    }
+    async Task<ObservableCollection<GetListData>> GetListDataPurchaseOrder(int p)
+    {
+        await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(p.ToString());
+        return ViewModel.GetListData;
+    }
+
+    async Task OnSeletedPurchaseOrder(string e)
+    {
+        Console.WriteLine(e);
+        var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
+        ViewModel.GoodReceiptPoForm.DocDate = Convert.ToDateTime(objData?.DocDate);
+        ViewModel.GoodReceiptPoForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
+        selectedVendor = ViewModel.Vendors.Where(x => x.VendorCode == objData?.VendorCode);
+        await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
+        var i = 1;
+        foreach (var obj in ViewModel.GetPurchaseOrderLineByDocNums)
+        {
+            ViewModel.GoodReceiptPoForm.Lines?.Add(new GoodReceiptPoLine
+            {
+                ItemCode = obj.ItemCode,
+                ItemName = obj.ItemName,
+                Qty = Convert.ToDouble(obj.Qty),
+                Price = Convert.ToDouble(obj.Price),
+                VatCode = obj.VatCode,
+                WarehouseCode = obj.WarehouseCode,
+                ManageItem = obj.ManageItem,
+                LineNum = i,
+                BaseEntry = Convert.ToInt32(obj.DocEntry),
+                BaseLine = Convert.ToInt32(obj.BaseLineNumber),
+            });
+            i++;
+        }
+        StateHasChanged();
+    }
 }

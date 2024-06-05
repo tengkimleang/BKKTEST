@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace Tri_Wall.Shared.Models.GoodReceiptPo;
+namespace Tri_Wall.Shared.Models.DeliveryOrder;
 
-public class GoodReceiptPoLine
+public class DeliveryOrderLine
 {
     public string ItemCode { get; set; } = string.Empty;
     public string ItemName { get; set; } = string.Empty;
@@ -19,11 +14,11 @@ public class GoodReceiptPoLine
     public string? ManageItem { get; set; }
     public int BaseEntry { get; set; }
     public int BaseLine { get; set; }
-    public List<BatchReceiptPo>? Batches { get; set; }
-    public List<SerialReceiptPo>? Serials { get; set; }
+    public List<BatchDeliveryOrder>? Batches { get; set; }
+    public List<SerialDeliveryOrder>? Serials { get; set; }
 }
 
-public class BatchReceiptPo
+public class BatchDeliveryOrder
 {
     public string BatchCode { get; set; } = string.Empty;
     public double Qty { get; set; }
@@ -33,7 +28,7 @@ public class BatchReceiptPo
     public string LotNo { get; set; } = string.Empty;
 }
 
-public class SerialReceiptPo
+public class SerialDeliveryOrder
 {
     public string SerialCode { get; set; } = string.Empty;
     public int Qty { get; set; } = 1;

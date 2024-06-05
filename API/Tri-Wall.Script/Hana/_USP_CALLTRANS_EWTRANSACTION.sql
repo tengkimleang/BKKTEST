@@ -9,31 +9,7 @@ ALTER PROCEDURE "TRIWALL_TRAINKEY"."_USP_CALLTRANS_EWTRANSACTION"(
 AS
 BEGIN
 USING SQLSCRIPT_STRING AS LIBRARY;
-	IF :DTYPE='GET_PURCHASE_ORDER' THEN
-		SELECT 
-			 "DocNum" AS "DocNum"
-			,"CardCode" AS "VendorCode"
-			,"CardName" AS "VendorName"
-			,"NumAtCard" AS "VendorRefNo"
-			,TO_VARCHAR("DocDate",'dd-MM-yyyy') AS "PostingDate"
-			,"DocTotal" AS "DocTotal" 
-			,"DocEntry" AS "DocEntry"
-		FROM TRIWALL_TRAINKEY."OPOR" 
-		WHERE 
-			"Series"=Case When par1='' Then "Series" Else par1 End 
-			And "DocStatus"='O' 
-			--AND IFNULL(Cast("U_docDraft" As nvarchar(max)),'')<>'oDraft'
-			ORDER BY "DocNum" DESC;
-	ELSE IF :DTYPE='GET_Purchase_ORDER_Count' THEN
-		SELECT 
-			COUNT("DocNum") AS "Count" 
-		FROM TRIWALL_TRAINKEY."OPOR" 
-		WHERE 
-			"Series"=Case When :par1='' Then "Series" Else :par1 End 
-			--AND  DocNum LIKE '%'+IIF(@par2='-1','',@par2)+'%' 
-			And "DocStatus"='O';
-			--AND ISNULL(Cast(U_docDraft As nvarchar(max)),'')<>'oDraft'
-	ELSE IF :DTYPE='GET_Purchase_Order_Detail_By_DocNum' THEN
+	IF :DTYPE='GET_Purchase_Order_Detail_By_DocNum' THEN
 		SELECT 
 			 A."CardCode" AS "VendorCode"
 			,A."CardName" AS "VendorName"
@@ -137,6 +113,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
 		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
 		WHERE A."DocEntry"=:par1;
+	
 	ELSE IF :DTYPE='GetBatchSerialGoodReceipt' THEN
 	
 		SELECT 
@@ -614,14 +591,18 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "Series" AS "Code"
 				,"SeriesName"
-				,B."NextNumber" As "DocNum"
+				,(SELECT 
+					IFNULL(MAX("DocNum")+1,B."InitialNum") 
+				  FROM TRIWALL_TRAINKEY."OPDN" 
+				  WHERE "Series"=B."Series"
+				 )AS "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
 			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
-				B."Indicator"=YEAR(CURRENT_DATE) 
-				AND B."ObjectCode"=15 
-				AND "SubNum"=MONTH(CURRENT_DATE)
-				AND B."Indicator"<>'Default';
+				A."Category"=YEAR(CURRENT_DATE)
+				AND TO_VARCHAR(B."ObjectCode")=15 
+				AND "SubNum"=MONTH(CURRENT_DATE) 
+				And B."Indicator"<>'Default';
 		ELSE IF :par1='16' THEN
 			SELECT 
 				 "Series" AS "Code"
@@ -2834,9 +2815,24 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,CAST("Rate" AS double) AS "Rate"
 		FROM TRIWALL_TRAINKEY."OVTG"
 		WHERE "Category"='I' AND "Inactive"='N';
+	ELSE IF :DTYPE='GetTaxSale' THEN
+		SELECT 
+			 "Code" AS "Code"
+			,CAST("Rate" AS double) AS "Rate"
+		FROM TRIWALL_TRAINKEY."OVTG"
+		WHERE "Category"='O' AND "Inactive"='N';
 	ELSE IF :DTYPE='TotalItemCount' THEN
 		IF :par1='GoodReceiptPo' THEN
 			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."OPDN";
+		ELSE IF :par1='PurchaseOrder' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."OPOR" WHERE "DocStatus"='O';
+		ELSE IF :par1='SaleOrder' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ORDR" WHERE "DocStatus"='O';
+		ELSE IF :par1='DeliveryOrder' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ODLN" WHERE "DocStatus"='O';
+		END IF;
+		END IF;
+		END IF;
 		END IF;
 	ELSE IF :DTYPE='GoodReceiptPoHeader' THEN
 	
@@ -2853,6 +2849,192 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		FROM TRIWALL_TRAINKEY."OPDN" 
 		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		
+	ELSE IF :DTYPE='GET_PURCHASE_ORDER' THEN
+
+		DECLARE offset INT;
+		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "DocumentNumber"
+			,"DocDate" AS "DocDate"
+			,"CardCode" AS "VendorCode"
+			,"Comments" AS "Remarks"
+			,"TaxDate" AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."OPOR" 
+		WHERE "DocStatus"='O'
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		
+	ELSE IF :DTYPE='GetDeliveryOrderHeader' THEN
+	
+		DECLARE offset INT;
+		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "DocumentNumber"
+			,"DocDate" AS "DocDate"
+			,"CardCode" AS "VendorCode"
+			,"Comments" AS "Remarks"
+			,"TaxDate" AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."ODLN" 
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		
+	ELSE IF :DTYPE='GetSaleOrder' THEN
+
+		DECLARE offset INT;
+		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "DocumentNumber"
+			,"DocDate" AS "DocDate"
+			,"CardCode" AS "VendorCode"
+			,"Comments" AS "Remarks"
+			,"TaxDate" AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."ORDR" 
+		WHERE "DocStatus"='O'
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		
+	ELSE IF :DTYPE='GET_PurchaseOrder_Line_Detail_By_DocNum' THEN
+	
+		SELECT 
+			 B."LineNum" AS "BaseLineNumber"
+			,B."DocEntry" AS "DocEntry"
+			,B."ItemCode" AS "ItemCode"
+			,B."Dscription" AS "ItemName"
+			,B."OpenQty" AS "Qty"
+			,B."Price" AS "Price"
+			,B."LineTotal" AS "LineTotal"
+			,B."TaxCode" AS "VatCode"
+			,B."WhsCode" AS "WarehouseCode"
+			,E."CodeBars" AS "BarCode"
+			,CASE WHEN E."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN E."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ManageItem"
+		FROM TRIWALL_TRAINKEY."OPOR" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."POR1" AS B ON A."DocEntry"=B."DocEntry"
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1 AND B."LineStatus"='O';
+		
+	ELSE IF :DTYPE='GetCustomer' THEN
+		SELECT  
+			 "CardCode" AS "VendorCode"
+			,"CardName" As "VendorName"
+			,"Phone1" As "PhoneNumber"
+			,"CntctPrsn" as "ContactID"
+		FROM TRIWALL_TRAINKEY."OCRD" 
+		WHERE "CardType"='C';
+	ELSE IF :DTYPE='GetDeliveryOrderLineDetailByDocEntry' THEN
+		SELECT 
+			 B."LineNum" AS "BaseLineNumber"
+			,B."DocEntry" AS "DocEntry"
+			,B."ItemCode" AS "ItemCode"
+			,B."Dscription" AS "ItemName"
+			,B."OpenQty" AS "Qty"
+			,B."Price" AS "Price"
+			,B."LineTotal" AS "LineTotal"
+			,B."TaxCode" AS "VatCode"
+			,B."WhsCode" AS "WarehouseCode"
+			,E."CodeBars" AS "BarCode"
+			,CASE WHEN E."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN E."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ManageItem"
+		FROM TRIWALL_TRAINKEY."ODLN" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."DLN1" AS B ON A."DocEntry"=B."DocEntry"
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1;
+	ELSE IF :DTYPE='GetSaleOrderLineDetailByDocEntry' THEN
+	
+		SELECT 
+			 B."LineNum" AS "BaseLineNumber"
+			,B."DocEntry" AS "DocEntry"
+			,B."ItemCode" AS "ItemCode"
+			,B."Dscription" AS "ItemName"
+			,B."OpenQty" AS "Qty"
+			,B."Price" AS "Price"
+			,B."LineTotal" AS "LineTotal"
+			,B."TaxCode" AS "VatCode"
+			,B."WhsCode" AS "WarehouseCode"
+			,E."CodeBars" AS "BarCode"
+			,CASE WHEN E."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN E."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ManageItem"
+		FROM TRIWALL_TRAINKEY."ORDR" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."RDR1" AS B ON A."DocEntry"=B."DocEntry"
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1 AND B."LineStatus"='O';
+	ELSE IF :DTYPE='GetBatchSerialDeliveryOrder' THEN
+	
+		SELECT 
+			 A."ItemCode" AS "ItemCode"	
+			,C."Quantity" AS "Qty"
+			,B."DistNumber" AS "SerialBatch"
+			,B."MnfSerial" AS "MfrSerialNo"
+			,TO_VARCHAR(B."ExpDate",'dd-MM-yyyy') AS "ExpDate"
+			,B."MnfDate" AS "MrfDate"
+			,'Serial' AS "Type"
+		FROM TRIWALL_TRAINKEY."SRI1" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS B ON A."ItemCode"=B."ItemCode" AND B."SysNumber"=A."SysSerial"
+		LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=A."ItemCode" And C."SysSerial"=A."SysSerial"
+		WHERE A."BaseEntry"=:par1 
+			AND A."BaseType"=15 
+			--And C."Status"<>0
+				
+		UNION ALL
+		
+		SELECT 
+			 A."ItemCode" AS "ItemCode"	
+			,A."Quantity" AS "Qty"
+			,B."DistNumber" AS "SerialBatch"
+			,B."MnfSerial" AS "MfrSerialNo"
+			,TO_VARCHAR("ExpDate",'dd-MM-yyyy') AS "ExpDate"
+			,B."MnfDate" AS "MrfDate"
+			,'Batch' AS "Type"
+		FROM TRIWALL_TRAINKEY."IBT1" AS A 
+		LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS B ON A."ItemCode"=B."ItemCode" AND A."BatchNum"=B."DistNumber"
+		--LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=A."ItemCode" and B."SysNumber"=C."SysNumber"
+		WHERE A."BaseEntry"=:par1
+			AND A."BaseType"=15;
+			
+			
+	ELSE IF :DTYPE='GET_DeliveryOrder_Header_Detail_By_DocNum' THEN
+		SELECT 
+			 F."SeriesName" AS "SeriesName"
+			,A."DocNum" AS "DocNum"
+			,TO_VARCHAR(A."DocDate",'yyyy-mm-dd') AS "DocDate"
+			,TO_VARCHAR(A."TaxDate",'yyyy-mm-dd') AS "TaxDate"
+			,A."CardCode"|| ' - ' || A."CardName" AS "Vendor"
+			,IFNULL(C."Name",'') AS "ContactPerson"
+			,IFNULL(A."NumAtCard",'') AS "RefInv"
+		FROM TRIWALL_TRAINKEY."ODLN" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
+		WHERE 
+			A."DocEntry"=:par1;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

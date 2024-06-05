@@ -1,0 +1,26 @@
+﻿@page "/login"
+@layout EmptyLayout
+
+<FluentStack Width="100%"
+             Tokens="new StackTokens { Padding = 10 }"
+             Class="login-form"
+             HorizontalAlignment="HorizontalAlignment.End">
+    <FluentGrid>
+        <FluentGridItem xs="12" sm="12" lg="12" xl="12">
+            <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
+        </FluentGridItem>
+    </FluentGrid>
+    @* <FluentTextField Label="Username" @bind-Value="@username"/> *@
+    @* <FluentTextField Label="Password" @bind-Value="@password" Type="TextFieldType.Password"/> *@
+    @* <FluentPrimaryButton OnClick="@LoginTest">Login</FluentPrimaryButton> *@
+</FluentStack>
+
+@code {
+private string username;
+private string password;
+
+private void LoginTest()
+{
+// Handle login logic here
+}
+}

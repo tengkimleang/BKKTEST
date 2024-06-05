@@ -16,7 +16,7 @@
                 </FluentBreadcrumbItem>
             </FluentBreadcrumb>
             <FluentSpacer />
-            <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
+            <FluentButton OnClick="ListCopyFromPurchaseOrder" IconEnd="@(new Icons.Filled.Size24.Search())">
                 Copy From
             </FluentButton>
             &nbsp;&nbsp;
@@ -59,10 +59,10 @@
                             <FluentAutocomplete Required
                                                 TOption="Vendors"
                                                 Width="100%"
-                                                Placeholder="Customer"
+                                                Placeholder="Vendor"
                                                 OnOptionsSearch="OnSearch"
                                                 MaximumOptionsSearch="1"
-                                                Label="Customer"
+                                                Label="Vendor"
                                                 Virtualize="true"
                                                 Items="ViewModel.Vendors"
                                                 MaximumSelectedOptions="1"

@@ -1,6 +1,7 @@
 ﻿using Refit;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
+using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 
@@ -24,6 +25,9 @@ public interface IApiService
     public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxPurchases(
         [Body] GetRequest getRequest);
     [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxSales(
+        [Body] GetRequest getRequest);
+    [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses(
         [Body] GetRequest getRequest);
     [Post("/getQuery")]
@@ -35,11 +39,14 @@ public interface IApiService
     [Post("/goodReceiptPo")]
     public Task<PostResponse> PostGoodReceptPo(
         [Body] GoodReceiptPoHeader request);
+    [Post("/deliveryOrders")]
+    public Task<PostResponse> PostDelveryOrder(
+        [Body] DeliveryOrderHeader request);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum>>> GoodReceiptPoHeaderDeatialByDocNum(
         [Body] GetRequest request);
     [Post("/getQuery")]
-    public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GoodReceiptPoHeaderLineByDocNum(
+    public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GetLineByDocNum(
         [Body] GetRequest request);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(

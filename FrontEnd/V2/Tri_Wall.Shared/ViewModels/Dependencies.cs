@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Services;
 
@@ -19,8 +20,13 @@ public static class Dependencies
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         services.AddSingleton<ApiService>();
         services.AddScoped<GoodReceptPoViewModel>();
+        services.AddScoped<DeliveryOrderViewModel>();
+        #region Validator
         services.AddScoped<IValidator<GoodReceiptPoHeader>, GoodReceiptPoHeaderValidator>();
         services.AddScoped<IValidator<GoodReceiptPoLine>, GoodReceiptPoLineValidator>();
+        services.AddScoped<IValidator<DeliveryOrderHeader>, DeliveryOrderHeaderValidator>();
+        services.AddScoped<IValidator<DeliveryOrderLine>, DeliveryOrderLineValidator>();
+        #endregion
         return services;
     }
 }
