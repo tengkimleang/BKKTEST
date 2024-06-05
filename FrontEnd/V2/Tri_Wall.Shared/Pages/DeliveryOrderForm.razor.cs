@@ -20,7 +20,7 @@ public partial class DeliveryOrderForm
     
     private string stringDisplay = "Delivery Order";
     
-    string? dataGrid = "width: 100%;height:405px";
+    string? dataGrid = "width: 2600px;height:405px";
     bool isView=false;
     protected void OnCloseOverlay() => visible = true;
     
@@ -36,7 +36,7 @@ public partial class DeliveryOrderForm
             { "taxPurchase", ViewModel.TaxSales },
             { "warehouse", ViewModel.Warehouses },
             { "line", deliveryOrderLine },
-            { "getSerialBatch", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) }
+            { "getSerialBatch", new Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch) }
         };
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodDeliveryOrder>(dictionary, new DialogParameters
@@ -85,7 +85,7 @@ public partial class DeliveryOrderForm
         else
         {
             stringDisplay = "Delivery Order";
-            dataGrid = "width: 100%;height:405px";
+            dataGrid = "width: 1600px;height:405px";
         }
     }
     private void DeleteLine(int index)

@@ -3027,6 +3027,35 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
 		WHERE 
 			A."DocEntry"=:par1;
+	
+	ELSE IF :DTYPE='OnGetBatchOrSerialAvailableByItemCode' THEN		
+		IF :par1='S' THEN
+			SELECT 
+				 B."ItemCode" AS "ItemCode"	
+				,B."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR(B."ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Serial' AS "Type"
+			FROM TRIWALL_TRAINKEY."OSRN" AS B
+			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=B."ItemCode" And C."SysSerial"=B."SysNumber"
+			WHERE B."ItemCode"=:par2 AND C."Status"='0';
+		ELSE IF :par1='B' THEN
+			SELECT 
+				 B."ItemCode" AS "ItemCode"	
+				,C."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR("ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Batch' AS "Type"
+			FROM TRIWALL_TRAINKEY."OBTN" AS B
+			LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=B."ItemCode" and B."SysNumber"=C."SysNumber"
+			WHERE B."ItemCode"=:par2 AND IFNULL(C."Quantity",0)>0;
+		END IF;
+		END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

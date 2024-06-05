@@ -22,6 +22,7 @@ public class BatchDeliveryOrder
 {
     public string BatchCode { get; set; } = string.Empty;
     public double Qty { get; set; }
+    public double QtyAvailable { get; set; }
     public DateTime? ExpDate { get; set; } = DateTime.Today;
     public DateTime? ManfectureDate { get; set; } = DateTime.Today;
     public DateTime? AdmissionDate { get; set; } = DateTime.Today;

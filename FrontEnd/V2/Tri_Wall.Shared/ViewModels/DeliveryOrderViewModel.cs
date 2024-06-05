@@ -101,7 +101,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("GetDeliveryOrderHeader",dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
         }
         catch (Exception e)
         {
