@@ -2829,7 +2829,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		ELSE IF :par1='SaleOrder' THEN
 			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ORDR" WHERE "DocStatus"='O';
 		ELSE IF :par1='DeliveryOrder' THEN
-			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ODLN" WHERE "DocStatus"='O';
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ODLN";
 		END IF;
 		END IF;
 		END IF;
@@ -3035,7 +3035,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,B."Quantity" AS "Qty"
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
-				,TO_VARCHAR(B."ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,B."ExpDate" AS "ExpDate"
 				,B."MnfDate" AS "MrfDate"
 				,'Serial' AS "Type"
 			FROM TRIWALL_TRAINKEY."OSRN" AS B
@@ -3047,7 +3047,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,C."Quantity" AS "Qty"
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
-				,TO_VARCHAR("ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,"ExpDate" AS "ExpDate"
 				,B."MnfDate" AS "MrfDate"
 				,'Batch' AS "Type"
 			FROM TRIWALL_TRAINKEY."OBTN" AS B

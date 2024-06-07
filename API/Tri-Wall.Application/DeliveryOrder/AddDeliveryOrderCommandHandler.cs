@@ -49,7 +49,8 @@ public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCo
             {
                 foreach (var serial in l.Serials!)
                 {
-                    oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
+                    //oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
+                    oDeliveryOrder.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
                     oDeliveryOrder.Lines.SerialNumbers.Add();
                 }
             }

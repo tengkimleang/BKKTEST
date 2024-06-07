@@ -5,7 +5,7 @@
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu" @bind-Expanded="expanded">
-            <FluentNavLink title="Home" Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavLink title="Home" Href="/home" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
             <FluentNavLink title="Good Receipt PO" Href="goodreceptpoform" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Good Receipt PO</FluentNavLink>
             @*<FluentNavLink title="Issue For Production" Href="issueforproduction" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Issue For Production</FluentNavLink>
             <FluentNavLink title="Return Component" Href="returncomponent" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Return Component</FluentNavLink>
@@ -21,6 +21,6 @@
 </div>
 
 @code {
-    private bool expanded = true;
+    private bool expanded = false;
 
 }

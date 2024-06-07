@@ -1,5 +1,7 @@
 ﻿
 
+using Tri_Wall.Shared.Models.Gets;
+
 namespace Tri_Wall.Shared.Models.DeliveryOrder;
 
 public class DeliveryOrderLine
@@ -27,6 +29,7 @@ public class BatchDeliveryOrder
     public DateTime? ManfectureDate { get; set; } = DateTime.Today;
     public DateTime? AdmissionDate { get; set; } = DateTime.Today;
     public string LotNo { get; set; } = string.Empty;
+    public IEnumerable<GetBatchOrSerial> OnSelectedBatchOrSerial { get; set; } = Array.Empty<GetBatchOrSerial>();
 }
 
 public class SerialDeliveryOrder
@@ -36,4 +39,5 @@ public class SerialDeliveryOrder
     public string MfrNo { get; set; } = string.Empty;
     public DateTime? MfrDate { get; set; } = DateTime.Today;
     public DateTime? ExpDate { get; set; } = DateTime.Today;
+    public IEnumerable<GetBatchOrSerial> OnSelectedBatchOrSerial { get; set; } = Array.Empty<GetBatchOrSerial>();
 }

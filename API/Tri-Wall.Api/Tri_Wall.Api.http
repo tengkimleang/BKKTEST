@@ -1,4 +1,8 @@
-﻿@API_HostAddress = http://localhost:5253
+﻿@API_HostAddress = http://localhost:8081/APITRIWALL
+#@API_HostAddress = http://1.10.143.138:8429/BarCodeBackEnd
+
+
+#http://localhost/APITRIWALL http://192.168.10.2/AddOnProgram
 
 
 ###

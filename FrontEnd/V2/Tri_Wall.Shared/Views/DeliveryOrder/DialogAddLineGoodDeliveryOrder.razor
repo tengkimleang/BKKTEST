@@ -46,7 +46,7 @@
                                                 MaximumOptionsSearch="1"
                                                 Label="Item Code"
                                                 Virtualize="true"
-                                                Items="_items"
+                                                Items="_item"
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
                                                 @bind-SelectedOptions="@_selectedItem"
@@ -65,10 +65,10 @@
                                           TOption="VatGroups"
                                           Required
                                           Label="Vat Code"
-                                          Items="_vatGroups"
+                                          Items="_vatGroup"
                                           OptionText="@(i => i.Code)"
                                           OptionValue="@(i => i.Code)"
-                                          SelectedOption="_vatGroups?.FirstOrDefault()"
+                                          SelectedOption="_vatGroup?.FirstOrDefault()"
                                           @bind-Value="@DataResult.VatCode"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -92,10 +92,10 @@
                         <div class="grid" style="width: 100%; overflow-x:auto;">
                             <FluentDataGrid TGridItem=@BatchDeliveryOrder ResizableColumns="true"
                                             GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
-                                            Items="batchReceiptPOs.AsQueryable()"
+                                            Items="_batchReceiptPo.AsQueryable()"
                                             Style=@dataGrid>
                                 <TemplateColumn Tooltip="true" Title="Action">
-                                    <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                    <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(_batchReceiptPo.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                         Delete
                                     </FluentButton>
                                 </TemplateColumn>
@@ -109,9 +109,9 @@
                                                         Virtualize="true"
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
-                                                        OptionText="@(item => $"{item.SerialBatch}-{item.Qty}")"
+                                                        OptionText="@(item => $"{item.SerialBatch}")"
                                                         @bind-SelectedOptions="@_selectedSerialDeliveryOrders"
-                                                        ValueChanged="(e)=> OnSelectedSerialOrBatch(e,batchReceiptPOs.IndexOf(context))" />
+                                                        ValueChanged="@(e=> OnSelectedSerialOrBatch(e,_batchReceiptPo.IndexOf(context),"Batch"))" />
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty">
                                     <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double" />
@@ -137,44 +137,46 @@
                         <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
-                        <FluentDataGrid TGridItem=@SerialDeliveryOrder ResizableColumns="true"
-                                        GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
-                                        Items="serialReceiptPO.AsQueryable()"
-                                        Style=@dataGrid>
-                            <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
-                                    Delete
-                                </FluentButton>
-                            </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Serial Code">
-                                <FluentAutocomplete Required
-                                                    TOption="GetBatchOrSerial"
-                                                    Width="100%"
-                                                    Placeholder="Serial Code"
-                                                    OnOptionsSearch="OnSearchSerial"
-                                                    MaximumOptionsSearch="1"
-                                                    Virtualize="true"
-                                                    Items="_serialBatchDeliveryOrders"
-                                                    MaximumSelectedOptions="1"
-                                                    OptionText="@(item => $"{item.SerialBatch}-{item.Qty}")"
-                                                    @bind-SelectedOptions="@_selectedSerialDeliveryOrders"
-                                                    ValueChanged="(e)=>OnSelectedSerialOrBatch(e,serialReceiptPO.IndexOf(context))"/>
-                            </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Qty">
-                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
-                                </FluentNumberField>
-                            </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Manfecture Code">
-                                <FluentTextField @bind-Value=@context.MfrNo Placeholder="MfrNo" ReadOnly></FluentTextField>
-                            </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Expire Date">
-                                <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date" ReadOnly>
-                                </FluentDatePicker>
-                            </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Manfecture Date">
-                                <FluentDatePicker @bind-Value=@context.MfrDate Placeholder="Manfecture Date" ReadOnly></FluentDatePicker>
-                            </TemplateColumn>
-                        </FluentDataGrid>
+                        <div class="grid" style="width: 100%; overflow-x:auto;">
+                            <FluentDataGrid TGridItem=@SerialDeliveryOrder ResizableColumns="true"
+                                            GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
+                                            Items="_serialReceiptPo.AsQueryable()"
+                                            Style=@dataGrid>
+                                <TemplateColumn Tooltip="true" Title="Action">
+                                    <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(_serialReceiptPo.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                        Delete
+                                    </FluentButton>
+                                </TemplateColumn>
+                                <TemplateColumn Tooltip="true" Title="Serial Code">
+                                    <FluentAutocomplete Required
+                                                        TOption="GetBatchOrSerial"
+                                                        Width="100%"
+                                                        Placeholder="Serial Code"
+                                                        OnOptionsSearch="OnSearchSerial"
+                                                        MaximumOptionsSearch="1"
+                                                        Virtualize="true"
+                                                        Items="_serialBatchDeliveryOrders"
+                                                        MaximumSelectedOptions="1"
+                                                        OptionText="@(item => $"{item.SerialBatch}")"
+                                                        @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
+                                                        ValueChanged="@((e)=>OnSelectedSerialOrBatch(e,_serialReceiptPo.IndexOf(context),"Serial"))"/>
+                                </TemplateColumn>
+                                <TemplateColumn Tooltip="true" Title="Qty">
+                                    <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
+                                    </FluentNumberField>
+                                </TemplateColumn>
+                                <TemplateColumn Tooltip="true" Title="Manfecture Code">
+                                    <FluentTextField @bind-Value=@context.MfrNo Placeholder="MfrNo" ReadOnly></FluentTextField>
+                                </TemplateColumn>
+                                <TemplateColumn Tooltip="true" Title="Expire Date">
+                                    <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date" ReadOnly>
+                                    </FluentDatePicker>
+                                </TemplateColumn>
+                                <TemplateColumn Tooltip="true" Title="Manfecture Date">
+                                    <FluentDatePicker @bind-Value=@context.MfrDate Placeholder="Manfecture Date" ReadOnly></FluentDatePicker>
+                                </TemplateColumn>
+                            </FluentDataGrid>
+                        </div>
                     }
                 </div>
             </FluentBodyContent>

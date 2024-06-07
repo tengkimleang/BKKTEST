@@ -9,7 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Tri_Wall.Shared\Tri_Wall.Shared.csproj" />
     <ProjectReference Include="..\Tri_Wall.WebApp.Server.Client\Tri_Wall.WebApp.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
   </ItemGroup>
 
 </Project>

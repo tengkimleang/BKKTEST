@@ -1,26 +1,47 @@
-﻿@page "/login"
+﻿@page "/"
 @layout EmptyLayout
+@rendermode InteractiveWebAssembly
+@attribute [StreamRendering]
 
-<FluentStack Width="100%"
-             Tokens="new StackTokens { Padding = 10 }"
-             Class="login-form"
-             HorizontalAlignment="HorizontalAlignment.End">
-    <FluentGrid>
-        <FluentGridItem xs="12" sm="12" lg="12" xl="12">
-            <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
-        </FluentGridItem>
-    </FluentGrid>
-    @* <FluentTextField Label="Username" @bind-Value="@username"/> *@
-    @* <FluentTextField Label="Password" @bind-Value="@password" Type="TextFieldType.Password"/> *@
-    @* <FluentPrimaryButton OnClick="@LoginTest">Login</FluentPrimaryButton> *@
-</FluentStack>
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;background-color: #7F3612;">
+    <FluentCard class="card" style="width: 300px;height: 250px;padding: 0px;margin: 0px;">
+        <h4 class="card-header d-flex justify-content-center">
+            <img src="_content/Tri_Wall.Shared/images/logo.png" width="42px" height="32px"/>
+
+        </h4>
+        <div class="card-body">
+            @* <FluentLabel Style="margin-bottom: 10px">Login</FluentLabel> *@
+            <FluentTextField @bind-Value="model.Username" Style="width: 100%" Label="User Name"/>
+            <FluentTextField @bind-Value="model.Password" Style="width: 100%" Label="Password" TextFieldType="TextFieldType.Password"/>
+        </div>
+        <div class="card-footer">
+            <FluentButton Appearance="Appearance.Accent" OnClick="OnValidSubmit" class="float-end">
+                Login
+            </FluentButton>
+        </div>
+    </FluentCard>
+</div>
+
 
 @code {
-private string username;
-private string password;
+    private LoginForm model = new LoginForm
+    {
+        Username = "admin",
+        Password = "1234"
+    };
+    private void OnValidSubmit()
+    {
+        try
+        {
+            if(model.Username=="admin" && model.Password=="1234")
+                NavigationManager.NavigateTo("home");
+            else
+                ToastService.ShowError("Login Failed user: admin and password: 1234");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+        }
+    }
 
-private void LoginTest()
-{
-// Handle login logic here
-}
 }

@@ -20,17 +20,17 @@ public partial class DialogAddLineGoodDeliveryOrder
     public Dictionary<string, object> Content { get; set; } = default!;
 
     private DeliveryOrderLine DataResult { get; set; } = new();
-    private List<BatchDeliveryOrder> batchReceiptPOs = new();
-    private List<SerialDeliveryOrder> serialReceiptPO = new();
+    private List<BatchDeliveryOrder> _batchReceiptPo = new();
+    private List<SerialDeliveryOrder> _serialReceiptPo = new();
     private IEnumerable<GetBatchOrSerial> _serialBatchDeliveryOrders=new List<GetBatchOrSerial>();
     private bool _isItemBatch;
     private bool _isItemSerial;
     private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
     private IEnumerable<GetBatchOrSerial> _selectedSerialDeliveryOrders = Array.Empty<GetBatchOrSerial>();
-    private IEnumerable<Items> _items => Content["item"] as IEnumerable<Items> ?? new List<Items>();
+    private IEnumerable<Items> _item => Content["item"] as IEnumerable<Items> ?? new List<Items>();
     
     private Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch => Content["getSerialBatch"] as Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>>?? default!;
-    private IEnumerable<VatGroups>? _vatGroups => Content["taxPurchase"] as IEnumerable<VatGroups>;
+    private IEnumerable<VatGroups>? _vatGroup => Content["taxPurchase"] as IEnumerable<VatGroups>;
     private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
     string? dataGrid = "width: 1600px;overflow-x:scroll;";
 
@@ -39,16 +39,16 @@ public partial class DialogAddLineGoodDeliveryOrder
         if (Content.ContainsKey("line"))
         {
             DataResult = Content["line"] as DeliveryOrderLine ?? new DeliveryOrderLine();
-            batchReceiptPOs = DataResult.Batches ?? new List<BatchDeliveryOrder>();
-            serialReceiptPO = DataResult.Serials ?? new List<SerialDeliveryOrder>();
-            _selectedItem = _items.Where(i => i.ItemCode == DataResult.ItemCode);
+            _batchReceiptPo = DataResult.Batches ?? new List<BatchDeliveryOrder>();
+            _serialReceiptPo = DataResult.Serials ?? new List<SerialDeliveryOrder>();
+            _selectedItem = _item.Where(i => i.ItemCode == DataResult.ItemCode);
             UpdateItemDetails(DataResult.ItemCode);
         }
     }
 
     private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
-        e.Items = _items?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = _item?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                             i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
                             .OrderBy(i => i.ItemCode);
     }
@@ -62,8 +62,8 @@ public partial class DialogAddLineGoodDeliveryOrder
 
     private async Task SaveAsync()
     {
-        DataResult.Batches = batchReceiptPOs;
-        DataResult.Serials = serialReceiptPO;
+        DataResult.Batches = _batchReceiptPo;
+        DataResult.Serials = _serialReceiptPo;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
         {
@@ -95,24 +95,32 @@ public partial class DialogAddLineGoodDeliveryOrder
                     {"ItemCode", firstItem?.ItemCode ??""},
                     {"ItemType", firstItem?.ItemType ??""}
                 });
-       
     }
-    private void OnSelectedSerialOrBatch(string newValue,int index)
+    private void OnSelectedSerialOrBatch(string newValue,int index,string type)
     {
-        var firstItem = _serialBatchDeliveryOrders.FirstOrDefault();
-        if(firstItem?.Type == "Batch")
+        
+        if(type == "Batch")
         {
-            batchReceiptPOs[index].BatchCode = firstItem.SerialBatch;
-            batchReceiptPOs[index].Qty = 0;
-            batchReceiptPOs[index].QtyAvailable = Convert.ToInt32(firstItem.Qty);
-            batchReceiptPOs[index].ManfectureDate = Convert.ToDateTime(firstItem.MrfDate??null);
-            batchReceiptPOs[index].ExpDate = Convert.ToDateTime(firstItem.ExpDate ?? null);
-        }else if(firstItem?.Type == "Serial")
+            var firstItem = _batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
+            if (firstItem != null)
+            {
+                _batchReceiptPo[index].BatchCode = firstItem.SerialBatch ?? string.Empty;
+                _batchReceiptPo[index].Qty = 0;
+                _batchReceiptPo[index].QtyAvailable = Convert.ToInt32(firstItem.Qty);
+                _batchReceiptPo[index].ManfectureDate = DateTime.Parse(firstItem.MrfDate ?? string.Empty);
+                _batchReceiptPo[index].ExpDate = DateTime.Parse(firstItem.ExpDate ?? string.Empty);
+            }
+        }else if(type == "Serial")
         {
-            serialReceiptPO[index].SerialCode = firstItem.SerialBatch;
-            serialReceiptPO[index].Qty = Convert.ToInt32(firstItem.Qty);
-            serialReceiptPO[index].MfrDate = Convert.ToDateTime(firstItem.MrfDate ?? null);
-            serialReceiptPO[index].ExpDate = Convert.ToDateTime(firstItem.ExpDate ?? null);
+            var firstItem = _serialReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
+            if (firstItem != null)
+            {
+                _serialReceiptPo[index].SerialCode = firstItem.SerialBatch ?? string.Empty;
+                _serialReceiptPo[index].Qty = 1;
+                _serialReceiptPo[index].MfrDate = DateTime.Parse(firstItem.MrfDate ?? string.Empty);
+                _serialReceiptPo[index].ExpDate = DateTime.Parse(firstItem.ExpDate ?? string.Empty);
+                _serialReceiptPo[index].MfrNo = firstItem.MfrSerialNo;
+            }
         }
     }
 
@@ -120,11 +128,11 @@ public partial class DialogAddLineGoodDeliveryOrder
     {
         if (_isItemBatch)
         {
-            batchReceiptPOs.Add(new BatchDeliveryOrder { BatchCode = "", });
+            _batchReceiptPo.Add(new BatchDeliveryOrder { BatchCode = "", });
         }
-        else if (_isItemSerial && serialReceiptPO.Count() < DataResult.Qty)
+        else if (_isItemSerial && _serialReceiptPo.Count() < DataResult.Qty)
         {
-            serialReceiptPO.Add(new SerialDeliveryOrder { SerialCode = "", });
+            _serialReceiptPo.Add(new SerialDeliveryOrder { SerialCode = "", });
         }
     }
 
@@ -132,16 +140,16 @@ public partial class DialogAddLineGoodDeliveryOrder
     {
         if (_isItemBatch)
         {
-            batchReceiptPOs.RemoveAt(index);
+            _batchReceiptPo.RemoveAt(index);
         }
         else if (_isItemSerial)
         {
-            serialReceiptPO.RemoveAt(index);
+            _serialReceiptPo.RemoveAt(index);
         }
     }
 
     private void UpdateGridSize(GridItemSize size)
     {
-        dataGrid = size == GridItemSize.Xs ? "width: 1600px;height:205px" : "width: 2600px;height:405px";
+        dataGrid = size == GridItemSize.Xs ? "width: 1600px;height:205px" : "width: 1600px;overflow-x:scroll;max-height: 400px;";
     }
 }
