@@ -15,7 +15,7 @@ public static class Dependencies
             .ConfigureHttpClient(static client =>
             {
                 client.Timeout = TimeSpan.FromMinutes(5);
-                client.BaseAddress = new Uri("http://localhost:5253");
+                client.BaseAddress = new Uri("http://localhost:8429/BarCodeBackEnd");
             })
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         services.AddSingleton<ApiService>();

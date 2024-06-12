@@ -2,7 +2,7 @@
 using Tri_Wall.Application;
 using Tri_Wall.Infrastructure;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);

@@ -1,8 +1,9 @@
-﻿@API_HostAddress = http://localhost:5000
+﻿@API_HostAddress = http://localhost:8429/BarCodeBackEnd
 #@API_HostAddress = http://1.10.143.138:8429/BarCodeBackEnd
 
 
 #http://localhost/APITRIWALL http://192.168.10.2/AddOnProgram
+#http://localhost:8429/BarCodeBackEnd/HeloWorld
 
 ###
 

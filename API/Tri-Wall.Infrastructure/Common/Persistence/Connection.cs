@@ -55,7 +55,11 @@ public class Connection : IConnection, IUnitOfWork
             SLDServer = _settings.SLDServer,
             LicenseServer = _settings.LicenseServer
         };
-        _company.Connect();
+        var a=_company.Connect();
+        if(a!= 0)
+        {
+            throw new System.Exception(_company.GetLastErrorDescription());
+        }
         return _company;
     }
     public void Rollback(Company company)
