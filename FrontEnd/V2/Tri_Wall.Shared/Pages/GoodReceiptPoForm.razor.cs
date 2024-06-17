@@ -146,7 +146,14 @@ public partial class GoodReceiptPoForm
         return Task.CompletedTask;
     }
 
-    Task OnSearchPurchaseOrderOrGoodRecieptPO(Dictionary<string,object> e)
+    Task OnSearchPurchaseOrder(Dictionary<string,object> e)
+    {
+        Console.WriteLine(e);
+        ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        return Task.CompletedTask;
+    }
+
+    Task OnSearchGoodRecieptPo(Dictionary<string, object> e)
     {
         Console.WriteLine(e);
         //ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
@@ -184,7 +191,7 @@ public partial class GoodReceiptPoForm
             //{ "isDelete", true },
             { "isSelete", true },
             {"onSelete",new Func<string,Task>(OnSeleted)},
-            {"onSearch",new Func<Dictionary<string,object>,Task>(OnSearchPurchaseOrder)},
+            {"onSearch",new Func<Dictionary<string,object>,Task>(OnSearchGoodRecieptPo)},
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
@@ -207,6 +214,7 @@ public partial class GoodReceiptPoForm
             //{"onDelete",new Func<string,Task>(OnDelete)},
             { "isSelete", true },
             {"onSelete",new Func<string,Task>(OnSeletedPurchaseOrder)},
+            {"onSearch",new Func<Dictionary<string,object>,Task>(OnSearchPurchaseOrder)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
