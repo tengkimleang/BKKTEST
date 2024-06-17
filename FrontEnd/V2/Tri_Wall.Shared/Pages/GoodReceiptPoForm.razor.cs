@@ -145,6 +145,14 @@ public partial class GoodReceiptPoForm
         StateHasChanged();
         return Task.CompletedTask;
     }
+
+    Task OnSearchPurchaseOrderOrGoodRecieptPO(Dictionary<string,object> e)
+    {
+        Console.WriteLine(e);
+        //ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        return Task.CompletedTask;
+    }
+
     async Task OnGetBatchOrSerial()
     {
         Console.WriteLine(ViewModel.GetBatchOrSerials.Count());
@@ -176,6 +184,7 @@ public partial class GoodReceiptPoForm
             //{ "isDelete", true },
             { "isSelete", true },
             {"onSelete",new Func<string,Task>(OnSeleted)},
+            {"onSearch",new Func<Dictionary<string,object>,Task>(OnSearchPurchaseOrder)},
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters

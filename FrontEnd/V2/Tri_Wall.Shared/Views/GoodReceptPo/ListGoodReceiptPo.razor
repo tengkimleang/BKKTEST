@@ -29,18 +29,18 @@
                 <div class="content">
                     <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker Label="DocDate" style="width: 100%;"/>
+                            <FluentDatePicker @bind-Value="dateFrom" Label="Date From" style="width: 100%;"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker Label="TaxDate" style="width: 100%;"/>
+                            <FluentDatePicker @bind-Value="dateTo" Label="Date To" style="width: 100%;"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentNumberField Value="0" Label="Document Number" style="width: 100%;">
+                            <FluentNumberField @bind-Value="docNum" Label="Document Number" style="width: 100%;">
                             </FluentNumberField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentLabel Style="margin-bottom: 4px">Action</FluentLabel>
-                            <FluentButton Label="Action" IconEnd="@(new Icons.Filled.Size24.Search())">
+                            <FluentButton Label="Action" OnClick="(e=>OnClickSearch())" IconEnd="@(new Icons.Filled.Size24.Search())">
                                 Search
                             </FluentButton>
                         </FluentGridItem>

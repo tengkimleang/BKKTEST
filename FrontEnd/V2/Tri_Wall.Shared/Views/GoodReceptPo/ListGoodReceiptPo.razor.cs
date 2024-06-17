@@ -25,13 +25,18 @@ public partial class ListGoodReceiptPo
     private Func<string,Task> OnSeleteAsync => Content["onSelete"] as Func<string,Task> ?? default!;
     
     private Func<string,Task> OnDeleteAsync => Content["onDelete"] as Func<string,Task> ?? default!;
+    private Func<Dictionary<string, object>, Task> OnSearch => Content["onSearch"] as Func<Dictionary<string,object>, Task> ?? default!;
 
     private string? dataGrid = "width: 1240px;height:300px;";
     
     private IEnumerable<GetListData> _goodReceiptPoHeaders= new List<GetListData>();
     
     PaginationState pagination = new();
-    
+
+    private DateTime? dateFrom;
+    private DateTime? dateTo;
+    private int docNum;
+
     protected override async Task OnInitializedAsync()
     {
         await pagination.SetTotalItemCountAsync(Convert.ToInt32(TotalItemCounts.FirstOrDefault()?.AllItem)).ConfigureAwait(false);
@@ -49,7 +54,18 @@ public partial class ListGoodReceiptPo
         await Dialog.CloseAsync();
         await OnSeleteAsync(docNum);
     }
-    
+
+    private async Task OnClickSearch()
+    {
+        var searchParams = new Dictionary<string, object>
+        {
+            {"dateFrom", dateFrom ?? Convert.ToDateTime("1999-01-01")},
+            {"dateTo", dateTo?? DateTime.Today},
+            {"docNum", docNum},
+        };
+        await OnSearch(searchParams);
+    }
+
     private void UpdateGridSize(GridItemSize size)
     {
         dataGrid = size == GridItemSize.Xs ? "width: 1200px;height:205px" : "width: 100%;height:405px";
