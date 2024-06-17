@@ -36,9 +36,10 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(string type)
         => apiService.GetTotalItemCount(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "TotalItemCount",type));
-    public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(string storeType,string perPage)
+    public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(string storeType,string perPage
+        ,string type="",string dateFrom="",string dateTo="",string docNum="")
         => apiService.GetListGoodReceiptPo(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", storeType,perPage));
+            "_USP_CALLTRANS_EWTRANSACTION", storeType,perPage,type,dateFrom,dateTo,docNum));
     public Task<PostResponse> PostGoodReceptPo(GoodReceiptPoHeader goodReceiptPoHeader)
         => apiService.PostGoodReceptPo(goodReceiptPoHeader);
     public Task<PostResponse> PostDelveryOrder(DeliveryOrderHeader deliveryOrderHeader)
@@ -55,4 +56,7 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,string itemType,string itemCode)
         => apiService.GetBatchOrSerial(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType,itemCode));
+    public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(string itemCode,string qty)
+        => apiService.GennerateBatchSerial(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GennerateBatchOrSerial", itemCode,qty));
 }

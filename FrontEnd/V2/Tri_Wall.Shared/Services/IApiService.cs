@@ -51,4 +51,7 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(
         [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(
+        [Body] GetRequest request);
 }

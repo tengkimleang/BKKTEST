@@ -24,9 +24,10 @@ public partial class DialogAddLineGoodReceiptPo
     private bool _isItemSerial;
     private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
     private IEnumerable<Items> _items => Content["item"] as IEnumerable<Items> ?? new List<Items>();
+    private Func<Dictionary<string, object>, Task<string>> GetGenerateBatchSerial => Content["getGenerateBatchSerial"] as Func<Dictionary<string,object>, Task<string>> ?? default!;
     private IEnumerable<VatGroups>? _vatGroups => Content["taxPurchase"] as IEnumerable<VatGroups>;
     private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
-    string? dataGrid = "width: 100%;";
+    string? dataGrid = "width: 1600px;";
 
     override protected void OnInitialized()
     {
@@ -105,5 +106,17 @@ public partial class DialogAddLineGoodReceiptPo
     private void UpdateGridSize(GridItemSize size)
     {
         dataGrid = size == GridItemSize.Xs ? "width: 1200px;height:205px" : "width: 100%;height:405px";
+    }
+    private async Task OnClickGennerateBatchSerial(int index)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "itemCode", DataResult.ItemCode },
+            { "qty", DataResult.Qty ?? 0 }
+        };
+        if(_isItemBatch)
+            batchReceiptPOs[index].BatchCode=(await GetGenerateBatchSerial(data));
+        else if(_isItemSerial)
+            serialReceiptPO[index].SerialCode=await GetGenerateBatchSerial(data);
     }
 }

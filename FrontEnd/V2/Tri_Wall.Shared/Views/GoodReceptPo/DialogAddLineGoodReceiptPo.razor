@@ -87,6 +87,10 @@
                                 <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
+                                <FluentButton OnClick="@(e=>OnClickGennerateBatchSerial(batchReceiptPOs.IndexOf(context)))" 
+                                              IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
+                                    Gennerate
+                                </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Batch Code">
                                 <FluentTextField @bind-Value=@context.BatchCode Placeholder="Batch Code"/>
@@ -115,16 +119,21 @@
                             Add Line
                         </FluentButton>
                         <FluentDataGrid TGridItem=@SerialReceiptPo ResizableColumns="true"
-                                        GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
+                                        GridTemplateColumns="1.5fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
                                         Items="serialReceiptPO.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
                                 <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
+                                &nbsp;&nbsp;
+                                <FluentButton OnClick="@(e=>OnClickGennerateBatchSerial(serialReceiptPO.IndexOf(context)))" 
+                                              IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
+                                    Gennerate
+                                </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Serial Code">
-                                <FluentTextField @bind-Value=@context.SerialCode Placeholder="Batch Code"/>
+                                <FluentTextField @bind-Value=@context.SerialCode Placeholder="Serial Code"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
                                 <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">

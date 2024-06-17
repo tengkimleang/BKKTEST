@@ -23,7 +23,7 @@ public partial class ListGoodReceiptPo
     private Func<string,Task> OnSeleteAsync => Content["onSelete"] as Func<string,Task> ?? default!;
     
     private Func<string,Task> OnDeleteAsync => Content["onDelete"] as Func<string,Task> ?? default!;
-    private Func<Dictionary<string, object>, Task> OnSearch => Content["onSearch"] as Func<Dictionary<string,object>, Task> ?? default!;
+    private Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>> OnSearch => Content["onSearch"] as Func<Dictionary<string,object>, Task<ObservableCollection<GetListData>>> ?? default!;
 
     private string? dataGrid = "width: 1240px;height:300px;";
     
@@ -33,7 +33,7 @@ public partial class ListGoodReceiptPo
 
     private DateTime? dateFrom;
     private DateTime? dateTo;
-    private int docNum;
+    private string searchDocNum="";
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,11 +57,11 @@ public partial class ListGoodReceiptPo
     {
         var searchParams = new Dictionary<string, object>
         {
-            {"dateFrom", dateFrom ?? Convert.ToDateTime("1999-01-01")},
-            {"dateTo", dateTo?? DateTime.Today},
-            {"docNum", docNum},
+            {"dateFrom", (dateFrom ?? Convert.ToDateTime("1999-01-01")).ToString("yyyy-MM-dd")},
+            {"dateTo", (dateTo?? DateTime.Now.Date).ToString("yyyy-MM-dd")},
+            {"docNum", searchDocNum}
         };
-        await OnSearch(searchParams);
+        _goodReceiptPoHeaders = await OnSearch(searchParams);
     }
 
     private void UpdateGridSize(GridItemSize size)

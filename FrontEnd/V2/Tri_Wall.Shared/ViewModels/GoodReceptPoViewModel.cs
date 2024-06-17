@@ -54,6 +54,8 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     
     [ObservableProperty]
     ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
+    [ObservableProperty]
+    ObservableCollection<GetGennerateBatchSerial> _getGennerateBatchSerial = new();
 
     public override async Task Loaded()
     {
@@ -94,11 +96,45 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
         }
     }
     [RelayCommand]
+    async Task OnGetGoodReceiptPoBySearch(Dictionary<string,object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader",""
+                ,"condition"
+                ,data["dateFrom"].ToString()??""
+                ,data["dateTo"].ToString()??""
+                ,data["docNum"].ToString()??"")).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    [RelayCommand]
     async Task OnGetPurchaseOrder(string perPage)
     {
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER",perPage)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    [RelayCommand]
+    async Task OnGetPurchaseOrderBySearch(Dictionary<string,object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER",""
+                ,"condition"
+                ,data["dateFrom"].ToString()??""
+                ,data["dateTo"].ToString()??""
+                ,data["docNum"].ToString()??"")).Data ?? new();
         }
         catch (Exception e)
         {
@@ -119,5 +155,20 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
         GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GET_PurchaseOrder_Line_Detail_By_DocNum", docEntry)).Data ?? new();
+    }
+    
+    [RelayCommand]
+    async Task OnGetGennerateBatchSerial(Dictionary<string,object> data)
+    {
+        try
+        {
+            GetGennerateBatchSerial=(await apiService.GennerateBatchSerial(data["itemCode"].ToString()??""
+                ,data["qty"].ToString()??"")).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

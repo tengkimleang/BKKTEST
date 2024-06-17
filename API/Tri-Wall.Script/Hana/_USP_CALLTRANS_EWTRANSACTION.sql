@@ -2836,34 +2836,65 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		END IF;
 	ELSE IF :DTYPE='GoodReceiptPoHeader' THEN
 	
-		DECLARE offset INT;
-		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
-
-		SELECT 
-			 "DocEntry" AS "DocEntry"
-			,"DocNum" AS "DocumentNumber"
-			,"DocDate" AS "DocDate"
-			,"CardCode" AS "VendorCode"
-			,"Comments" AS "Remarks"
-			,"TaxDate" AS "TaxDate"
-		FROM TRIWALL_TRAINKEY."OPDN" 
-		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		IF :par2='' THEN
+			DECLARE offset INT;
+			SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+	
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPDN" 
+			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		ELSE IF :par2='condition' THEN
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPDN" 
+			WHERE "DocStatus"='O'
+			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
+			ORDER BY "DocEntry";
+		END IF;
+		END IF;
 		
 	ELSE IF :DTYPE='GET_PURCHASE_ORDER' THEN
-
-		DECLARE offset INT;
-		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
-
-		SELECT 
-			 "DocEntry" AS "DocEntry"
-			,"DocNum" AS "DocumentNumber"
-			,"DocDate" AS "DocDate"
-			,"CardCode" AS "VendorCode"
-			,"Comments" AS "Remarks"
-			,"TaxDate" AS "TaxDate"
-		FROM TRIWALL_TRAINKEY."OPOR" 
-		WHERE "DocStatus"='O'
-		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		
+		IF :par2='' THEN
+			DECLARE offset INT;
+			SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPOR" 
+			WHERE "DocStatus"='O'
+			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		ELSE IF :par2='condition' THEN
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPOR" 
+			WHERE "DocStatus"='O'
+			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
+			ORDER BY "DocEntry";
+		END IF;
+		END IF;
 		
 	ELSE IF :DTYPE='GetDeliveryOrderHeader' THEN
 	

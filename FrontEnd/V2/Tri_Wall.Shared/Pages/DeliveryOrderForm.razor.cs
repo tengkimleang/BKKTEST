@@ -18,8 +18,9 @@ public partial class DeliveryOrderForm
     public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
     
     private string stringDisplay = "Delivery Order";
-    
-    string? dataGrid = "width: 2600px;height:405px";
+    private string fromWord = "From";
+    private string saveWord = "Save";
+    string? dataGrid = "width: 1600px;height:405px";
     bool isView=false;
     protected void OnCloseOverlay() => visible = true;
     
@@ -78,12 +79,16 @@ public partial class DeliveryOrderForm
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "D-O";
-            dataGrid = "width: 700px;height:205px";
+            stringDisplay = "";
+            dataGrid = "width: 1600px;height:205px";
+            fromWord = "";
+            saveWord = "S-";
         }
         else
         {
             stringDisplay = "Delivery Order";
+            fromWord = "From";
+            saveWord = "Save";
             dataGrid = "width: 1600px;height:405px";
         }
     }

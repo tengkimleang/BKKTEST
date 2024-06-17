@@ -16,7 +16,7 @@
             </FluentBreadcrumb>
             <FluentSpacer />
             <FluentButton OnClick="ListCopyFromPurchaseOrder" IconEnd="@(new Icons.Filled.Size24.Search())">
-                Copy From
+                Copy @fromWord
             </FluentButton>
             &nbsp;&nbsp;
             <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
@@ -28,7 +28,7 @@
             </FluentButton>
             &nbsp;&nbsp;
             <FluentButton OnClick="@((e)=>OnSaveTransaction("print"))" IconEnd="@(new Icons.Filled.Size24.PrintAdd())">
-                Save Print
+                @saveWord Print
             </FluentButton>
         </FluentHeader>
         <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
@@ -100,7 +100,7 @@
                                         <FluentButton Style="color:#BC2F32" OnClick="(e)=> DeleteLine(ViewModel.DeliveryOrderForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                             Delete
                                         </FluentButton>
-                                        <FluentButton Style="color:#036ac4" OnClick="(e)=> OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Delete())">
+                                        <FluentButton OnClick="(e)=> OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Edit())">
                                             Edit
                                         </FluentButton>
                                     </TemplateColumn>
