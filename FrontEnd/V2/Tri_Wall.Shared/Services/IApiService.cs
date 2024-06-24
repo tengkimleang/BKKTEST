@@ -4,6 +4,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.IssueForProduction;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -54,4 +55,13 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(
         [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders(
+        [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(
+        [Body] GetRequest request);
+    [Post("/issueForProduction")]
+    public Task<PostResponse> PostIssueProduction(
+        [Body] IssueProductionHeader request);
 }

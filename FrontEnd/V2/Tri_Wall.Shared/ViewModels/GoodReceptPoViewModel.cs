@@ -10,69 +10,64 @@ namespace Tri_Wall.Shared.ViewModels;
 
 public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-    [ObservableProperty]
-    GoodReceiptPoHeader _goodReceiptPoForm=new();
+    #region Data Member
 
-    [ObservableProperty]
-    ObservableCollection<Series> _series = new();
+    [ObservableProperty] GoodReceiptPoHeader _goodReceiptPoForm = new();
 
-    [ObservableProperty]
-    ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
+    [ObservableProperty] ObservableCollection<Series> _series = new();
 
-    [ObservableProperty]
-    ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
+    [ObservableProperty] ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
 
-    [ObservableProperty]
-    ObservableCollection<Items> _items = loadMasterData.GetItems;
+    [ObservableProperty] ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
 
-    [ObservableProperty]
-    ObservableCollection<VatGroups> _taxPurchases = loadMasterData.GetTaxPurchases;
+    [ObservableProperty] ObservableCollection<Items> _items = loadMasterData.GetItems;
 
-    [ObservableProperty]
-    ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+    [ObservableProperty] ObservableCollection<VatGroups> _taxPurchases = loadMasterData.GetTaxPurchases;
 
-    [ObservableProperty]
-    PostResponse _postResponses = new();
-    
-    [ObservableProperty]
-    ObservableCollection<TotalItemCount> _totalItemCount=new();
-    
-    [ObservableProperty]
-    ObservableCollection<TotalItemCount> _totalItemCountPurchaseOrder=new();
+    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
-    [ObservableProperty]
-    ObservableCollection<GetListData> _getListData = new();
+    [ObservableProperty] PostResponse _postResponses = new();
+
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCount = new();
+
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountPurchaseOrder = new();
+
+    [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
     ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
 
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
 
-    [ObservableProperty]
-    ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
-    
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
-    [ObservableProperty]
-    ObservableCollection<GetGennerateBatchSerial> _getGennerateBatchSerial = new();
+    [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
+
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
+
+    [ObservableProperty] ObservableCollection<GetGennerateBatchSerial> _getGennerateBatchSerial = new();
+
+    [ObservableProperty] Boolean _isView = false;
+
+    #endregion
+
+    #region Method
 
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
-                 (await apiService.GetSeries("20")).Data ?? new());
+            (await apiService.GetSeries("20")).Data ?? new());
         Vendors = await CheckingValueT(Vendors, async () =>
-                        (await apiService.GetVendors()).Data ?? new());
+            (await apiService.GetVendors()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
-                    (await apiService.GetContactPersons()).Data ?? new());
+            (await apiService.GetContactPersons()).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
-                    (await apiService.GetItems()).Data ?? new());
+            (await apiService.GetItems()).Data ?? new());
         TaxPurchases = await CheckingValueT(TaxPurchases, async () =>
-                    (await apiService.GetTaxPurchases()).Data ?? new());
+            (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-                    (await apiService.GetWarehouses()).Data ?? new());
+            (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("GoodReceiptPo")).Data ?? new();
         TotalItemCountPurchaseOrder = (await apiService.GetTotalItemCount("PurchaseOrder")).Data ?? new();
+        IsView = true;
     }
 
     [RelayCommand]
@@ -81,13 +76,13 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
         GoodReceiptPoForm.ContactPersonCode = "0";
         PostResponses = await apiService.PostGoodReceptPo(GoodReceiptPoForm);
     }
-    
+
     [RelayCommand]
     async Task OnGetGoodReceiptPo(string perPage)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader",perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -95,16 +90,17 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             throw;
         }
     }
+
     [RelayCommand]
-    async Task OnGetGoodReceiptPoBySearch(Dictionary<string,object> data)
+    async Task OnGetGoodReceiptPoBySearch(Dictionary<string, object> data)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader",""
-                ,"condition"
-                ,data["dateFrom"].ToString()??""
-                ,data["dateTo"].ToString()??""
-                ,data["docNum"].ToString()??"")).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", ""
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
         }
         catch (Exception e)
         {
@@ -112,12 +108,13 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             throw;
         }
     }
+
     [RelayCommand]
     async Task OnGetPurchaseOrder(string perPage)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER",perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -125,16 +122,17 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             throw;
         }
     }
+
     [RelayCommand]
-    async Task OnGetPurchaseOrderBySearch(Dictionary<string,object> data)
+    async Task OnGetPurchaseOrderBySearch(Dictionary<string, object> data)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER",""
-                ,"condition"
-                ,data["dateFrom"].ToString()??""
-                ,data["dateTo"].ToString()??""
-                ,data["docNum"].ToString()??"")).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", ""
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
         }
         catch (Exception e)
         {
@@ -146,24 +144,28 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_GoodReceipt_PO_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GET_GoodReceipt_PO_Line_Detail_By_DocNum",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialGoodReceipt")).Data ?? new();
+        GoodReceiptPoHeaderDeatialByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
+                "GET_GoodReceipt_PO_Header_Detail_By_DocNum")).Data ?? new();
+        GoodReceiptPoLineByDocNums =
+            (await apiService.GetLineByDocNum("GET_GoodReceipt_PO_Line_Detail_By_DocNum", docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceipt")).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
-        GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GET_PurchaseOrder_Line_Detail_By_DocNum", docEntry)).Data ?? new();
+        GetPurchaseOrderLineByDocNums =
+            (await apiService.GetLineByDocNum("GET_PurchaseOrder_Line_Detail_By_DocNum", docEntry)).Data ?? new();
     }
-    
+
     [RelayCommand]
-    async Task OnGetGennerateBatchSerial(Dictionary<string,object> data)
+    async Task OnGetGennerateBatchSerial(Dictionary<string, object> data)
     {
         try
         {
-            GetGennerateBatchSerial=(await apiService.GennerateBatchSerial(data["itemCode"].ToString()??""
-                ,data["qty"].ToString()??"")).Data ?? new();
+            GetGennerateBatchSerial = (await apiService.GennerateBatchSerial(data["itemCode"].ToString() ?? ""
+                , data["qty"].ToString() ?? "")).Data ?? new();
         }
         catch (Exception e)
         {
@@ -171,4 +173,6 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             throw;
         }
     }
+
+    #endregion
 }

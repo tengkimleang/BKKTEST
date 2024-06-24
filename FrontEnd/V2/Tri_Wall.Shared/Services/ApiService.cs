@@ -4,6 +4,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.IssueForProduction;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -59,4 +60,12 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(string itemCode,string qty)
         => apiService.GennerateBatchSerial(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GennerateBatchOrSerial", itemCode,qty));
+    public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders()
+        => apiService.GetProductionOrders(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order"));
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(string docEntry)
+        => apiService.GetProductionOrderLines(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order_Lines",docEntry));
+    public Task<PostResponse> PostIssueProduction(IssueProductionHeader issueProductionHeader)
+        => apiService.PostIssueProduction(issueProductionHeader);
 }

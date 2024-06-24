@@ -519,16 +519,16 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,"SeriesName"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
-				  FROM TRIWALL_TRAINKEY."OIGE" 
+				  FROM TRIWALL_TRAINKEY."OPDN" 
 				  WHERE "Series"=B."Series"
-				 )AS "DocNum" 
+				 )AS "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
 			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
-				B."Indicator"=YEAR(CURRENT_DATE) 
-				AND B."ObjectCode"=60 
+				A."Category"=YEAR(CURRENT_DATE)
+				AND TO_VARCHAR(B."ObjectCode")=60 
 				AND "SubNum"=MONTH(CURRENT_DATE) 
-				AND B."Indicator"<>'Default';
+				And B."Indicator"<>'Default';
 		ELSE IF :par1='22' THEN
 			SELECT 
 				 "Series" AS "Code"
@@ -852,7 +852,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 A."DocEntry" AS "DocEntry"
 				,A."DocNum" AS "DocNum"
-				,TO_VARCHAR(A."DueDate",'dd-MMM-yyyy') AS "DueDate"
+				,TO_VARCHAR(A."DueDate",'DD-MM-yyyy') AS "DueDate"
 				,A."ItemCode" AS "ProductNo"
 				,C."ItemName" AS "ProductName"
 				,A."PlannedQty"-A."CmpltQty" AS "Qty"
@@ -865,7 +865,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 					'N'
 				 END AS "ItemType"
 				,C."CodeBars"
-				,TO_VARCHAR(A."StartDate",'dd-MMM-yyyy') AS "StartDate"
+				,TO_VARCHAR(A."StartDate",'dd-MM-yyyy') AS "StartDate"
 				,E."BPLid" AS "BranchCode"
 				,F."BPLName" AS "BranchName"
 				,A."Warehouse"
@@ -875,18 +875,17 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS D ON A."ItemCode"=D."ItemCode" AND "PriceList"=1
 			LEFT JOIN TRIWALL_TRAINKEY."OWHS" AS E ON E."WhsCode"=A."Warehouse"
 			LEFT JOIN TRIWALL_TRAINKEY."OBPL" AS F ON E."BPLid"=F."BPLId"
-			WHERE A."Series"=CASE WHEN :par1='-1' THEN A."Series" ELSE :par1 END 
-				  AND A."Status"='R'
+			WHERE --A."Series"=CASE WHEN :par1='-1' THEN A."Series" ELSE :par1 END 
+				  --AND 
+				  A."Status"='R'
 				  AND A."DocEntry" NOT IN (SELECT 
 				  								"BaseEntry" 
 				  							FROM TRIWALL_TRAINKEY."IGN1" 
 				  							WHERE "BaseType"=202)
-				  AND "DocNum" LIKE '%'|| :par2 ||'%'
+				  --AND "DocNum" LIKE '%'|| :par2 ||'%'
 		)A 
 		WHERE A."Qty"<>0
 		ORDER BY "DocNum" DESC;
-		/*OFFSET cast(@par3 as int) ROWS
-		FETCH NEXT cast(@par4 as int) ROWS ONLY;*/
 	ELSE IF :DTYPE='GET_Production_Order_Count' THEN
 		SELECT 
 			COUNT(A."DocEntry") AS "COUNT" 
@@ -3086,6 +3085,26 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			WHERE B."ItemCode"=:par2 AND IFNULL(C."Quantity",0)>0;
 		END IF;
 		END IF;
+	ELSE IF :DTYPE='GET_Production_Order_Lines' THEN
+		execute immediate '
+			SELECT  
+			 A."DocEntry" AS "DocEntry"
+			,A."LineNum" AS "OrderLineNum"
+			,A."ItemCode" AS "ItemCode"
+			,A."ItemName" AS "ItemName"
+			,A."PlannedQty" AS "Qty"
+			,A."UomCode" AS "Uom"
+			,A."wareHouse" AS "WarehouseCode" 
+			,CASE WHEN B."ManSerNum"=''Y'' THEN
+			 	''S''
+			 WHEN B."ManBtchNum"=''Y'' THEN
+			 	''B''
+			 ELSE ''N'' END AS "ItemType"
+			FROM TRIWALL_TRAINKEY."WOR1" AS A
+			LEFT JOIN TRIWALL_TRAINKEY."OWOR" AS AA ON AA."DocEntry"=A."DocEntry"
+			LEFT JOIN TRIWALL_TRAINKEY."OITM" AS B ON B."ItemCode"=A."ItemCode"
+			WHERE A."DocEntry" IN ('|| :par1 ||') AND A."IssueType"=''M'' AND A."IssuedQty"=0;';
+	END IF;
 	END IF;
 	END IF;
 	END IF;

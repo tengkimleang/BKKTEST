@@ -4,6 +4,7 @@ using Tri_Wall.Application.Authorize;
 using Tri_Wall.Application.DeliveryOrder;
 using Tri_Wall.Application.GoodReceiptPo;
 using Tri_Wall.Application.GoodReturn;
+using Tri_Wall.Application.IssueForProductions;
 using Tri_Wall.Application.Layout;
 using Tri_Wall.Application.SaleOrder;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IValidator<AddGoodReturnCommand>, AddGoodReturnCommandValidator>();
         services.AddScoped<IValidator<LayoutCommand>, LayoutCommandValidator>();
         services.AddScoped<IValidator<AddSaleOrderCommand>, AddSaleOrderCommandValidator>();
+        services.AddScoped<IValidator<AddIssueForProductionCommand>, AddIssueForProductionCommandValidator>();
         return services;
     }
 }

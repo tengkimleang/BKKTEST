@@ -19,31 +19,31 @@ public partial class DialogAddLineGoodReceiptPo
 
     private GoodReceiptPoLine DataResult { get; set; } = new();
     private List<BatchReceiptPo> batchReceiptPOs = new();
-    private List<SerialReceiptPo> serialReceiptPO = new();
+    private List<SerialReceiptPo> _serialReceiptPo = new();
     private bool _isItemBatch;
     private bool _isItemSerial;
     private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
-    private IEnumerable<Items> _items => Content["item"] as IEnumerable<Items> ?? new List<Items>();
+    private IEnumerable<Items> Items => Content["item"] as IEnumerable<Items> ?? new List<Items>();
     private Func<Dictionary<string, object>, Task<string>> GetGenerateBatchSerial => Content["getGenerateBatchSerial"] as Func<Dictionary<string,object>, Task<string>> ?? default!;
-    private IEnumerable<VatGroups>? _vatGroups => Content["taxPurchase"] as IEnumerable<VatGroups>;
-    private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
+    private IEnumerable<VatGroups>? VatGroups => Content["taxPurchase"] as IEnumerable<VatGroups>;
+    private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
     string? dataGrid = "width: 1600px;";
 
-    override protected void OnInitialized()
+    protected override void OnInitialized()
     {
-        if (Content.ContainsKey("line"))
+        if (Content.TryGetValue("line", out var value))
         {
-            DataResult = Content["line"] as GoodReceiptPoLine ?? new GoodReceiptPoLine();
+            DataResult = value as GoodReceiptPoLine ?? new GoodReceiptPoLine();
             batchReceiptPOs = DataResult.Batches ?? new List<BatchReceiptPo>();
-            serialReceiptPO = DataResult.Serials ?? new List<SerialReceiptPo>();
-            _selectedItem = _items.Where(i => i.ItemCode == DataResult.ItemCode);
+            _serialReceiptPo = DataResult.Serials ?? new List<SerialReceiptPo>();
+            _selectedItem = Items.Where(i => i.ItemCode == DataResult.ItemCode);
             UpdateItemDetails(DataResult.ItemCode);
         }
     }
 
     private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
-        e.Items = _items?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = Items.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                             i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
                             .OrderBy(i => i.ItemCode);
     }
@@ -51,7 +51,7 @@ public partial class DialogAddLineGoodReceiptPo
     private async Task SaveAsync()
     {
         DataResult.Batches = batchReceiptPOs;
-        DataResult.Serials = serialReceiptPO;
+        DataResult.Serials = _serialReceiptPo;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
         {
@@ -68,7 +68,7 @@ public partial class DialogAddLineGoodReceiptPo
         });
     }
 
-    private void UpdateItemDetails(string newValue)
+    private void UpdateItemDetails(string? newValue)
     {
         var firstItem = _selectedItem.FirstOrDefault();
         DataResult.Price = double.Parse(firstItem?.PriceUnit ?? "0");
@@ -85,9 +85,9 @@ public partial class DialogAddLineGoodReceiptPo
         {
             batchReceiptPOs.Add(new BatchReceiptPo { BatchCode = "", });
         }
-        else if (_isItemSerial && serialReceiptPO.Count() < DataResult.Qty)
+        else if (_isItemSerial && _serialReceiptPo.Count() < DataResult.Qty)
         {
-            serialReceiptPO.Add(new SerialReceiptPo { SerialCode = "", });
+            _serialReceiptPo.Add(new SerialReceiptPo { SerialCode = "", });
         }
     }
 
@@ -99,7 +99,7 @@ public partial class DialogAddLineGoodReceiptPo
         }
         else if (_isItemSerial)
         {
-            serialReceiptPO.RemoveAt(index);
+            _serialReceiptPo.RemoveAt(index);
         }
     }
 
@@ -117,6 +117,6 @@ public partial class DialogAddLineGoodReceiptPo
         if(_isItemBatch)
             batchReceiptPOs[index].BatchCode=(await GetGenerateBatchSerial(data));
         else if(_isItemSerial)
-            serialReceiptPO[index].SerialCode=await GetGenerateBatchSerial(data);
+            _serialReceiptPo[index].SerialCode=await GetGenerateBatchSerial(data);
     }
 }

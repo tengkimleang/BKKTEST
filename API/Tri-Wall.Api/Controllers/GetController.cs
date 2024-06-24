@@ -20,9 +20,4 @@ public class GetController(ISender mediator) : ApiController
                 ErrorMessage = err[0].Description
             }));
     }
-    [HttpGet("HeloWord")]
-    public async Task<IActionResult> Get()
-    {
-        return Ok("Hello World");
-    }
 }

@@ -1,5 +1,5 @@
 ﻿
-namespace Tri_Wall.Shared.Models;
+namespace Tri_Wall.Shared.Models.Gets;
 
 public record ContactPersons(
     string ContactID,

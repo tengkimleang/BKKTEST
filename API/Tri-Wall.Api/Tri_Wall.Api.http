@@ -15,8 +15,8 @@ Content-Type: application/json
 
 {
   "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
-  "DBType": "GennerateBatchOrSerial",
-  "Par1": "27-25",
+  "DBType": "GET_Production_Order_Lines",
+  "Par1": "''709'',''628''",
   "Par2": "2",
   "Par3": "",
   "Par4": "",
@@ -100,4 +100,56 @@ Content-Type: application/json
             "LineStatus": 0
         }
     ]
+}
+
+###
+
+POST {{API_HostAddress}}/issueForProduction
+Content-Type: application/json
+
+{
+  "series": "335",
+  "remarks": "",
+  "docDate": "2024-06-14T00:00:00",
+  "lines": [
+    {
+      "docNum": "714",
+      "lineNum": 0,
+      "baseLineNum": 1,
+      "itemCode": "RLCA1501390IPP",
+      "itemName": "MEDIUM_CA150_S.1390",
+      "qty": 1.6666666666666665,
+      "qtyRequire": 0,
+      "price": 0,
+      "whsCode": "RM01",
+      "uomName": "Manual",
+      "ManageItem": "N"
+    },
+    {
+      "docNum": "714",
+      "lineNum": 0,
+      "baseLineNum": 2,
+      "itemCode": "RLCA1501390IPP",
+      "itemName": "MEDIUM_CA150_S.1390",
+      "qty": 1.6666666666666665,
+      "qtyRequire": 0,
+      "price": 0,
+      "whsCode": "RM01",
+      "uomName": "Manual",
+      "ManageItem": "N"
+    },
+    {
+      "docNum": "714",
+      "lineNum": 0,
+      "baseLineNum": 3,
+      "itemCode": "RLCA1501390IPP",
+      "itemName": "MEDIUM_CA150_S.1390",
+      "qty": 1.6666666666666665,
+      "qtyRequire": 0,
+      "price": 0,
+      "whsCode": "RM01",
+      "uomName": "Manual",
+      "ManageItem": "N"
+    }
+  ]
 }

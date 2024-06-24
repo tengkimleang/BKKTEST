@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
@@ -21,11 +22,14 @@ public static class Dependencies
         services.AddSingleton<ApiService>();
         services.AddScoped<GoodReceptPoViewModel>();
         services.AddScoped<DeliveryOrderViewModel>();
+        services.AddScoped<IssueProductionOrderViewModel>();
         #region Validator
         services.AddScoped<IValidator<GoodReceiptPoHeader>, GoodReceiptPoHeaderValidator>();
         services.AddScoped<IValidator<GoodReceiptPoLine>, GoodReceiptPoLineValidator>();
         services.AddScoped<IValidator<DeliveryOrderHeader>, DeliveryOrderHeaderValidator>();
         services.AddScoped<IValidator<DeliveryOrderLine>, DeliveryOrderLineValidator>();
+        services.AddScoped<IValidator<IssueProductionHeader>, IssueProductionHeaderValidator>();
+        services.AddScoped<IValidator<IssueProductionLine>, IssueProductionLineValidator>();
         #endregion
         return services;
     }

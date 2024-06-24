@@ -34,21 +34,21 @@ public partial class DialogAddLineGoodDeliveryOrder
     private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
     string? dataGrid = "width: 1600px;overflow-x:scroll;";
 
-    override protected void OnInitialized()
+    protected override async void OnInitialized()
     {
-        if (Content.ContainsKey("line"))
+        if (Content.TryGetValue("line", out var value))
         {
-            DataResult = Content["line"] as DeliveryOrderLine ?? new DeliveryOrderLine();
+            DataResult = value as DeliveryOrderLine ?? new DeliveryOrderLine();
             _batchReceiptPo = DataResult.Batches ?? new List<BatchDeliveryOrder>();
             _serialReceiptPo = DataResult.Serials ?? new List<SerialDeliveryOrder>();
             _selectedItem = _item.Where(i => i.ItemCode == DataResult.ItemCode);
-            UpdateItemDetails(DataResult.ItemCode);
+            await UpdateItemDetails(DataResult.ItemCode);
         }
     }
 
     private void OnSearch(OptionsSearchEventArgs<Items> e)
     {
-        e.Items = _item?.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = _item.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                             i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
                             .OrderBy(i => i.ItemCode);
     }

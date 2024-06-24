@@ -35,7 +35,7 @@ public static class DependencyInjection
         services.AddSingleton<IDataProviderRepository, DataProviderRepository>();
         services.AddSingleton<IReportLayout, ReportLayout>();
         // Add user repository to the service collection
-        //services.AddHostedService<LoadConnectionSapService>();
+        services.AddHostedService<LoadConnectionSapService>();
         return services;
     }
 }

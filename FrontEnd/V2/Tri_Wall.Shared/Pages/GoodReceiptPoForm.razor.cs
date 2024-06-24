@@ -39,7 +39,7 @@ public partial class GoodReceiptPoForm
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = (goodReceiptPoLine == null) ? "Add Line" : "Update Line",
+            Title = (goodReceiptPoLine is null) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",

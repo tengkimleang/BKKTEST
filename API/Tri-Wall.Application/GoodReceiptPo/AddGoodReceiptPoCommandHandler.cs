@@ -7,10 +7,9 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.GoodReceiptPo;
 
-public class AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork, IDataProviderRepository queryProvider)
+public class AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<AddGoodReceiptPoCommand, ErrorOr<PostResponse>>
 {
-    private readonly IDataProviderRepository queryProvider = queryProvider;
 
     public Task<ErrorOr<PostResponse>> Handle(AddGoodReceiptPoCommand request, CancellationToken cancellationToken)
     {

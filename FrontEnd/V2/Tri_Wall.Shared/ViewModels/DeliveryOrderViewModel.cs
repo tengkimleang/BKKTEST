@@ -11,13 +11,13 @@ namespace Tri_Wall.Shared.ViewModels;
 public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     [ObservableProperty]
-    DeliveryOrderHeader _DeliveryOrderForm=new();
+    DeliveryOrderHeader _deliveryOrderForm=new();
 
     [ObservableProperty]
     ObservableCollection<Series> _series = new();
 
     [ObservableProperty]
-    ObservableCollection<Vendors> _Customers = loadMasterData.GetCustomers;
+    ObservableCollection<Vendors> _customers = loadMasterData.GetCustomers;
 
     [ObservableProperty]
     ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
@@ -57,6 +57,9 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
 
     [ObservableProperty]
     ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
+    
+    [ObservableProperty]
+    Boolean _isView=false;
 
     public override async Task Loaded()
     {
@@ -74,6 +77,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
                     (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("DeliveryOrder")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("SaleOrder")).Data ?? new();
+        IsView = true;
     }
 
     [RelayCommand]

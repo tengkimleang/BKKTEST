@@ -1,6 +1,4 @@
-﻿@using Tri_Wall.Shared.Models.Gets
-@rendermode InteractiveWebAssembly
-@implements IDialogContentComponent<Dictionary<string, object>>
+﻿@implements IDialogContentComponent<Dictionary<string, object>>
 <style>
     .fluent-toast-provider {
         z-index: 10050 !important; /* Adjust this value as needed */
@@ -21,7 +19,7 @@
 </FluentDialogFooter>
 @* Body *@
 <FluentDialogBody Style="overflow-y:scroll;">
-    <FluentLayout Style="margin-top: 0px;">
+    <FluentLayout Style="margin-top: 0;">
         <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
             <FluentBodyContent Class="body-content" Style="overflow: auto">
                 <div class="content">
@@ -36,7 +34,7 @@
                                                 MaximumOptionsSearch="1"
                                                 Label="Item Code"
                                                 Virtualize="true"
-                                                Items="_items"
+                                                Items="Items"
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
                                                 @bind-SelectedOptions="@_selectedItem"
@@ -55,10 +53,10 @@
                                           TOption="VatGroups"
                                           Required
                                           Label="Vat Code"
-                                          Items="_vatGroups"
+                                          Items="VatGroups"
                                           OptionText="@(i => i.Code)"
                                           OptionValue="@(i => i.Code)"
-                                          SelectedOption="_vatGroups?.FirstOrDefault()"
+                                          SelectedOption="VatGroups?.FirstOrDefault()"
                                           @bind-Value="@DataResult.VatCode"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -66,17 +64,18 @@
                                           TOption="Warehouses"
                                           Required
                                           Label="Warehouse"
-                                          Items="_warehouses"
+                                          Items="Warehouses"
                                           OptionText="@(i => i.Name)"
                                           OptionValue="@(i => i.Code)"
-                                          SelectedOption="_warehouses?.FirstOrDefault()"
+                                          SelectedOption="Warehouses?.FirstOrDefault()"
                                           @bind-Value="@DataResult.WarehouseCode"/>
                         </FluentGridItem>
 
                     </FluentGrid>
                     @if (_isItemBatch)
                     {
-                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" 
+                                      IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
                         <FluentDataGrid TGridItem=@BatchReceiptPo ResizableColumns="true"
@@ -84,12 +83,13 @@
                                         Items="batchReceiptPOs.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" 
+                                              IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
-                                <FluentButton OnClick="@(e=>OnClickGennerateBatchSerial(batchReceiptPOs.IndexOf(context)))" 
+                                <FluentButton OnClick="@( e=> OnClickGennerateBatchSerial(batchReceiptPOs.IndexOf(context)))"
                                               IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
-                                    Gennerate
+                                    Generate
                                 </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Batch Code">
@@ -105,11 +105,11 @@
                                 <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date">
                                 </FluentDatePicker>
                             </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Manfecture Date">
-                                <FluentDatePicker @bind-Value=@context.ManfectureDate Placeholder="Manfecture Date"></FluentDatePicker>
+                            <TemplateColumn Tooltip="true" Title="Manufacture Date">
+                                <FluentDatePicker @bind-Value=@context.ManfectureDate Placeholder="Manufacture Date"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Admission Date">
-                                <FluentDatePicker @bind-Value=@context.AdmissionDate Placeholder="Admission Date"></FluentDatePicker>
+                                <FluentDatePicker @bind-Value=@context.AdmissionDate Placeholder="Admission Date"/>
                             </TemplateColumn>
                         </FluentDataGrid>
                     }
@@ -120,34 +120,35 @@
                         </FluentButton>
                         <FluentDataGrid TGridItem=@SerialReceiptPo ResizableColumns="true"
                                         GridTemplateColumns="1.5fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
-                                        Items="serialReceiptPO.AsQueryable()"
+                                        Items="_serialReceiptPo.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(serialReceiptPO.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(_serialReceiptPo.IndexOf(context))"
+                                              IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
                                 &nbsp;&nbsp;
-                                <FluentButton OnClick="@(e=>OnClickGennerateBatchSerial(serialReceiptPO.IndexOf(context)))" 
+                                <FluentButton OnClick="@(e => OnClickGennerateBatchSerial(_serialReceiptPo.IndexOf(context)))"
                                               IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
-                                    Gennerate
+                                    Generate
                                 </FluentButton>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Serial Code">
                                 <FluentTextField @bind-Value=@context.SerialCode Placeholder="Serial Code"/>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">
-                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
-                                </FluentNumberField>
+                                <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty"/>
+                                
                             </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Manfecture Code">
+                            <TemplateColumn Tooltip="true" Title="Manufacture Code">
                                 <FluentTextField @bind-Value=@context.MfrNo Placeholder="MfrNo"></FluentTextField>
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Expire Date">
                                 <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date">
                                 </FluentDatePicker>
                             </TemplateColumn>
-                            <TemplateColumn Tooltip="true" Title="Manfecture Date">
-                                <FluentDatePicker @bind-Value=@context.MfrDate Placeholder="Manfecture Date"></FluentDatePicker>
+                            <TemplateColumn Tooltip="true" Title="Manufacture Date">
+                                <FluentDatePicker @bind-Value=@context.MfrDate Placeholder="Manufacture Date"></FluentDatePicker>
                             </TemplateColumn>
                         </FluentDataGrid>
                     }
