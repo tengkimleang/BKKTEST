@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.Json;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -37,6 +38,8 @@ public partial class DialogAddLineIssueProductionOrder
         if (Content.TryGetValue("line", out var value))
         {
             DataResult = value as IssueProductionLine ?? new IssueProductionLine();
+            _batchReceiptPo = DataResult.Batches ?? new List<BatchIssueProduction>();
+            _serialReceiptPo = DataResult.Serials ?? new List<SerialIssueProduction>();
             _selectedItem = ListGetProductionOrderLines.Where(i => i.ItemCode == DataResult.ItemCode);
             await UpdateItemDetails(DataResult.ItemCode);
         }
@@ -74,12 +77,15 @@ public partial class DialogAddLineIssueProductionOrder
     private async Task UpdateItemDetails(string? newValue)
     {
         var firstItem = _selectedItem.FirstOrDefault();
+
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
         DataResult.UomName = firstItem?.Uom ?? "";
         DataResult.ManageItem=firstItem?.ItemType;
         DataResult.QtyRequire =Convert.ToDouble(firstItem?.Qty ?? "0");
+        IsItemBatch = firstItem?.ItemType == "B";
+        IsItemSerial = firstItem?.ItemType == "S";
         if (firstItem?.ItemType != "N")
             _serialBatchDeliveryOrders=await GetSerialBatch(new Dictionary<string, string>
             {
@@ -116,6 +122,7 @@ public partial class DialogAddLineIssueProductionOrder
     }
     private void OnSearchSerial(OptionsSearchEventArgs<GetBatchOrSerial> e)
     {
+        Console.WriteLine(JsonSerializer.Serialize(_serialBatchDeliveryOrders));
         e.Items = _serialBatchDeliveryOrders?.Where(i => i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                          i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.SerialBatch);
@@ -126,6 +133,7 @@ public partial class DialogAddLineIssueProductionOrder
         if(type == "Batch")
         {
             var firstItem = _batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
+            Console.WriteLine(JsonSerializer.Serialize(_batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault()));
             if (firstItem != null)
             {
                 _batchReceiptPo[index].BatchCode = firstItem.SerialBatch ?? string.Empty;

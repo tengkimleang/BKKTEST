@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.VisualBasic;
 using Refit;
-using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Views.GoodReceptPo;
@@ -15,12 +14,12 @@ using Tri_Wall.Shared.Views.IssueForProduction;
 
 namespace Tri_Wall.Shared.Pages;
 
-public partial class IssueForProductionForm
+public partial class ReceiptFromProductionForm
 {
     [Inject] public IValidator<IssueProductionHeader>? Validator { get; init; }
     [Inject] public IValidator<IssueProductionLine>? ValidatorLine { get; init; }
 
-    private string stringDisplay = "Issue For Production";
+    private string stringDisplay = "Receipt From Production";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
     bool isView = false;
@@ -144,7 +143,7 @@ public partial class IssueForProductionForm
         }
         else
         {
-            stringDisplay = "Issue For Production";
+            stringDisplay = "Receipt For Production";
             saveWord = "Save";
             dataGrid = "width: 1600px;height:405px";
         }
@@ -293,5 +292,4 @@ public partial class IssueForProductionForm
             Height = "80%"
         }).ConfigureAwait(false);
     }
-    
 }

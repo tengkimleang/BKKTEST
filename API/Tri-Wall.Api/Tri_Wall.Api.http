@@ -15,9 +15,9 @@ Content-Type: application/json
 
 {
   "StoreName": "_USP_CALLTRANS_EWTRANSACTION",
-  "DBType": "GET_Production_Order_Lines",
-  "Par1": "''709'',''628''",
-  "Par2": "2",
+  "DBType": "SERIES",
+  "Par1": "60",
+  "Par2": "",
   "Par3": "",
   "Par4": "",
   "Par5": ""

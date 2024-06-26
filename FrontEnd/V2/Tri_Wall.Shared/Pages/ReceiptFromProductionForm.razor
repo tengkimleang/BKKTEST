@@ -1,9 +1,9 @@
-﻿@page "/issueforproduction"
+﻿@page "/receiptfromproductionform"
 @using Tri_Wall.Shared.Models.IssueForProduction
-@inherits MvvmComponentBase<IssueProductionOrderViewModel>
+@inherits MvvmComponentBase<ReceiptFromProductionOrderViewModel>
 @rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
-<PageTitle>Issue For Production</PageTitle>
+<PageTitle>Receipt Form Production</PageTitle>
 @if (ViewModel.IsView is false)
 {
     <p>Loading ......</p>

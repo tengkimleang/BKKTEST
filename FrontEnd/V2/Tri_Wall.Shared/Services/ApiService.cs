@@ -54,18 +54,24 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(string docEntry,string type)
         => apiService.GetBatchOrSerial(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", type, docEntry));
-    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,string itemType,string itemCode)
+    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,string itemType,string itemCode,string docEntry="")
         => apiService.GetBatchOrSerial(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType,itemCode));
+            "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType,itemCode,docEntry));
     public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(string itemCode,string qty)
         => apiService.GennerateBatchSerial(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GennerateBatchOrSerial", itemCode,qty));
-    public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders()
+    public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders(string type)
         => apiService.GetProductionOrders(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order"));
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order",type));
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order_Lines",docEntry));
     public Task<PostResponse> PostIssueProduction(IssueProductionHeader issueProductionHeader)
         => apiService.PostIssueProduction(issueProductionHeader);
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLine(string docEntry)
+        => apiService.GetProductionOrderLines(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
+        => apiService.GetProductionOrderLines(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
 }

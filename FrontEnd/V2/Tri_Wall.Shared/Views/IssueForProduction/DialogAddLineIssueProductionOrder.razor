@@ -95,7 +95,7 @@
                                                     Items="_serialBatchDeliveryOrders"
                                                     MaximumSelectedOptions="1"
                                                     OptionText="@(item => $"{item.SerialBatch}")"
-                                                    @bind-SelectedOptions="@_selectedSerialDeliveryOrders"
+                                                    @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
                                                     ValueChanged="@(e=> OnSelectedSerialOrBatch(e,_batchReceiptPo.IndexOf(context),"Batch"))" />
                             </TemplateColumn>
                             <TemplateColumn Tooltip="true" Title="Qty">

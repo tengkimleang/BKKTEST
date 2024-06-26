@@ -155,7 +155,6 @@ public partial class DeliveryOrderForm
     }
     async Task OnGetBatchOrSerial()
     {
-        Console.WriteLine(ViewModel.GetBatchOrSerials.Count());
         var dictionary = new Dictionary<string, object>
         {
             { "getData", ViewModel.GetBatchOrSerials },
@@ -175,6 +174,11 @@ public partial class DeliveryOrderForm
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
+    async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
+    {
+        await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(e);
+        return ViewModel.GetListData;
+    }
     async Task OpenListDataAsyncAsync()
     {
         var dictionary = new Dictionary<string, object>
@@ -184,6 +188,7 @@ public partial class DeliveryOrderForm
             //{ "isDelete", true },
             { "isSelete", true },
             {"onSelete",new Func<string,Task>(OnSeleted)},
+            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)},
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters

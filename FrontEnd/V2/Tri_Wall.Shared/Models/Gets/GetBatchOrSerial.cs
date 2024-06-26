@@ -9,5 +9,6 @@ public record GetBatchOrSerial(
         string MfrSerialNo,
         string ExpDate,
         string MrfDate,
-        string Type
+        string Type,
+        string LineNum
     );

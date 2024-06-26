@@ -140,4 +140,21 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     {
         GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry)).Data ?? new();
     }
+    [RelayCommand]
+    async Task OnGetGoodReceiptPoBySearch(Dictionary<string, object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", ""
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -10,7 +10,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
      #region Data Member
 
@@ -47,12 +47,12 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("60")).Data ?? new());
+            (await apiService.GetSeries("59")).Data ?? new());
         GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
-            (await apiService.GetProductionOrders("GetForIssueProduction")).Data ?? new());
+            (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("ReceiptFromProduction")).Data ?? new();
         IsView = true;
     }
 
@@ -131,7 +131,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
         try
         {
             GetProductionOrderLines = new();
-            GetProductionOrderLines = (await apiService.GetProductionOrderLines(docEntry)).Data ?? new();
+            GetProductionOrderLines = (await apiService.GetIssueProductionLines(docEntry)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -144,7 +144,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialInIssueForProduction", dictionary["ItemType"],dictionary["ItemCode"],dictionary["DocEntry"])).Data ?? new();
         }
         catch (Exception e)
         {

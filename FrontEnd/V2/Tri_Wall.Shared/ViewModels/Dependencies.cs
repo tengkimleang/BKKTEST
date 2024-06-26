@@ -23,6 +23,7 @@ public static class Dependencies
         services.AddScoped<GoodReceptPoViewModel>();
         services.AddScoped<DeliveryOrderViewModel>();
         services.AddScoped<IssueProductionOrderViewModel>();
+        services.AddScoped<ReceiptFromProductionOrderViewModel>();
         #region Validator
         services.AddScoped<IValidator<GoodReceiptPoHeader>, GoodReceiptPoHeaderValidator>();
         services.AddScoped<IValidator<GoodReceiptPoLine>, GoodReceiptPoLineValidator>();
