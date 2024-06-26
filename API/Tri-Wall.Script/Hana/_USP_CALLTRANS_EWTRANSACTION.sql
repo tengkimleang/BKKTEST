@@ -3199,6 +3199,40 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			WHERE B."ItemCode"=:par2 AND IFNULL(C."Quantity",0)>0;
 		END IF;
 		END IF;
+	ELSE IF :DTYPE='OnGetBatchOrSerialInIssueForProduction' THEN		
+		IF :par1='S' THEN
+			SELECT 
+				 B."ItemCode" AS "ItemCode"	
+				,B."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,B."ExpDate" AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Serial' AS "Type"
+				,C."Status"
+				,D.*
+			FROM TRIWALL_TRAINKEY."OSRN" AS B
+			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=B."ItemCode" And C."SysSerial"=B."SysNumber"
+			LEFT JOIN TRIWALL_TRAINKEY."SRI1" AS D ON D."SysSerial"=B."SysNumber"
+			WHERE B."ItemCode"=:par2 
+				AND D."BsDocType"='202'
+				AND D."BaseType"='60' 
+				AND D."BsDocEntry"=:par3 
+				AND C."Status"<>'0';
+		ELSE IF :par1='B' THEN
+			SELECT 
+				 B."ItemCode" AS "ItemCode"	
+				,C."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,"ExpDate" AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Batch' AS "Type"
+			FROM TRIWALL_TRAINKEY."OBTN" AS B
+			LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=B."ItemCode" and B."SysNumber"=C."SysNumber"
+			WHERE B."ItemCode"=:par2 AND IFNULL(C."Quantity",0)>0;
+		END IF;
+		END IF;
 	ELSE IF :DTYPE='GET_Production_Order_Lines' THEN
 		execute immediate '
 			SELECT  
