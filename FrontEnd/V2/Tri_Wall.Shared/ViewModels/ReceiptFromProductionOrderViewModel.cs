@@ -67,7 +67,7 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("ReceiptForProduction", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -81,39 +81,7 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", ""
-                , "condition"
-                , data["dateFrom"].ToString() ?? ""
-                , data["dateTo"].ToString() ?? ""
-                , data["docNum"].ToString() ?? "")).Data ?? new();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
-    [RelayCommand]
-    async Task OnGetPurchaseOrder(string perPage)
-    {
-        try
-        {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage)).Data ?? new();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
-    [RelayCommand]
-    async Task OnGetPurchaseOrderBySearch(Dictionary<string, object> data)
-    {
-        try
-        {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("ReceiptForProduction", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -144,6 +112,7 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     {
         try
         {
+            //todo
             GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialInIssueForProduction", dictionary["ItemType"],dictionary["ItemCode"],dictionary["DocEntry"])).Data ?? new();
         }
         catch (Exception e)
@@ -155,9 +124,9 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     [RelayCommand]
     async Task OnIssueForProductionDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialIssueForProduction")).Data ?? new();
+        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_ReceiptForProduction_Header_Detail_By_DocNum")).Data ?? new();
+        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetReceiptForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialReceiptForProduction")).Data ?? new();
     }
     #endregion
 }
