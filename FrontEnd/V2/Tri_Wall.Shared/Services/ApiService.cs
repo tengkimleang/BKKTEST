@@ -68,10 +68,9 @@ public class ApiService(IApiService apiService)
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order_Lines",docEntry));
     public Task<PostResponse> PostIssueProduction(IssueProductionHeader issueProductionHeader)
         => apiService.PostIssueProduction(issueProductionHeader);
-    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLine(string docEntry)
-        => apiService.GetProductionOrderLines(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
+    public Task<PostResponse> PostReturnFromProduction(IssueProductionHeader issueProductionHeader)
+        => apiService.PostReturnFromProduction(issueProductionHeader);
 }
