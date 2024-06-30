@@ -16,7 +16,7 @@ public class AddReturnComponentCommandHandler(IUnitOfWork unitOfWork)
         var oCompany = unitOfWork.Connect();
         oCompany.ThrowIfNull("Company is null");
         unitOfWork.BeginTransaction(oCompany);
-        var oIssueForProduction = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oInventoryGenExit);
+        var oIssueForProduction = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oInventoryGenEntry);
         if (!request.IsDraft) oIssueForProduction.DocObjectCode = BoObjectTypes.oInventoryGenEntry;//oInventoryGenExit
         oIssueForProduction.Series = request.Series;
         oIssueForProduction.Reference2 = request.Remarks;

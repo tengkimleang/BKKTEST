@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Tri_Wall.Application.IssueForProductions;
 using Tri_Wall.Application.ReturnComponent;
 using Tri_Wall.Domain.Common;
 

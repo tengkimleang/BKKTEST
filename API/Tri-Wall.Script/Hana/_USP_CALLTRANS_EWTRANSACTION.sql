@@ -3212,7 +3212,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			FROM TRIWALL_TRAINKEY."OSRN" AS B
 			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=B."ItemCode" And C."SysSerial"=B."SysNumber"
 			LEFT JOIN TRIWALL_TRAINKEY."SRI1" AS D ON D."SysSerial"=B."SysNumber"
-			WHERE B."ItemCode"=:par2 
+			WHERE B."ItemCode"=:par2
 				AND D."BsDocType"='202'
 				AND D."BaseType"='60' 
 				AND D."BsDocEntry"=:par3 
@@ -3229,18 +3229,19 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			FROM TRIWALL_TRAINKEY."IBT1" AS B
 			LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS C ON C."ItemCode"=B."ItemCode" and C."DistNumber"=B."BatchNum"
 			WHERE 
-				B."ItemCode"='TEST-B-01' 
+				B."ItemCode"=:par2 
 				--AND IFNULL(C."Quantity",0)>0
 				AND B."BsDocType"='202'
 				AND B."BaseType"='60' 
-				AND B."BsDocEntry"=:par3
-				AND B."Quantity"<(SELECT T0."Quantity"
+				AND B."BaseEntry"=:par3;
+				--AND B."BsDocEntry"='723';
+				/*AND B."Quantity"<(SELECT T0."Quantity"
 									FROM TRIWALL_TRAINKEY."IBT1" AS T0 
 									WHERE 
 										T0."ItemCode"=B."ItemCode" 
 									AND T0."BaseType"='59' 
 									AND T0."BsDocType"='202' 
-									AND B."BsDocEntry"=:par3);
+									AND B."BsDocEntry"='723')*/
 		END IF;
 		END IF;
 	ELSE IF :DTYPE='GET_Production_Order_Lines' THEN
@@ -3336,8 +3337,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 	ELSE IF :DTYPE='GET_Issue_Production_Lines' THEN
 		execute immediate '
 			SELECT  
-				 A."DocEntry" AS "DocEntry"
-				,A."LineNum" AS "OrderLineNum"
+				-- A."DocEntry" AS "DocEntry"
+				 A."BaseEntry" AS "DocEntry"
+				--,A."LineNum" AS "OrderLineNum"
+				,A."BaseLine" AS "OrderLineNum"
 				,A."ItemCode" AS "ItemCode"
 				,B."ItemName" AS "ItemName"
 				,A."Quantity" AS "Qty"

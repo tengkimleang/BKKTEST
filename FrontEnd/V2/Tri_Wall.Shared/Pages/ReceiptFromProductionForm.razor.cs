@@ -160,13 +160,14 @@ public partial class ReceiptFromProductionForm
     {
         var productionOrder = ViewModel.IssueProductionLine;
         ViewModel.IssueProduction.Lines = new();
+        //Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetProductionOrderLines));
+        //Console.WriteLine(JsonSerializer.Serialize(productionOrder));
+
         foreach (var line in productionOrder)
         {
             var total = ViewModel.GetProductionOrderLines?.Where(x => x.ItemCode ==
                                                                       line.ItemCode)
                 .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
-            // var listObj = ViewModel.GetProductionOrderLines?.Where(x =>
-            //     x.ItemCode == line.ItemCode).Count();
             foreach (var vmIssueProductionLine in ViewModel.GetProductionOrderLines!.Where(x =>
                          x.ItemCode == line.ItemCode).ToList())
             {
@@ -197,7 +198,7 @@ public partial class ReceiptFromProductionForm
 
             return;
         }
-
+        //Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
         try
         {
             visible = true;
@@ -210,6 +211,8 @@ public partial class ReceiptFromProductionForm
                 ViewModel.IssueProduction = new();
                 ViewModel.IssueProductionLine = new();
                 ToastService.ShowSuccess("Success");
+                ViewModel.GetProductionOrderLines = new();
+                await ViewModel.GetProductionOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
             }
             else

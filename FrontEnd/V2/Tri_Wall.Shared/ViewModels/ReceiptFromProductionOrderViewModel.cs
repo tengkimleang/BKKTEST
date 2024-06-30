@@ -59,7 +59,12 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostIssueProduction(IssueProduction);
+        PostResponses = await apiService.PostReturnFromProduction(IssueProduction);
+    }
+    [RelayCommand]
+    async Task OnGetProductionOrder()
+    {
+        GetProductionOrder = (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new();
     }
 
     [RelayCommand]
