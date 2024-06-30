@@ -14,13 +14,13 @@
 	<ItemGroup>
 		<PackageReference Include="Blazor-ApexCharts" Version="3.3.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="FluentValidation" Version="11.9.1" />
+		<PackageReference Include="FluentValidation" Version="11.9.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.6" />
-		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.5.0" />
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.7.2" />
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.DataGrid.EntityFrameworkAdapter" Version="4.7.2" />
+		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.6.0" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.8.1" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.DataGrid.EntityFrameworkAdapter" Version="4.8.0" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.6.0" />
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.7.2" />
-		<PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.8.0" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="7.1.1" />
 	</ItemGroup>
 </Project>

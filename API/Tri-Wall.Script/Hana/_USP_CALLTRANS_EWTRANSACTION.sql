@@ -3233,14 +3233,14 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				--AND IFNULL(C."Quantity",0)>0
 				AND B."BsDocType"='202'
 				AND B."BaseType"='60' 
-				AND B."BsDocEntry"='717'
+				AND B."BsDocEntry"=:par3
 				AND B."Quantity"<(SELECT T0."Quantity"
 									FROM TRIWALL_TRAINKEY."IBT1" AS T0 
 									WHERE 
 										T0."ItemCode"=B."ItemCode" 
 									AND T0."BaseType"='59' 
 									AND T0."BsDocType"='202' 
-									AND B."BsDocEntry"='717');
+									AND B."BsDocEntry"=:par3);
 		END IF;
 		END IF;
 	ELSE IF :DTYPE='GET_Production_Order_Lines' THEN
@@ -3463,6 +3463,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 	END IF;
 	END IF;		
 	END IF;		
+	END IF;
 	END IF;
 	END IF;
 	END IF;

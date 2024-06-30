@@ -64,4 +64,7 @@ public interface IApiService
     [Post("/issueForProduction")]
     public Task<PostResponse> PostIssueProduction(
         [Body] IssueProductionHeader request);
+    [Post("/returnComponent")]
+    public Task<PostResponse> PostReturnFromProduction(
+        [Body] IssueProductionHeader request);
 }

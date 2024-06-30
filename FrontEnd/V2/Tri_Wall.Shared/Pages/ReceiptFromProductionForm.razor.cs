@@ -11,6 +11,7 @@ using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.IssueForProduction;
+using Tri_Wall.Shared.Views.ReceiptFromProduction;
 
 namespace Tri_Wall.Shared.Pages;
 
@@ -62,7 +63,6 @@ public partial class ReceiptFromProductionForm
 
     async Task OpenDialogAsync(IssueProductionLine issueProductionLine)
     {
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetProductionOrderLines));
         IEnumerable<GetProductionOrderLines> listGetProductionOrderLines = ViewModel.GetProductionOrderLines
             .GroupBy(item => new
             {
@@ -91,7 +91,7 @@ public partial class ReceiptFromProductionForm
                 new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
             }
         };
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineIssueProductionOrder>(dictionary
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReceiptFromProductionOrder>(dictionary
             , new DialogParameters
             {
                 Title = (issueProductionLine.ItemCode == "") ? "Add Line" : "Update Line",
@@ -225,7 +225,6 @@ public partial class ReceiptFromProductionForm
 
     Task OnSeleted(string e)
     {
-        // Console.WriteLine(e);
         ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         isView =true;
         StateHasChanged();

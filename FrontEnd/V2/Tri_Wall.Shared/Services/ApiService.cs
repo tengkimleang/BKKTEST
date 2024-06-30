@@ -74,4 +74,6 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
+    public Task<PostResponse> PostReturnFromProduction(IssueProductionHeader issueProductionHeader)
+        => apiService.PostReturnFromProduction(issueProductionHeader);
 }

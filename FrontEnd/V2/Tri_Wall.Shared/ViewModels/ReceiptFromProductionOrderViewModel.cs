@@ -12,10 +12,10 @@ namespace Tri_Wall.Shared.ViewModels;
 
 public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-     #region Data Member
+    #region Data Member
 
     [ObservableProperty] IssueProductionHeader _issueProduction = new();
-    
+
     [ObservableProperty] ObservableCollection<IssueProductionLine> _issueProductionLine = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
@@ -27,11 +27,11 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty] ObservableCollection<GetProductionOrder> _getProductionOrder = new();
-    
+
     [ObservableProperty] ObservableCollection<GetProductionOrderLines> _getProductionOrderLines = new();
 
     [ObservableProperty] Boolean _isView = false;
-    
+
     [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
     [ObservableProperty]
@@ -108,12 +108,15 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
         }
     }
     [RelayCommand]
-    async Task OnGetBatchOrSerialByItemCode(Dictionary<string,string> dictionary)
+    async Task OnGetBatchOrSerialByItemCode(Dictionary<string, string> dictionary)
     {
         try
         {
             //todo
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialInIssueForProduction", dictionary["ItemType"],dictionary["ItemCode"],dictionary["DocEntry"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialInIssueForProduction",
+                dictionary["ItemType"],
+                dictionary["ItemCode"],
+                dictionary["DocEntry"])).Data ?? new();
         }
         catch (Exception e)
         {
@@ -124,9 +127,12 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
     [RelayCommand]
     async Task OnIssueForProductionDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_ReceiptForProduction_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetReceiptForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialReceiptForProduction")).Data ?? new();
+        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
+            "GET_ReceiptForProduction_Header_Detail_By_DocNum")).Data ?? new();
+        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetReceiptForProductionLineDetailByDocEntry",
+            docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,
+            "GetBatchSerialReceiptForProduction")).Data ?? new();
     }
     #endregion
 }

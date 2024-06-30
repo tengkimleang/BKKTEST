@@ -8,9 +8,9 @@ using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.IssueForProduction;
 
-namespace Tri_Wall.Shared.Views.IssueForProduction;
+namespace Tri_Wall.Shared.Views.ReceiptFromProduction;
 
-public partial class DialogAddLineIssueProductionOrder
+public partial class DialogAddLineReceiptFromProductionOrder
 {
     [Inject] public IValidator<IssueProductionLine>? Validator { get; init; }
 
@@ -77,9 +77,7 @@ public partial class DialogAddLineIssueProductionOrder
     private async Task UpdateItemDetails(string? newValue)
     {
         var firstItem = _selectedItem.FirstOrDefault();
-        Console.WriteLine(JsonSerializer.Serialize(_selectedItem));
-        //ListGetProductionOrderLines
-        Console.WriteLine(JsonSerializer.Serialize(ListGetProductionOrderLines));
+
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
@@ -92,7 +90,8 @@ public partial class DialogAddLineIssueProductionOrder
             _serialBatchDeliveryOrders=await GetSerialBatch(new Dictionary<string, string>
             {
                 {"ItemCode", firstItem?.ItemCode ??""},
-                {"ItemType", firstItem?.ItemType ??""}
+                {"ItemType", firstItem?.ItemType ??""},
+                {"DocEntry", firstItem?.DocEntry ??""},
             });
     }
 
@@ -124,6 +123,7 @@ public partial class DialogAddLineIssueProductionOrder
     }
     private void OnSearchSerial(OptionsSearchEventArgs<GetBatchOrSerial> e)
     {
+        Console.WriteLine(JsonSerializer.Serialize(_serialBatchDeliveryOrders));
         e.Items = _serialBatchDeliveryOrders?.Where(i => i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                          i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.SerialBatch);
