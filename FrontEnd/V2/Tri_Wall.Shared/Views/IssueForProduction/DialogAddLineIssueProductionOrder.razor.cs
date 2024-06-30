@@ -77,7 +77,9 @@ public partial class DialogAddLineIssueProductionOrder
     private async Task UpdateItemDetails(string? newValue)
     {
         var firstItem = _selectedItem.FirstOrDefault();
-
+        Console.WriteLine(JsonSerializer.Serialize(_selectedItem));
+        //ListGetProductionOrderLines
+        Console.WriteLine(JsonSerializer.Serialize(ListGetProductionOrderLines));
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
@@ -122,7 +124,6 @@ public partial class DialogAddLineIssueProductionOrder
     }
     private void OnSearchSerial(OptionsSearchEventArgs<GetBatchOrSerial> e)
     {
-        Console.WriteLine(JsonSerializer.Serialize(_serialBatchDeliveryOrders));
         e.Items = _serialBatchDeliveryOrders?.Where(i => i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                          i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.SerialBatch);

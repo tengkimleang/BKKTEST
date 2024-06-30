@@ -77,7 +77,7 @@ public partial class DialogAddLineReceiptFromProductionOrder
     private async Task UpdateItemDetails(string? newValue)
     {
         var firstItem = _selectedItem.FirstOrDefault();
-        Console.WriteLine(JsonSerializer.Serialize(firstItem));
+
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
