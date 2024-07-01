@@ -33,13 +33,14 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     [ObservableProperty] Boolean _isView = false;
     
     [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
-    [ObservableProperty]
-    ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+
+    [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
+
+    [ObservableProperty] ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+
+    [ObservableProperty]  ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
     #endregion 
 
     #region Method

@@ -38,10 +38,7 @@ public class AddIssueForProductionCommandHandler(IUnitOfWork unitOfWork)
                     foreach (var serial in l.Serials)
                     {
                         oIssueForProduction.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
-                        oIssueForProduction.Lines.SerialNumbers.Quantity = serial.Qty;
-                        oIssueForProduction.Lines.SerialNumbers.ManufacturerSerialNumber =serial.MfrNo;
-                        oIssueForProduction.Lines.SerialNumbers.ManufactureDate = Convert.ToDateTime(serial.MfrDate);
-                        oIssueForProduction.Lines.SerialNumbers.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
+                        oIssueForProduction.Lines.SerialNumbers.Quantity = 1;
                         oIssueForProduction.Lines.SerialNumbers.Add();
                     }
                     break;
@@ -50,12 +47,8 @@ public class AddIssueForProductionCommandHandler(IUnitOfWork unitOfWork)
                 {
                     foreach (var batch in l.Batches)
                     {
-                        oIssueForProduction.Lines.BatchNumbers.AddmisionDate = DateTime.Now;
                         oIssueForProduction.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
                         oIssueForProduction.Lines.BatchNumbers.Quantity = batch.Qty;
-                        oIssueForProduction.Lines.BatchNumbers.ExpiryDate = (DateTime)batch.ExpDate!;
-                        oIssueForProduction.Lines.BatchNumbers.ManufacturingDate = Convert.ToDateTime(batch.ManfectureDate);
-                        oIssueForProduction.Lines.BatchNumbers.InternalSerialNumber = batch.LotNo;
                         oIssueForProduction.Lines.BatchNumbers.Add();
                     }
                     break;

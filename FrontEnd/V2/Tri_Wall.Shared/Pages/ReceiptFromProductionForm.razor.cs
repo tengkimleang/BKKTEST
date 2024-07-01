@@ -82,7 +82,7 @@ public partial class ReceiptFromProductionForm
                 ItemType = group.First().ItemType,
                 DocEntry=group.First().DocEntry,
             }).ToImmutableList();
-        Console.WriteLine(JsonSerializer.Serialize(listGetProductionOrderLines));
+        //Console.WriteLine(JsonSerializer.Serialize(listGetProductionOrderLines));
         var dictionary = new Dictionary<string, object>
         {
             { "item", listGetProductionOrderLines },
@@ -188,44 +188,44 @@ public partial class ReceiptFromProductionForm
             }
         }
 
-        var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                ToastService!.ShowError(error.ErrorMessage);
-            }
+        //var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+        //if (!result.IsValid)
+        //{
+        //    foreach (var error in result.Errors)
+        //    {
+        //        ToastService!.ShowError(error.ErrorMessage);
+        //    }
 
-            return;
-        }
-        //Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
-        try
-        {
-            visible = true;
+        //    return;
+        //}
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
+        //try
+        //{
+        //    visible = true;
 
-            await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+        //    await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
-            if (ViewModel.PostResponses.ErrorCode == "")
-            {
-                SelectedProductionOrder = new List<GetProductionOrder>();
-                ViewModel.IssueProduction = new();
-                ViewModel.IssueProductionLine = new();
-                ToastService.ShowSuccess("Success");
-                ViewModel.GetProductionOrderLines = new();
-                await ViewModel.GetProductionOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
-            }
-            else
-                ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+        //    if (ViewModel.PostResponses.ErrorCode == "")
+        //    {
+        //        SelectedProductionOrder = new List<GetProductionOrder>();
+        //        ViewModel.IssueProduction = new();
+        //        ViewModel.IssueProductionLine = new();
+        //        ToastService.ShowSuccess("Success");
+        //        ViewModel.GetProductionOrderLines = new();
+        //        await ViewModel.GetProductionOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
+        //        if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+        //    }
+        //    else
+        //        ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
 
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
-        }
+        //    visible = false;
+        //}
+        //catch (ApiException ex)
+        //{
+        //    var content = ex.GetContentAsAsync<Dictionary<String, String>>();
+        //    ToastService!.ShowError(ex.ReasonPhrase ?? "");
+        //    visible = false;
+        //}
     }
 
     Task OnSeleted(string e)

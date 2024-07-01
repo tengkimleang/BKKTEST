@@ -86,7 +86,7 @@ public partial class DialogAddLineReceiptFromProductionOrder
         DataResult.QtyRequire =Convert.ToDouble(firstItem?.Qty ?? "0");
         IsItemBatch = firstItem?.ItemType == "B";
         IsItemSerial = firstItem?.ItemType == "S";
-        Console.WriteLine(JsonSerializer.Serialize(firstItem));
+        //Console.WriteLine(JsonSerializer.Serialize(firstItem));
         if (firstItem?.ItemType != "N")
             _serialBatchDeliveryOrders=await GetSerialBatch(new Dictionary<string, string>
             {

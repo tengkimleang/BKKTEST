@@ -3230,10 +3230,9 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS C ON C."ItemCode"=B."ItemCode" and C."DistNumber"=B."BatchNum"
 			WHERE 
 				B."ItemCode"=:par2 
-				--AND IFNULL(C."Quantity",0)>0
 				AND B."BsDocType"='202'
 				AND B."BaseType"='60' 
-				AND B."BaseEntry"=:par3;
+				AND B."BsDocEntry"=:par3;
 				--AND B."BsDocEntry"='723';
 				/*AND B."Quantity"<(SELECT T0."Quantity"
 									FROM TRIWALL_TRAINKEY."IBT1" AS T0 

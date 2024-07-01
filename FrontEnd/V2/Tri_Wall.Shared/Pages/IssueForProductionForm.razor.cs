@@ -152,14 +152,15 @@ public partial class IssueForProductionForm
 
     private void DeleteLine(int index)
     {
-        ViewModel.IssueProduction.Lines!.RemoveAt(index);
+        ViewModel.IssueProductionLine!.RemoveAt(index);
     }
 
     async Task OnSaveTransaction(string type = "")
     {
-        var productionOrder = ViewModel.IssueProductionLine;
+        var issueProductionLines = ViewModel.IssueProductionLine.AsQueryable();
+        var strMP = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
         ViewModel.IssueProduction.Lines = new();
-        foreach (var line in productionOrder)
+        foreach (var line in issueProductionLines)
         {
             var total = ViewModel.GetProductionOrderLines?.Where(x => x.ItemCode ==
                                                                       line.ItemCode)
@@ -170,23 +171,98 @@ public partial class IssueForProductionForm
                          x.ItemCode == line.ItemCode).ToList())
             {
                 var actualQty = (Convert.ToDouble(vmIssueProductionLine.Qty ?? "0") / total) * line.Qty;
-                ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                if (line.ManageItem == "S")
                 {
-                    ItemCode = vmIssueProductionLine.ItemCode,
-                    ItemName = vmIssueProductionLine.ItemName,
-                    Qty = actualQty,
-                    UomName = vmIssueProductionLine.Uom,
-                    WhsCode = line.WhsCode,
-                    ManageItem = vmIssueProductionLine.ItemType,
-                    BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                    DocNum = vmIssueProductionLine.DocEntry,
-                    Batches = line.Batches,
-                    Serials = line.Serials,
-                });
+                    var serials = new List<SerialIssueProduction>();
+                    for (var i = 0; i < actualQty; i++)
+                    {
+                        if (line.Serials?.Count > 0)
+                        {
+                            serials.Add(line.Serials.FirstOrDefault()!);
+                            line.Serials.Remove(line.Serials.FirstOrDefault()!);
+                        }
+                    }
+
+                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                    {
+                        ItemCode = vmIssueProductionLine.ItemCode,
+                        ItemName = vmIssueProductionLine.ItemName,
+                        Qty = actualQty,
+                        UomName = vmIssueProductionLine.Uom,
+                        WhsCode = line.WhsCode,
+                        ManageItem = vmIssueProductionLine.ItemType,
+                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+                        DocNum = vmIssueProductionLine.DocEntry,
+                        Serials = serials,
+                    });
+                }
+                else if (line.ManageItem == "B")
+                {
+                    var batches = new List<BatchIssueProduction>();
+                    var qty = actualQty;
+                    for (var i = 0;i<actualQty ; i++)
+                    {
+                        if (line.Batches?.Count > 0)
+                        {
+                            batches.Add(new BatchIssueProduction
+                            {
+                                AdmissionDate = line.Batches.FirstOrDefault()?.AdmissionDate,
+                                BatchCode = line.Batches.FirstOrDefault()?.BatchCode ?? "",
+                                ExpDate = line.Batches.FirstOrDefault()?.ExpDate,
+                                Qty = (line.Batches.FirstOrDefault()!.Qty <= actualQty) ? line.Batches.FirstOrDefault()!.Qty : actualQty
+                            });
+                            
+                            line.Batches.FirstOrDefault()!.Qty -= actualQty;
+
+                            if (line.Batches.FirstOrDefault()!.Qty == 0)
+                                line.Batches.RemoveAt(0);
+
+                            if (line.Batches[0].Qty <= actualQty)
+                            {
+                                actualQty -= line.Batches[0].Qty;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                    {
+                        ItemCode = vmIssueProductionLine.ItemCode,
+                        ItemName = vmIssueProductionLine.ItemName,
+                        Qty = qty,
+                        UomName = vmIssueProductionLine.Uom,
+                        WhsCode = line.WhsCode,
+                        ManageItem = vmIssueProductionLine.ItemType,
+                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+                        DocNum = vmIssueProductionLine.DocEntry,
+                        Batches = batches,
+                    });
+                }
+                else
+                {
+                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                    {
+                        ItemCode = vmIssueProductionLine.ItemCode,
+                        ItemName = vmIssueProductionLine.ItemName,
+                        Qty = actualQty,
+                        UomName = vmIssueProductionLine.Uom,
+                        WhsCode = line.WhsCode,
+                        ManageItem = vmIssueProductionLine.ItemType,
+                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+                        DocNum = vmIssueProductionLine.DocEntry
+                    });
+                }
             }
         }
 
+        ViewModel.IssueProductionLine = new();
+
+        ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(strMP) ?? new();
+
         var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+
         if (!result.IsValid)
         {
             foreach (var error in result.Errors)
@@ -221,14 +297,14 @@ public partial class IssueForProductionForm
             var content = ex.GetContentAsAsync<Dictionary<String, String>>();
             ToastService!.ShowError(ex.ReasonPhrase ?? "");
             visible = false;
-        }
+        }        
     }
 
     Task OnSeleted(string e)
     {
         // Console.WriteLine(e);
         ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView =true;
+        isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -293,5 +369,5 @@ public partial class IssueForProductionForm
             Height = "80%"
         }).ConfigureAwait(false);
     }
-    
+
 }

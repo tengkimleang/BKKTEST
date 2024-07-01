@@ -109,48 +109,141 @@ POST {{API_HostAddress}}/issueForProduction
 Content-Type: application/json
 
 {
-  "series": "335",
+  "series": "336",
   "remarks": "",
-  "docDate": "2024-06-14T00:00:00",
+  "docDate": "2024-07-01",
   "lines": [
     {
-      "docNum": "714",
+      "docNum": "729",
+      "lineNum": 0,
+      "baseLineNum": 0,
+      "itemCode": "TEST-B-01",
+      "itemName": "Batch",
+      "qty": 2,
+      "qtyRequire": 0,
+      "price": 0,
+      "whsCode": "RS02",
+      "uomName": "Manual",
+      "manageItem": "B",
+      "batches": [
+        {
+          "batchCode": "test21",
+          "qty": 2,
+          "expDate": "2024-06-25",
+          "manfectureDate": "2024-07-01",
+          "admissionDate": "2024-07-01",
+          "lotNo": "",
+          "qtyAvailable": 0,
+          "onSelectedBatchOrSerial": []
+        },
+        {
+          "batchCode": "test21",
+          "qty": 2,
+          "expDate": "2024-06-25",
+          "manfectureDate": "2024-07-01",
+          "admissionDate": "2024-07-01",
+          "lotNo": "",
+          "qtyAvailable": 0,
+          "onSelectedBatchOrSerial": []
+        }
+      ],
+      "serials": null
+    },
+    {
+      "docNum": "730",
+      "lineNum": 0,
+      "baseLineNum": 0,
+      "itemCode": "TEST-B-01",
+      "itemName": "Batch",
+      "qty": 2,
+      "qtyRequire": 0,
+      "price": 0,
+      "whsCode": "RS02",
+      "uomName": "Manual",
+      "manageItem": "B",
+      "batches": [
+        {
+          "batchCode": "test21",
+          "qty": 2,
+          "expDate": "2024-06-25",
+          "manfectureDate": "2024-07-01",
+          "admissionDate": "2024-07-01",
+          "lotNo": "",
+          "qtyAvailable": 0,
+          "onSelectedBatchOrSerial": []
+        }
+      ],
+      "serials": null
+    },
+    {
+      "docNum": "729",
       "lineNum": 0,
       "baseLineNum": 1,
-      "itemCode": "RLCA1501390IPP",
-      "itemName": "MEDIUM_CA150_S.1390",
-      "qty": 1.6666666666666665,
+      "itemCode": "TEST-S-01",
+      "itemName": "Serial",
+      "qty": 1,
       "qtyRequire": 0,
       "price": 0,
-      "whsCode": "RM01",
+      "whsCode": "AS01",
       "uomName": "Manual",
-      "ManageItem": "N"
+      "manageItem": "S",
+      "batches": null,
+      "serials": [
+        {
+          "serialCode": "t2123t1",
+          "qty": 1,
+          "mfrNo": "",
+          "mfrDate": "1899-12-30T00:00:00",
+          "expDate": "1899-12-30T00:00:00",
+          "onSelectedBatchOrSerial": [
+            {
+              "itemCode": "TEST-S-01",
+              "qty": "0",
+              "serialBatch": "t2123t1",
+              "mfrSerialNo": "",
+              "expDate": "12/30/1899 00:00:00",
+              "mrfDate": "12/30/1899 00:00:00",
+              "type": "Serial",
+              "lineNum": null
+            }
+          ]
+        }
+      ]
     },
     {
-      "docNum": "714",
+      "docNum": "730",
       "lineNum": 0,
-      "baseLineNum": 2,
-      "itemCode": "RLCA1501390IPP",
-      "itemName": "MEDIUM_CA150_S.1390",
-      "qty": 1.6666666666666665,
+      "baseLineNum": 1,
+      "itemCode": "TEST-S-01",
+      "itemName": "Serial",
+      "qty": 1,
       "qtyRequire": 0,
       "price": 0,
-      "whsCode": "RM01",
+      "whsCode": "AS01",
       "uomName": "Manual",
-      "ManageItem": "N"
-    },
-    {
-      "docNum": "714",
-      "lineNum": 0,
-      "baseLineNum": 3,
-      "itemCode": "RLCA1501390IPP",
-      "itemName": "MEDIUM_CA150_S.1390",
-      "qty": 1.6666666666666665,
-      "qtyRequire": 0,
-      "price": 0,
-      "whsCode": "RM01",
-      "uomName": "Manual",
-      "ManageItem": "N"
+      "manageItem": "S",
+      "batches": null,
+      "serials": [
+        {
+          "serialCode": "t2123t2",
+          "qty": 1,
+          "mfrNo": "",
+          "mfrDate": "1899-12-30T00:00:00",
+          "expDate": "1899-12-30T00:00:00",
+          "onSelectedBatchOrSerial": [
+            {
+              "itemCode": "TEST-S-01",
+              "qty": "0",
+              "serialBatch": "t2123t2",
+              "mfrSerialNo": "",
+              "expDate": "12/30/1899 00:00:00",
+              "mrfDate": "12/30/1899 00:00:00",
+              "type": "Serial",
+              "lineNum": null
+            }
+          ]
+        }
+      ]
     }
   ]
 }
