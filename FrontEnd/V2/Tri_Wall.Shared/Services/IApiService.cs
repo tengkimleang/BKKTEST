@@ -5,6 +5,7 @@ using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -66,5 +67,5 @@ public interface IApiService
         [Body] IssueProductionHeader request);
     [Post("/receiptFromProduction/returnComponent")]
     public Task<PostResponse> PostReturnFromProduction(
-        [Body] IssueProductionHeader request);
+        [Body] ReturnComponentProductionHeader request);
 }

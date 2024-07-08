@@ -109,137 +109,127 @@ POST {{API_HostAddress}}/issueForProduction
 Content-Type: application/json
 
 {
-  "series": "336",
-  "remarks": "",
-  "docDate": "2024-07-01",
-  "lines": [
+  "Series": "336",
+  "Remarks": "",
+  "DocDate": "2024-07-02T00:00:00",
+  "Lines": [
     {
-      "docNum": "729",
-      "lineNum": 0,
-      "baseLineNum": 0,
-      "itemCode": "TEST-B-01",
-      "itemName": "Batch",
-      "qty": 2,
-      "qtyRequire": 0,
-      "price": 0,
-      "whsCode": "RS02",
-      "uomName": "Manual",
-      "manageItem": "B",
-      "batches": [
+      "DocNum": "729",
+      "LineNum": 0,
+      "BaseLineNum": 0,
+      "ItemCode": "TEST-B-01",
+      "ItemName": "Batch",
+      "Qty": 2,
+      "QtyRequire": 0,
+      "Price": 0,
+      "WhsCode": "RS02",
+      "UomName": "Manual",
+      "ManageItem": "B",
+      "Batches": [
         {
-          "batchCode": "test21",
-          "qty": 2,
-          "expDate": "2024-06-25",
-          "manfectureDate": "2024-07-01",
-          "admissionDate": "2024-07-01",
-          "lotNo": "",
-          "qtyAvailable": 0,
-          "onSelectedBatchOrSerial": []
-        },
-        {
-          "batchCode": "test21",
-          "qty": 2,
-          "expDate": "2024-06-25",
-          "manfectureDate": "2024-07-01",
-          "admissionDate": "2024-07-01",
-          "lotNo": "",
-          "qtyAvailable": 0,
-          "onSelectedBatchOrSerial": []
+          "BatchCode": "test21",
+          "Qty": 2,
+          "ExpDate": "2024-06-25T00:00:00",
+          "ManfectureDate": "2024-07-02T00:00:00+07:00",
+          "AdmissionDate": "2024-07-02T00:00:00+07:00",
+          "LotNo": "",
+          "QtyAvailable": 0,
+          "OnSelectedBatchOrSerial": []
         }
       ],
-      "serials": null
+      "Serials": null
     },
     {
-      "docNum": "730",
-      "lineNum": 0,
-      "baseLineNum": 0,
-      "itemCode": "TEST-B-01",
-      "itemName": "Batch",
-      "qty": 2,
-      "qtyRequire": 0,
-      "price": 0,
-      "whsCode": "RS02",
-      "uomName": "Manual",
-      "manageItem": "B",
-      "batches": [
+      "DocNum": "730",
+      "LineNum": 0,
+      "BaseLineNum": 0,
+      "ItemCode": "TEST-B-01",
+      "ItemName": "Batch",
+      "Qty": 2,
+      "QtyRequire": 0,
+      "Price": 0,
+      "WhsCode": "RS02",
+      "UomName": "Manual",
+      "ManageItem": "B",
+      "Batches": [
         {
-          "batchCode": "test21",
-          "qty": 2,
-          "expDate": "2024-06-25",
-          "manfectureDate": "2024-07-01",
-          "admissionDate": "2024-07-01",
-          "lotNo": "",
-          "qtyAvailable": 0,
-          "onSelectedBatchOrSerial": []
+          "BatchCode": "test21",
+          "Qty": 2,
+          "ExpDate": "2024-06-25T00:00:00",
+          "ManfectureDate": "2024-07-02T00:00:00+07:00",
+          "AdmissionDate": "2024-07-02T00:00:00+07:00",
+          "LotNo": "",
+          "QtyAvailable": 0,
+          "OnSelectedBatchOrSerial": []
         }
       ],
-      "serials": null
+      "Serials": null
     },
     {
-      "docNum": "729",
-      "lineNum": 0,
-      "baseLineNum": 1,
-      "itemCode": "TEST-S-01",
-      "itemName": "Serial",
-      "qty": 1,
-      "qtyRequire": 0,
-      "price": 0,
-      "whsCode": "AS01",
-      "uomName": "Manual",
-      "manageItem": "S",
-      "batches": null,
-      "serials": [
+      "DocNum": "729",
+      "LineNum": 0,
+      "BaseLineNum": 1,
+      "ItemCode": "TEST-S-01",
+      "ItemName": "Serial",
+      "Qty": 1,
+      "QtyRequire": 0,
+      "Price": 0,
+      "WhsCode": "RS02",
+      "UomName": "Manual",
+      "ManageItem": "S",
+      "Batches": null,
+      "Serials": [
         {
-          "serialCode": "t2123t1",
-          "qty": 1,
-          "mfrNo": "",
-          "mfrDate": "1899-12-30T00:00:00",
-          "expDate": "1899-12-30T00:00:00",
-          "onSelectedBatchOrSerial": [
+          "SerialCode": "t2123t1",
+          "Qty": 1,
+          "MfrNo": "",
+          "MfrDate": "1899-12-30T00:00:00",
+          "ExpDate": "1899-12-30T00:00:00",
+          "OnSelectedBatchOrSerial": [
             {
-              "itemCode": "TEST-S-01",
-              "qty": "0",
-              "serialBatch": "t2123t1",
-              "mfrSerialNo": "",
-              "expDate": "12/30/1899 00:00:00",
-              "mrfDate": "12/30/1899 00:00:00",
-              "type": "Serial",
-              "lineNum": null
+              "ItemCode": "TEST-S-01",
+              "Qty": "0",
+              "SerialBatch": "t2123t1",
+              "MfrSerialNo": "",
+              "ExpDate": "12/30/1899 00:00:00",
+              "MrfDate": "12/30/1899 00:00:00",
+              "Type": "Serial",
+              "LineNum": null
             }
           ]
         }
       ]
     },
     {
-      "docNum": "730",
-      "lineNum": 0,
-      "baseLineNum": 1,
-      "itemCode": "TEST-S-01",
-      "itemName": "Serial",
-      "qty": 1,
-      "qtyRequire": 0,
-      "price": 0,
-      "whsCode": "AS01",
-      "uomName": "Manual",
-      "manageItem": "S",
-      "batches": null,
-      "serials": [
+      "DocNum": "730",
+      "LineNum": 0,
+      "BaseLineNum": 1,
+      "ItemCode": "TEST-S-01",
+      "ItemName": "Serial",
+      "Qty": 1,
+      "QtyRequire": 0,
+      "Price": 0,
+      "WhsCode": "RS02",
+      "UomName": "Manual",
+      "ManageItem": "S",
+      "Batches": null,
+      "Serials": [
         {
-          "serialCode": "t2123t2",
-          "qty": 1,
-          "mfrNo": "",
-          "mfrDate": "1899-12-30T00:00:00",
-          "expDate": "1899-12-30T00:00:00",
-          "onSelectedBatchOrSerial": [
+          "SerialCode": "t2123t2",
+          "Qty": 1,
+          "MfrNo": "",
+          "MfrDate": "1899-12-30T00:00:00",
+          "ExpDate": "1899-12-30T00:00:00",
+          "OnSelectedBatchOrSerial": [
             {
-              "itemCode": "TEST-S-01",
-              "qty": "0",
-              "serialBatch": "t2123t2",
-              "mfrSerialNo": "",
-              "expDate": "12/30/1899 00:00:00",
-              "mrfDate": "12/30/1899 00:00:00",
-              "type": "Serial",
-              "lineNum": null
+              "ItemCode": "TEST-S-01",
+              "Qty": "0",
+              "SerialBatch": "t2123t2",
+              "MfrSerialNo": "",
+              "ExpDate": "12/30/1899 00:00:00",
+              "MrfDate": "12/30/1899 00:00:00",
+              "Type": "Serial",
+              "LineNum": null
             }
           ]
         }

@@ -5,6 +5,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.ReturnComponentProduction;
 using Tri_Wall.Shared.Pages;
 using Tri_Wall.Shared.Services;
 
@@ -14,9 +15,9 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
 {
     #region Data Member
 
-    [ObservableProperty] IssueProductionHeader _issueProduction = new();
+    [ObservableProperty] ReturnComponentProductionHeader _issueProduction = new();
 
-    [ObservableProperty] ObservableCollection<IssueProductionLine> _issueProductionLine = new();
+    [ObservableProperty] ObservableCollection<ReturnComponentProductionLine> _issueProductionLine = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 

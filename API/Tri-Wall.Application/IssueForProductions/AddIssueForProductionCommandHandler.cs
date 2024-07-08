@@ -3,7 +3,6 @@ using MediatR;
 using SAPbobsCOM;
 using Throw;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Application.GoodReceiptPo;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.IssueForProductions;

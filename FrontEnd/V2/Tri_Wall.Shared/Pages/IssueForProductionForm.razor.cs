@@ -165,8 +165,6 @@ public partial class IssueForProductionForm
             var total = ViewModel.GetProductionOrderLines?.Where(x => x.ItemCode ==
                                                                       line.ItemCode)
                 .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
-            // var listObj = ViewModel.GetProductionOrderLines?.Where(x =>
-            //     x.ItemCode == line.ItemCode).Count();
             foreach (var vmIssueProductionLine in ViewModel.GetProductionOrderLines!.Where(x =>
                          x.ItemCode == line.ItemCode).ToList())
             {
@@ -200,31 +198,28 @@ public partial class IssueForProductionForm
                 {
                     var batches = new List<BatchIssueProduction>();
                     var qty = actualQty;
-                    for (var i = 0;i<actualQty ; i++)
+                    if (line.Batches?.Count > 0)
                     {
-                        if (line.Batches?.Count > 0)
+                        var batchesCopy = line.Batches.ToList();
+                        foreach (var batch in batchesCopy)
                         {
+                            var index = line.Batches.IndexOf(batch);
                             batches.Add(new BatchIssueProduction
                             {
-                                AdmissionDate = line.Batches.FirstOrDefault()?.AdmissionDate,
-                                BatchCode = line.Batches.FirstOrDefault()?.BatchCode ?? "",
-                                ExpDate = line.Batches.FirstOrDefault()?.ExpDate,
-                                Qty = (line.Batches.FirstOrDefault()!.Qty <= actualQty) ? line.Batches.FirstOrDefault()!.Qty : actualQty
+                                AdmissionDate = line.Batches[index].AdmissionDate,
+                                BatchCode = line.Batches[index].BatchCode ?? "",
+                                ExpDate = line.Batches[index].ExpDate,
+                                Qty = (line.Batches[index].Qty <= actualQty) ? line.Batches[index].Qty : actualQty
                             });
-                            
-                            line.Batches.FirstOrDefault()!.Qty -= actualQty;
 
-                            if (line.Batches.FirstOrDefault()!.Qty == 0)
-                                line.Batches.RemoveAt(0);
+                            line.Batches[index].Qty -= actualQty;
 
-                            if (line.Batches[0].Qty <= actualQty)
-                            {
-                                actualQty -= line.Batches[0].Qty;
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            if (line.Batches[index].Qty <= actualQty)
+                                actualQty -= line.Batches[index].Qty;
+
+                            if (line.Batches[index]!.Qty == 0)
+                                line.Batches.RemoveAt(index);                            
+
                         }
                     }
                     ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
@@ -260,7 +255,7 @@ public partial class IssueForProductionForm
         ViewModel.IssueProductionLine = new();
 
         ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(strMP) ?? new();
-
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
         var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
 
         if (!result.IsValid)
@@ -297,7 +292,7 @@ public partial class IssueForProductionForm
             var content = ex.GetContentAsAsync<Dictionary<String, String>>();
             ToastService!.ShowError(ex.ReasonPhrase ?? "");
             visible = false;
-        }        
+        }
     }
 
     Task OnSeleted(string e)
@@ -324,7 +319,6 @@ public partial class IssueForProductionForm
 
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
-        //OnGetPurchaseOrder
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }

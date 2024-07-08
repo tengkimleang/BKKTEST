@@ -3343,6 +3343,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,A."ItemCode" AS "ItemCode"
 				,B."ItemName" AS "ItemName"
 				,A."Quantity" AS "Qty"
+				,C."PlannedQty" AS "PlanQty"
 				,A."UomCode" AS "Uom"
 				,A."WhsCode" AS "WarehouseCode" 
 				,CASE WHEN B."ManSerNum"=''Y'' THEN
@@ -3352,7 +3353,8 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				 ELSE ''N'' END AS "ItemType"
 			FROM TRIWALL_TRAINKEY."IGE1" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."OITM" AS B ON B."ItemCode"=A."ItemCode"
-			WHERE A."BaseEntry" IN ('|| :par1 ||');';
+			LEFT JOIN TRIWALL_TRAINKEY."WOR1" AS C ON C."ItemCode"=A."ItemCode" AND C."DocEntry"=A."BaseEntry" AND C."LineNum"=A."BaseLine"
+			WHERE A."BaseEntry" IN ('|| :par1 ||') AND A."BaseType"=''202'';';
 	ELSE IF :DTYPE='ReceiptForProduction' THEN
 	
 		IF :par2='' THEN

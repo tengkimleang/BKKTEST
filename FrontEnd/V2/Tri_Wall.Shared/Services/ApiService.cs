@@ -5,6 +5,7 @@ using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -71,6 +72,6 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
-    public Task<PostResponse> PostReturnFromProduction(IssueProductionHeader issueProductionHeader)
+    public Task<PostResponse> PostReturnFromProduction(ReturnComponentProductionHeader issueProductionHeader)
         => apiService.PostReturnFromProduction(issueProductionHeader);
 }

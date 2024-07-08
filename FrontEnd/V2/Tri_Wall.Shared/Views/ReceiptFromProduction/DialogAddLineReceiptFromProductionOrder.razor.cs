@@ -1,48 +1,65 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 namespace Tri_Wall.Shared.Views.ReceiptFromProduction;
 
 public partial class DialogAddLineReceiptFromProductionOrder
 {
-    [Inject] public IValidator<IssueProductionLine>? Validator { get; init; }
+    [Inject] public IValidator<ReturnComponentProductionLine>? Validator { get; init; }
 
     [CascadingParameter] public FluentDialog Dialog { get; set; } = default!;
 
     [Parameter] public Dictionary<string, object> Content { get; set; } = default!;
-
-    private IssueProductionLine DataResult { get; set; } = new();
+    private ReturnComponentProductionLine DataResult { get; set; } = new();
 
     private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
-    private List<BatchIssueProduction> _batchReceiptPo = new();
-    private List<SerialIssueProduction> _serialReceiptPo = new();
+    private IEnumerable<GetProductionOrder>? _selectedProductionOrder => Content["docNumOrderSelected"] as IEnumerable<GetProductionOrder>;
+    private List<BatchReturnComponentProduction> _batchReceiptPo = new();
+    private List<SerialReturnComponentProduction> _serialReceiptPo = new();
+    public List<ItemNoneReturnComponentProduction> _productionOrderNumber { get; set; } = new();
     private bool IsItemBatch;
     private bool IsItemSerial;
-    private IEnumerable<GetBatchOrSerial> _serialBatchDeliveryOrders=new List<GetBatchOrSerial>();
+    private bool IsItemNone;
+    private IEnumerable<GetBatchOrSerial> _serialBatchDeliveryOrders = new List<GetBatchOrSerial>();
     private IEnumerable<GetBatchOrSerial> _selectedSerialDeliveryOrders = Array.Empty<GetBatchOrSerial>();
-    private Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch => Content["getSerialBatch"] as Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>>?? default!;
+    private IEnumerable<ItemType> _type = Array.Empty<ItemType>();
+    private Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch => Content["getSerialBatch"] as Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> ?? default!;
     private IEnumerable<GetProductionOrderLines> _selectedItem = Array.Empty<GetProductionOrderLines>();
     private IEnumerable<GetProductionOrderLines> ListGetProductionOrderLines => Content["item"] as IEnumerable<GetProductionOrderLines> ?? new List<GetProductionOrderLines>();
 
     string? dataGrid = "width: 1600px;";
+    bool displayNoneOrShow;
 
     protected override async void OnInitialized()
     {
         if (Content.TryGetValue("line", out var value))
         {
-            DataResult = value as IssueProductionLine ?? new IssueProductionLine();
-            _batchReceiptPo = DataResult.Batches ?? new List<BatchIssueProduction>();
-            _serialReceiptPo = DataResult.Serials ?? new List<SerialIssueProduction>();
+            Console.WriteLine(JsonSerializer.Serialize(value));
+            DataResult = value as ReturnComponentProductionLine ?? new ReturnComponentProductionLine();
+            _batchReceiptPo = DataResult.Batches ?? new List<BatchReturnComponentProduction>();
+            _serialReceiptPo = DataResult.Serials ?? new List<SerialReturnComponentProduction>();
+            _productionOrderNumber = DataResult.ItemNones ?? new List<ItemNoneReturnComponentProduction>();
             _selectedItem = ListGetProductionOrderLines.Where(i => i.ItemCode == DataResult.ItemCode);
             await UpdateItemDetails(DataResult.ItemCode);
         }
+        _type = new List<ItemType>
+        {
+            new ItemType
+            {
+                Id=1,
+                Name="Auto"
+            },
+            new ItemType
+            {
+                Id=2,
+                Name="Manual"
+            }
+        };
     }
 
     private void OnSearch(OptionsSearchEventArgs<GetProductionOrderLines> e)
@@ -56,6 +73,8 @@ public partial class DialogAddLineReceiptFromProductionOrder
     {
         DataResult.Batches = _batchReceiptPo;
         DataResult.Serials = _serialReceiptPo;
+        DataResult.ItemNones = _productionOrderNumber;
+        Console.WriteLine(JsonSerializer.Serialize(DataResult));
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
         {
@@ -78,17 +97,20 @@ public partial class DialogAddLineReceiptFromProductionOrder
     {
         var firstItem = _selectedItem.FirstOrDefault();
 
+        Console.WriteLine(JsonSerializer.Serialize(firstItem));
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
         DataResult.UomName = firstItem?.Uom ?? "";
-        DataResult.ManageItem=firstItem?.ItemType;
-        DataResult.QtyRequire =Convert.ToDouble(firstItem?.Qty ?? "0");
+        DataResult.ManageItem = firstItem?.ItemType;
+        DataResult.QtyRequire = Convert.ToDouble(firstItem?.Qty ?? "0");
+        DataResult.QtyPlan = Convert.ToDouble(firstItem?.PlanQty ?? "0");
         IsItemBatch = firstItem?.ItemType == "B";
         IsItemSerial = firstItem?.ItemType == "S";
+        IsItemNone = firstItem?.ItemType == "N";
         //Console.WriteLine(JsonSerializer.Serialize(firstItem));
         if (firstItem?.ItemType != "N")
-            _serialBatchDeliveryOrders=await GetSerialBatch(new Dictionary<string, string>
+            _serialBatchDeliveryOrders = await GetSerialBatch(new Dictionary<string, string>
             {
                 {"ItemCode", firstItem?.ItemCode ??""},
                 {"ItemType", firstItem?.ItemType ??""},
@@ -104,11 +126,14 @@ public partial class DialogAddLineReceiptFromProductionOrder
     {
         if (IsItemBatch)
         {
-            _batchReceiptPo.Add(new BatchIssueProduction { BatchCode = "", });
+            _batchReceiptPo.Add(new BatchReturnComponentProduction { BatchCode = "", });
         }
         else if (IsItemSerial && _serialReceiptPo.Count() < DataResult.Qty)
         {
-            _serialReceiptPo.Add(new SerialIssueProduction { SerialCode = "", });
+            _serialReceiptPo.Add(new SerialReturnComponentProduction { SerialCode = "", });
+        }else if (IsItemNone)
+        {
+            _productionOrderNumber.Add(new ItemNoneReturnComponentProduction());
         }
     }
     private void DeleteLineFromBatchOrSerial(int index)
@@ -121,30 +146,55 @@ public partial class DialogAddLineReceiptFromProductionOrder
         {
             _serialReceiptPo.RemoveAt(index);
         }
+        else
+        {
+            _productionOrderNumber.RemoveAt(index);
+        }
     }
     private void OnSearchSerial(OptionsSearchEventArgs<GetBatchOrSerial> e)
     {
-        Console.WriteLine(JsonSerializer.Serialize(_serialBatchDeliveryOrders));
         e.Items = _serialBatchDeliveryOrders?.Where(i => i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                          i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.SerialBatch);
     }
-    private void OnSelectedSerialOrBatch(string newValue,int index,string type)
+    private void OnSearchType(OptionsSearchEventArgs<ItemType> e)
     {
-        
-        if(type == "Batch")
+        e.Items = _type?.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase));
+    }
+    private void OnSearchDocNum(OptionsSearchEventArgs<GetProductionOrder> e)
+    {
+        e.Items = _selectedProductionOrder?.Where(i => i.DocNum.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.DocNum);
+    }
+    private void OnSelectedType(string newValue)
+    {
+        if (_batchReceiptPo.Where(x => x.OnSelectedType.Where(z => z.Name == "Manual").Count() != 0).Count() == 0)
+        {
+            displayNoneOrShow = false;
+        }
+        else
+        {
+            displayNoneOrShow = true;
+
+        }
+    }
+    private void OnSelectedSerialOrBatch(string newValue, int index, string type)
+    {
+
+        if (type == "Batch")
         {
             var firstItem = _batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
-            Console.WriteLine(JsonSerializer.Serialize(_batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault()));
+            //Console.WriteLine(firstItem);
             if (firstItem != null)
             {
                 _batchReceiptPo[index].BatchCode = firstItem.SerialBatch ?? string.Empty;
                 _batchReceiptPo[index].Qty = 0;
-                _batchReceiptPo[index].QtyAvailable = Convert.ToInt32(firstItem.Qty);
+                _batchReceiptPo[index].QtyAvailable = Convert.ToDouble(firstItem.Qty);
                 _batchReceiptPo[index].ManfectureDate = DateTime.Parse(firstItem.MrfDate ?? string.Empty);
                 _batchReceiptPo[index].ExpDate = DateTime.Parse(firstItem.ExpDate ?? string.Empty);
             }
-        }else if(type == "Serial")
+        }
+        else if (type == "Serial")
         {
             var firstItem = _serialReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
             if (firstItem != null)
@@ -157,4 +207,36 @@ public partial class DialogAddLineReceiptFromProductionOrder
             }
         }
     }
+    private void OnSelectedDocument(string newValue, int index)
+    {
+        //todo
+        Console.WriteLine(index);
+    }
+    private void OnChangeQtyManual(ChangeEventArgs e, BatchReturnComponentProduction obj)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double qty))
+        {
+            obj.QtyLost = qty;
+            DataResult.QtyManual = _batchReceiptPo.Sum(x => x.QtyLost);
+            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) - _batchReceiptPo.Sum(x => x.QtyLost);
+        }
+    }
+    private void OnChangeQtyManualItemNone(ChangeEventArgs e, ItemNoneReturnComponentProduction obj)
+    {
+        if (double.TryParse(e.Value?.ToString(), out double qty))
+        {
+            obj.QtyLost = qty;
+            DataResult.QtyManual = _productionOrderNumber.Sum(x => x.QtyLost);
+            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) - _productionOrderNumber.Sum(x => x.QtyLost);
+        }
+    }
+    //private void OnChangeQtyAuto(ChangeEventArgs e, BatchReturnComponentProduction obj)
+    //{
+    //    if (double.TryParse(e.Value?.ToString(), out double qty))
+    //    { 
+    //        DataResult.QtyLost = DataResult.QtyPlan - DataResult.QtyLost - qty;
+    //        obj.Qty = qty;
+    //    }
+    //    Console.WriteLine(JsonSerializer.Serialize(DataResult));
+    //}
 }
