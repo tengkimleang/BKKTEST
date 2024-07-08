@@ -24,7 +24,8 @@ public class IssueProductionLineValidator : AbstractValidator<IssueProductionLin
             .ForEach(rule => rule.ChildRules(item =>
             {
                 item.RuleFor(i => i.BatchCode).NotEmpty().WithMessage("Batch Number must not be empty");
-                item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
+                //todo: check if this is correct
+                //item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
             }));
     }
 }

@@ -15,6 +15,7 @@ public partial class DialogAddLineReceiptFromProductionOrder
     [CascadingParameter] public FluentDialog Dialog { get; set; } = default!;
 
     [Parameter] public Dictionary<string, object> Content { get; set; } = default!;
+
     private ReturnComponentProductionLine DataResult { get; set; } = new();
 
     private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
