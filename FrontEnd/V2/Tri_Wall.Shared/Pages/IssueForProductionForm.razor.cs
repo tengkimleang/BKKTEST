@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.VisualBasic;
 using Refit;
-using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Views.GoodReceptPo;
@@ -157,8 +156,9 @@ public partial class IssueForProductionForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        var issueProductionLines = ViewModel.IssueProductionLine.AsQueryable();
+        var issueProductionLines = ViewModel.IssueProductionLine.ToList();
         var strMP = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
+        var strMP1 = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
         ViewModel.IssueProduction.Lines = new();
         foreach (var line in issueProductionLines)
         {
@@ -197,43 +197,76 @@ public partial class IssueForProductionForm
                 else if (line.ManageItem == "B")
                 {
                     var batches = new List<BatchIssueProduction>();
-                    var qty = actualQty;
-                    if (line.Batches?.Count > 0)
+                    //var qty = actualQty;
+                    var remainingQty = actualQty;
+                    foreach (var batch in line.Batches!.ToList())
                     {
-                        var batchesCopy = line.Batches.ToList();
-                        foreach (var batch in batchesCopy)
+                        Console.WriteLine(batch.Qty);
+                        if (remainingQty != 0)
                         {
-                            var index = line.Batches.IndexOf(batch);
+                            var index = line.Batches!.IndexOf(batch);
+                            var indexHeader= issueProductionLines.IndexOf(line);
                             batches.Add(new BatchIssueProduction
                             {
-                                AdmissionDate = line.Batches[index].AdmissionDate,
-                                BatchCode = line.Batches[index].BatchCode ?? "",
-                                ExpDate = line.Batches[index].ExpDate,
-                                Qty = (line.Batches[index].Qty <= actualQty) ? line.Batches[index].Qty : actualQty
+                                AdmissionDate = batch.AdmissionDate,
+                                BatchCode = batch.BatchCode ?? "",
+                                ExpDate = batch.ExpDate,
+                                Qty = remainingQty
                             });
 
-                            line.Batches[index].Qty -= actualQty;
-
-                            if (line.Batches[index].Qty <= actualQty)
-                                actualQty -= line.Batches[index].Qty;
-
-                            if (line.Batches[index]!.Qty == 0)
-                                line.Batches.RemoveAt(index);                            
+                            if (batch.Qty> remainingQty)
+                            {
+                                //line.Batches![index].Qty -= remainingQty;
+                                issueProductionLines[indexHeader].Batches![index].Qty -= remainingQty;
+                                remainingQty = 0;
+                            }   
+                            else if(batch.Qty <= remainingQty)
+                            {
+                                remainingQty -= batch.Qty;
+                                //line.Batches![index].Qty = 0;
+                                issueProductionLines[indexHeader].Batches![index].Qty = 0;
+                            }
+                            Console.WriteLine(issueProductionLines[indexHeader]?.Batches?[index].Qty);
+                            //Console.WriteLine(line.Batches![index].Qty);
+                            if (batch.Qty == 0)
+                            {
+                                line.Batches!.Remove(batch);
+                            }
+                            //if (batch.Qty >= actualQty)
+                            //{
+                            //    batch.Qty -= actualQty;
+                            //    actualQty = 0;
+                            //    if (batch.Qty == 0)
+                            //    {
+                            //        var index = line.Batches!.ToList().FindIndex(x => x.BatchCode == batch.BatchCode);
+                            //        issueProductionLines[index].Batches!.ToList().Remove(batch);
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    actualQty -= batch.Qty;
+                            //    batch.Qty = 0;
+                            //    var index = line.Batches!.ToList().FindIndex(x => x.BatchCode == batch.BatchCode);
+                            //    issueProductionLines[index].Batches!.ToList().Remove(batch);
+                            //}
 
                         }
                     }
-                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                    if (batches.Count > 0)
                     {
-                        ItemCode = vmIssueProductionLine.ItemCode,
-                        ItemName = vmIssueProductionLine.ItemName,
-                        Qty = qty,
-                        UomName = vmIssueProductionLine.Uom,
-                        WhsCode = line.WhsCode,
-                        ManageItem = vmIssueProductionLine.ItemType,
-                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                        DocNum = vmIssueProductionLine.DocEntry,
-                        Batches = batches,
-                    });
+                        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+                        {
+                            ItemCode = vmIssueProductionLine.ItemCode,
+                            ItemName = vmIssueProductionLine.ItemName,
+                            Qty = actualQty,
+                            UomName = vmIssueProductionLine.Uom,
+                            WhsCode = line.WhsCode,
+                            ManageItem = vmIssueProductionLine.ItemType,
+                            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+                            DocNum = vmIssueProductionLine.DocEntry,
+                            Batches = batches,
+                        });
+                    }
                 }
                 else
                 {
@@ -255,44 +288,46 @@ public partial class IssueForProductionForm
         ViewModel.IssueProductionLine = new();
 
         ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(strMP) ?? new();
+        ViewModel.GetProductionOrderLines = JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(strMP1) ?? new();
+
         Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
-        var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+        //var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
 
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                ToastService!.ShowError(error.ErrorMessage);
-            }
+        //if (!result.IsValid)
+        //{
+        //    foreach (var error in result.Errors)
+        //    {
+        //        ToastService!.ShowError(error.ErrorMessage);
+        //    }
 
-            return;
-        }
+        //    return;
+        //}
 
-        try
-        {
-            visible = true;
+        //try
+        //{
+        //    visible = true;
 
-            await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+        //    await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
-            if (ViewModel.PostResponses.ErrorCode == "")
-            {
-                SelectedProductionOrder = new List<GetProductionOrder>();
-                ViewModel.IssueProduction = new();
-                ViewModel.IssueProductionLine = new();
-                ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
-            }
-            else
-                ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+        //    if (ViewModel.PostResponses.ErrorCode == "")
+        //    {
+        //        SelectedProductionOrder = new List<GetProductionOrder>();
+        //        ViewModel.IssueProduction = new();
+        //        ViewModel.IssueProductionLine = new();
+        //        ToastService.ShowSuccess("Success");
+        //        if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+        //    }
+        //    else
+        //        ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
 
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
-        }
+        //    visible = false;
+        //}
+        //catch (ApiException ex)
+        //{
+        //    var content = ex.GetContentAsAsync<Dictionary<String, String>>();
+        //    ToastService!.ShowError(ex.ReasonPhrase ?? "");
+        //    visible = false;
+        //}
     }
 
     Task OnSeleted(string e)
