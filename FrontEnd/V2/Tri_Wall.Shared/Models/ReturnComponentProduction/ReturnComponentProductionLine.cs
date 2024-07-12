@@ -10,15 +10,15 @@ public class ReturnComponentProductionLine
     public int BaseLineNum { get; set; }
     public string ItemCode { get; set; } = string.Empty;
     public string ItemName { get; set; } = string.Empty;
-    public double Qty 
-    { 
-        get=> _qty;
-        set 
-        {
-            _qty = value;
-            QtyLost = QtyRequire - QtyPlan - value;
-        } 
-    }
+    public double Qty { get; set; }
+    //{ 
+    //    get=> _qty;
+    //    set 
+    //    {
+    //        _qty = value;
+    //        QtyLost = QtyRequire - QtyPlan - value;
+    //    } 
+    //}
     public double QtyRequire { get; set; }
     public double QtyPlan { get; set; }
     public double QtyManual { get; set; }
@@ -27,6 +27,7 @@ public class ReturnComponentProductionLine
     public string WhsCode { get; set; } = string.Empty;
     public string UomName { get; set; } = string.Empty;
     public string? ManageItem { get; set; }
+    public int Type { get; set; }
     public List<BatchReturnComponentProduction>? Batches { get; set; }
     public List<SerialReturnComponentProduction>? Serials { get; set; }
     public List<ItemNoneReturnComponentProduction>? ItemNones { get; set; }

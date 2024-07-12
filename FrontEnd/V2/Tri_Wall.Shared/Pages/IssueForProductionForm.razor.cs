@@ -157,177 +157,192 @@ public partial class IssueForProductionForm
     async Task OnSaveTransaction(string type = "")
     {
         var issueProductionLines = ViewModel.IssueProductionLine.ToList();
-        var strMP = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
-        var strMP1 = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
+        var serializedIssueProductionLine = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
+        var serializedProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
+
         ViewModel.IssueProduction.Lines = new();
+
         foreach (var line in issueProductionLines)
         {
-            var total = ViewModel.GetProductionOrderLines?.Where(x => x.ItemCode ==
-                                                                      line.ItemCode)
+            var totalQty = ViewModel.GetProductionOrderLines?
+                .Where(x => x.ItemCode == line.ItemCode)
                 .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
-            foreach (var vmIssueProductionLine in ViewModel.GetProductionOrderLines!.Where(x =>
-                         x.ItemCode == line.ItemCode).ToList())
+
+            var productionOrderLines = ViewModel.GetProductionOrderLines!
+                .Where(x => x.ItemCode == line.ItemCode)
+                .ToList();
+
+            foreach (var vmIssueProductionLine in productionOrderLines)
             {
-                var actualQty = (Convert.ToDouble(vmIssueProductionLine.Qty ?? "0") / total) * line.Qty;
+                var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty ?? "0") / totalQty) * line.Qty, 6);
+
                 if (line.ManageItem == "S")
                 {
-                    var serials = new List<SerialIssueProduction>();
-                    for (var i = 0; i < actualQty; i++)
-                    {
-                        if (line.Serials?.Count > 0)
-                        {
-                            serials.Add(line.Serials.FirstOrDefault()!);
-                            line.Serials.Remove(line.Serials.FirstOrDefault()!);
-                        }
-                    }
-
-                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
-                    {
-                        ItemCode = vmIssueProductionLine.ItemCode,
-                        ItemName = vmIssueProductionLine.ItemName,
-                        Qty = actualQty,
-                        UomName = vmIssueProductionLine.Uom,
-                        WhsCode = line.WhsCode,
-                        ManageItem = vmIssueProductionLine.ItemType,
-                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                        DocNum = vmIssueProductionLine.DocEntry,
-                        Serials = serials,
-                    });
+                    ProcessSerials(line, vmIssueProductionLine, actualQty);
                 }
                 else if (line.ManageItem == "B")
                 {
-                    var batches = new List<BatchIssueProduction>();
-                    //var qty = actualQty;
-                    var remainingQty = actualQty;
-                    foreach (var batch in line.Batches!.ToList())
-                    {
-                        Console.WriteLine(batch.Qty);
-                        if (remainingQty != 0)
-                        {
-                            var index = line.Batches!.IndexOf(batch);
-                            var indexHeader= issueProductionLines.IndexOf(line);
-                            batches.Add(new BatchIssueProduction
-                            {
-                                AdmissionDate = batch.AdmissionDate,
-                                BatchCode = batch.BatchCode ?? "",
-                                ExpDate = batch.ExpDate,
-                                Qty = remainingQty
-                            });
-
-                            if (batch.Qty> remainingQty)
-                            {
-                                //line.Batches![index].Qty -= remainingQty;
-                                issueProductionLines[indexHeader].Batches![index].Qty -= remainingQty;
-                                remainingQty = 0;
-                            }   
-                            else if(batch.Qty <= remainingQty)
-                            {
-                                remainingQty -= batch.Qty;
-                                //line.Batches![index].Qty = 0;
-                                issueProductionLines[indexHeader].Batches![index].Qty = 0;
-                            }
-                            Console.WriteLine(issueProductionLines[indexHeader]?.Batches?[index].Qty);
-                            //Console.WriteLine(line.Batches![index].Qty);
-                            if (batch.Qty == 0)
-                            {
-                                line.Batches!.Remove(batch);
-                            }
-                            //if (batch.Qty >= actualQty)
-                            //{
-                            //    batch.Qty -= actualQty;
-                            //    actualQty = 0;
-                            //    if (batch.Qty == 0)
-                            //    {
-                            //        var index = line.Batches!.ToList().FindIndex(x => x.BatchCode == batch.BatchCode);
-                            //        issueProductionLines[index].Batches!.ToList().Remove(batch);
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    actualQty -= batch.Qty;
-                            //    batch.Qty = 0;
-                            //    var index = line.Batches!.ToList().FindIndex(x => x.BatchCode == batch.BatchCode);
-                            //    issueProductionLines[index].Batches!.ToList().Remove(batch);
-                            //}
-
-                        }
-                    }
-                    if (batches.Count > 0)
-                    {
-                        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
-                        {
-                            ItemCode = vmIssueProductionLine.ItemCode,
-                            ItemName = vmIssueProductionLine.ItemName,
-                            Qty = actualQty,
-                            UomName = vmIssueProductionLine.Uom,
-                            WhsCode = line.WhsCode,
-                            ManageItem = vmIssueProductionLine.ItemType,
-                            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                            DocNum = vmIssueProductionLine.DocEntry,
-                            Batches = batches,
-                        });
-                    }
+                    ProcessBatches(line, vmIssueProductionLine, actualQty, issueProductionLines);
                 }
                 else
                 {
-                    ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
-                    {
-                        ItemCode = vmIssueProductionLine.ItemCode,
-                        ItemName = vmIssueProductionLine.ItemName,
-                        Qty = actualQty,
-                        UomName = vmIssueProductionLine.Uom,
-                        WhsCode = line.WhsCode,
-                        ManageItem = vmIssueProductionLine.ItemType,
-                        BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                        DocNum = vmIssueProductionLine.DocEntry
-                    });
+                    AddIssueProductionLine(vmIssueProductionLine, line, actualQty);
                 }
             }
         }
 
-        ViewModel.IssueProductionLine = new();
-
-        ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(strMP) ?? new();
-        ViewModel.GetProductionOrderLines = JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(strMP1) ?? new();
+        RestoreViewModelState(serializedIssueProductionLine, serializedProductionOrderLines);
 
         Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
-        //var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+        var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
 
-        //if (!result.IsValid)
-        //{
-        //    foreach (var error in result.Errors)
-        //    {
-        //        ToastService!.ShowError(error.ErrorMessage);
-        //    }
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                ToastService!.ShowError(error.ErrorMessage);
+            }
+            return;
+        }
 
-        //    return;
-        //}
+        await SubmitTransaction(type);
+    }
 
-        //try
-        //{
-        //    visible = true;
+    private void ProcessSerials(IssueProductionLine line, GetProductionOrderLines vmIssueProductionLine, double actualQty)
+    {
+        var serials = new List<SerialIssueProduction>();
 
-        //    await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+        for (var i = 0; i < actualQty; i++)
+        {
+            if (line.Serials?.Count > 0)
+            {
+                serials.Add(line.Serials.First());
+                line.Serials.RemoveAt(0);
+            }
+        }
 
-        //    if (ViewModel.PostResponses.ErrorCode == "")
-        //    {
-        //        SelectedProductionOrder = new List<GetProductionOrder>();
-        //        ViewModel.IssueProduction = new();
-        //        ViewModel.IssueProductionLine = new();
-        //        ToastService.ShowSuccess("Success");
-        //        if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
-        //    }
-        //    else
-        //        ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+        {
+            ItemCode = vmIssueProductionLine.ItemCode,
+            ItemName = vmIssueProductionLine.ItemName,
+            Qty = actualQty,
+            UomName = vmIssueProductionLine.Uom,
+            WhsCode = line.WhsCode,
+            ManageItem = vmIssueProductionLine.ItemType,
+            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+            DocNum = vmIssueProductionLine.DocEntry,
+            Serials = serials,
+        });
+    }
 
-        //    visible = false;
-        //}
-        //catch (ApiException ex)
-        //{
-        //    var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-        //    ToastService!.ShowError(ex.ReasonPhrase ?? "");
-        //    visible = false;
-        //}
+    private void ProcessBatches(IssueProductionLine line, GetProductionOrderLines vmIssueProductionLine, double actualQty, List<IssueProductionLine> issueProductionLines)
+    {
+        var batches = new List<BatchIssueProduction>();
+        var remainingQty = actualQty;
+
+        foreach (var batch in line.Batches!.ToList())
+        {
+            if (remainingQty == 0) break;
+
+            var index = line.Batches!.IndexOf(batch);
+            var indexHeader = issueProductionLines.IndexOf(line);
+
+            batches.Add(new BatchIssueProduction
+            {
+                AdmissionDate = batch.AdmissionDate,
+                BatchCode = batch.BatchCode ?? "",
+                ExpDate = batch.ExpDate,
+                Qty = Math.Min(batch.Qty, remainingQty)
+            });
+
+            if (batch.Qty > remainingQty)
+            {
+                issueProductionLines[indexHeader].Batches![index].Qty = Math.Round(batch.Qty - remainingQty, 6);
+                remainingQty = 0;
+            }
+            else
+            {
+                remainingQty -= batch.Qty;
+                issueProductionLines[indexHeader].Batches![index].Qty = 0;
+            }
+
+            if (batch.Qty == 0)
+            {
+                line.Batches!.Remove(batch);
+            }
+        }
+
+        if (batches.Count > 0)
+        {
+            ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+            {
+                ItemCode = vmIssueProductionLine.ItemCode,
+                ItemName = vmIssueProductionLine.ItemName,
+                Qty = actualQty,
+                UomName = vmIssueProductionLine.Uom,
+                WhsCode = line.WhsCode,
+                ManageItem = vmIssueProductionLine.ItemType,
+                BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+                DocNum = vmIssueProductionLine.DocEntry,
+                Batches = batches,
+            });
+        }
+    }
+
+    private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line, double actualQty)
+    {
+        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+        {
+            ItemCode = vmIssueProductionLine.ItemCode,
+            ItemName = vmIssueProductionLine.ItemName,
+            Qty = actualQty,
+            UomName = vmIssueProductionLine.Uom,
+            WhsCode = line.WhsCode,
+            ManageItem = vmIssueProductionLine.ItemType,
+            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+            DocNum = vmIssueProductionLine.DocEntry
+        });
+    }
+
+    private void RestoreViewModelState(string serializedIssueProductionLine, string serializedProductionOrderLines)
+    {
+        ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(serializedIssueProductionLine) ?? new();
+        ViewModel.GetProductionOrderLines = JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(serializedProductionOrderLines) ?? new();
+    }
+
+    private async Task SubmitTransaction(string type)
+    {
+        try
+        {
+            visible = true;
+
+            await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+
+            if (string.IsNullOrEmpty(ViewModel.PostResponses.ErrorCode))
+            {
+                SelectedProductionOrder = new List<GetProductionOrder>();
+                ViewModel.IssueProduction = new();
+                ViewModel.IssueProductionLine = new();
+                ToastService.ShowSuccess("Success");
+
+                if (type == "print")
+                {
+                    await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                }
+            }
+            else
+            {
+                ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
+            }
+
+            visible = false;
+        }
+        catch (ApiException ex)
+        {
+            var content = await ex.GetContentAsAsync<Dictionary<string, string>>();
+            ToastService!.ShowError(ex.ReasonPhrase ?? "");
+            visible = false;
+        }
     }
 
     Task OnSeleted(string e)
