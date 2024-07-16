@@ -26,8 +26,9 @@ public static class Dependencies
         services.AddSingleton<ApiService>();
         services.AddScoped<GoodReceptPoViewModel>();
         services.AddScoped<DeliveryOrderViewModel>();
-        services.AddScoped<IssueProductionOrderViewModel>();
-        services.AddScoped<ReceiptFromProductionOrderViewModel>();
+        services.AddScoped<InventoryTransferViewModel>();
+        services.AddTransient<IssueProductionOrderViewModel>();
+        services.AddTransient<ReceiptFromProductionOrderViewModel>();
         #endregion
         #region Validator
         var assembly = Assembly.GetAssembly(typeof(Dependencies));

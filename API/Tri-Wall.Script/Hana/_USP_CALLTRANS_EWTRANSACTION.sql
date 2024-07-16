@@ -646,19 +646,19 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		ELSE IF :par1='67' THEN
 		--Inventory Transfer Request
 			SELECT 
-				 B."Series" AS "Code"
+				 "Series" AS "Code"
 				,"SeriesName"
-				,B."BPLId" As "Branch"
 				,(SELECT 
 					IFNULL(MAX("DocNum")+1,B."InitialNum") 
-				  FROM TRIWALL_TRAINKEY."OWTR" WHERE "Series"=B."Series"
-				 )AS "DocNum" 
+				  FROM TRIWALL_TRAINKEY."OPDN" 
+				  WHERE "Series"=B."Series"
+				 )AS "DocNum"
 			FROM TRIWALL_TRAINKEY."OFPR" AS A 
 			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
-				B."Indicator"=YEAR(CURRENT_DATE) 
-				AND B."ObjectCode"=67 
-				AND A."SubNum"=MONTH(CURRENT_DATE) 
+				A."Category"=YEAR(CURRENT_DATE)
+				AND TO_VARCHAR(B."ObjectCode")=67 
+				AND "SubNum"=MONTH(CURRENT_DATE) 
 				And B."Indicator"<>'Default';
 		ELSE IF :par1='1470000065' THEN
 			SELECT 
@@ -892,7 +892,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 					  			COUNT(*) 	
 					  	   FROM TRIWALL_TRAINKEY."WOR1" AS T0 
 					  	   WHERE "DocEntry"=A."DocEntry" AND "IssuedQty"<"BaseQty")!=0
-					  AND A."DocEntry" LIKE '%'|| '744' ||'%'
+					  --AND A."DocEntry" LIKE '%'|| :par1 ||'%'
 			)A 
 			WHERE A."Qty"<>0
 			ORDER BY "DocNum" DESC;
@@ -2893,6 +2893,12 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT COUNT("DocNum")  AS "AllItem" FROM TRIWALL_TRAINKEY."OIGE";
 		ELSE IF :par1='ReceiptFromProduction' THEN
 			SELECT COUNT("DocNum")  AS "AllItem" FROM TRIWALL_TRAINKEY."OIGN";
+		ELSE IF :par1='InventoryTransfer' THEN
+			SELECT COUNT("DocEntry") AS "AllItem" FROM TRIWALL_TRAINKEY."OWTR";
+		ELSE IF :par1='SaleOrder' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ORDR" WHERE "DocStatus"='O';
+		END IF;
+		END IF;
 		END IF;
 		END IF;
 		END IF;

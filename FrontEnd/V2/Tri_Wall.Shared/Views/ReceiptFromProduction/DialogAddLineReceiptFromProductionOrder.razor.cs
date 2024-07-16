@@ -19,6 +19,15 @@ public partial class DialogAddLineReceiptFromProductionOrder
     private ReturnComponentProductionLine DataResult { get; set; } = new();
 
     private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
+    private double _qty
+    {
+        get => DataResult.Qty;
+        set
+        {
+            DataResult.Qty = value;
+            DataResult.QtyLost = DataResult.QtyRequire - DataResult.QtyPlan - value;
+        }
+    }
     private IEnumerable<GetProductionOrder>? _selectedProductionOrder => Content["docNumOrderSelected"] as IEnumerable<GetProductionOrder>;
     private List<BatchReturnComponentProduction> _batchReceiptPo = new();
     private List<SerialReturnComponentProduction> _serialReceiptPo = new();

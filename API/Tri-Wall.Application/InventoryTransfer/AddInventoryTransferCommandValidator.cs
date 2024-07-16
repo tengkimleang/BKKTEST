@@ -1,13 +1,15 @@
-﻿using FluentValidation;
-using Tri_Wall.Application.Common.Interfaces;
+﻿
+using FluentValidation;
+using Tri_Wall.Application.GoodReceiptPo;
 
-namespace Tri_Wall.Application.GoodReceiptPo;
+namespace Tri_Wall.Application.InventoryTransfer;
 
-public class AddGoodReceiptPoCommandValidator : AbstractValidator<AddGoodReceiptPoCommand>
+public class AddInventoryTransferCommandValidator : AbstractValidator<AddInventoryTransferCommand>
 {
-    public AddGoodReceiptPoCommandValidator()
+    public AddInventoryTransferCommandValidator()
     {
-        RuleFor(x => x.VendorCode).NotEmpty().WithMessage("VendorCode is required");
+        RuleFor(x => x.FromWarehouse).NotEmpty().WithMessage("FromWarehouse is required");
+        RuleFor(x => x.ToWarehouse).NotEmpty().WithMessage("ToWarehouse is required");
         RuleFor(x => x.Series).GreaterThan(0).WithMessage("Series is required");
         RuleFor(x => x.DocDate).NotNull().WithMessage("DocDate is required");
         RuleFor(x => x.TaxDate).NotNull().WithMessage("TaxDate   is required");
@@ -16,7 +18,6 @@ public class AddGoodReceiptPoCommandValidator : AbstractValidator<AddGoodReceipt
             {
                 item.RuleFor(i => i.ItemCode).NotEmpty().WithMessage("ItemCode must not be empty");
                 item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
-                item.RuleFor(i => i.Price).GreaterThan(0).WithMessage("Price should bigger than 0");
             }));
     }
 }

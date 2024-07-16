@@ -19,7 +19,6 @@ public partial class DialogAddLineIssueProductionOrder
     [Parameter] public Dictionary<string, object> Content { get; set; } = default!;
 
     private IssueProductionLine DataResult { get; set; } = new();
-
     private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
     private List<BatchIssueProduction> _batchReceiptPo = new();
     private List<SerialIssueProduction> _serialReceiptPo = new();

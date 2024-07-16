@@ -4,6 +4,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.InventoryTransfer;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
@@ -74,4 +75,6 @@ public class ApiService(IApiService apiService)
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
     public Task<PostResponse> PostReturnFromProduction(ReturnComponentProductionHeader issueProductionHeader)
         => apiService.PostReturnFromProduction(issueProductionHeader);
+    public Task<PostResponse> PostInventoryTransfer(InventoryTransferHeader inventoryTransfer)
+        => apiService.PostInventoryTransfer(inventoryTransfer);
 }
