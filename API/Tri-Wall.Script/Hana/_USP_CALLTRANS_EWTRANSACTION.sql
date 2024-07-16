@@ -888,7 +888,11 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 					  								"BaseEntry" 
 					  							FROM TRIWALL_TRAINKEY."IGN1" 
 					  							WHERE "BaseType"=202)
-					  --AND "DocNum" LIKE '%'|| :par2 ||'%'
+					  AND (SELECT 
+					  			COUNT(*) 	
+					  	   FROM TRIWALL_TRAINKEY."WOR1" AS T0 
+					  	   WHERE "DocEntry"=A."DocEntry" AND "IssuedQty"<"BaseQty")!=0
+					  AND A."DocEntry" LIKE '%'|| '744' ||'%'
 			)A 
 			WHERE A."Qty"<>0
 			ORDER BY "DocNum" DESC;

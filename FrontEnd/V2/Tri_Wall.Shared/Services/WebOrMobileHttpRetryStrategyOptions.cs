@@ -13,7 +13,7 @@ public class WebOrMobileHttpRetryStrategyOptions : HttpRetryStrategyOptions
     public WebOrMobileHttpRetryStrategyOptions()
     {
         BackoffType = DelayBackoffType.Exponential;
-        MaxRetryAttempts = 3;
+        MaxRetryAttempts = 5;
         UseJitter = true;
         Delay = TimeSpan.FromSeconds(1.5);
     }
