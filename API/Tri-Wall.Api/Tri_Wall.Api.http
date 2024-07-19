@@ -237,3 +237,60 @@ Content-Type: application/json
     }
   ]
 }
+
+
+###
+
+POST {{API_HostAddress}}/return
+Content-Type: application/json
+
+{
+  "CustomerCode":"C003",
+  "ContactPersonCode":"0",
+  "NumAtCard":"",
+  "Series":"192",
+  "DocDate":"2024-07-19T16:23:30.303+07:00",
+  "TaxDate":"2024-07-19T00:00:00",
+  "Remarks":"",
+  "IsDraft":false,
+  "Lines":[
+    {
+      "ItemCode":"TEST-B-01",
+      "ItemName":"Batch",
+      "Qty":1,
+      "LineNum":1,
+      "Price":1,
+      "VatCode":"S00",
+      "WarehouseCode":"RS02",
+      "ManageItem":"B",
+      "BaseEntry":0,
+      "BaseLine":0,
+      "Batches":[
+        {
+          "BatchCode":"W-01",
+          "Qty":1,
+          "QtyAvailable":10,
+          "ExpDate":"2024-07-09T00:00:00",
+          "ManfectureDate":"2024-07-09T00:00:00",
+          "AdmissionDate":"2024-07-19T00:00:00+07:00",
+          "LotNo":"",
+          "OnSelectedBatchOrSerial":[
+            {
+              "ItemCode":"TEST-B-01",
+              "Qty":"10",
+              "SerialBatch":"W-01",
+              "MfrSerialNo":"",
+              "ExpDate":"07/09/2024 00:00:00",
+              "MrfDate":"07/09/2024 00:00:00",
+              "Type":"Batch",
+              "LineNum":null
+            }
+          ]
+        }
+      ]
+      ,"Serials":[]
+    }
+  ]
+}
+
+###

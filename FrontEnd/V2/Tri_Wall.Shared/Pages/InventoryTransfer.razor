@@ -65,18 +65,16 @@ else
                                               Items="ViewModel.Warehouses"
                                               OptionText="@(i => i.Name)"
                                               OptionValue="@(i => i.Code)"
-                                              SelectedOption="ViewModel.Warehouses.FirstOrDefault()"
-                                              @bind-Value="ViewModel.InventoryTransferForm.FromWarehouse" />
+                                              @bind-Value="ViewModel.InventoryTransferForm.FromWarehouse" />    
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentSelect Width="100%"
                                               TOption="Warehouses"
                                               Required
                                               Label="Warehouses To"
-                                              Items="ViewModel.Warehouses"
+                                              Items="ViewModel.WarehousesTo"
                                               OptionText="@(i => i.Name)"
                                               OptionValue="@(i => i.Code)"
-                                              SelectedOption="ViewModel.Warehouses.FirstOrDefault()"
                                               @bind-Value="ViewModel.InventoryTransferForm.ToWarehouse" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">

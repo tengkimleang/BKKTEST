@@ -33,7 +33,7 @@ public class Connection : IConnection, IUnitOfWork
 
     public void Commit(Company company)
     {
-        company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit);
+        company.EndTransaction(BoWfTransOpt.wf_Commit);
     }
 
     public Company Connect()

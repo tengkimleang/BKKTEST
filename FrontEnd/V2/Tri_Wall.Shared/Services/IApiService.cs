@@ -72,4 +72,7 @@ public interface IApiService
     [Post("/inventoryTransfer")]
     public Task<PostResponse> PostInventoryTransfer(
         [Body] InventoryTransferHeader request);
+    [Post("/return")]
+    public Task<PostResponse> PostReturn(
+        [Body] DeliveryOrderHeader request);
 }

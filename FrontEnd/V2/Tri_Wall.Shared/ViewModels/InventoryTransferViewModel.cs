@@ -24,6 +24,9 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
     [ObservableProperty]
+    ObservableCollection<Warehouses> _warehousesTo = loadMasterData.GetWarehouses;
+
+    [ObservableProperty]
     PostResponse _postResponses = new();
 
     [ObservableProperty]
@@ -61,8 +64,12 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
                     (await apiService.GetItems()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
                     (await apiService.GetWarehouses()).Data ?? new());
+        WarehousesTo = await CheckingValueT(WarehousesTo, async () =>
+                           (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest")).Data ?? new();
+        InventoryTransferForm.FromWarehouse = Warehouses.FirstOrDefault()?.Code ?? "";
+        InventoryTransferForm.ToWarehouse = WarehousesTo.FirstOrDefault()?.Code ?? "";
         IsView = true;
     }
 

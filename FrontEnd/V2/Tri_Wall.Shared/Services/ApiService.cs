@@ -77,4 +77,6 @@ public class ApiService(IApiService apiService)
         => apiService.PostReturnFromProduction(issueProductionHeader);
     public Task<PostResponse> PostInventoryTransfer(InventoryTransferHeader inventoryTransfer)
         => apiService.PostInventoryTransfer(inventoryTransfer);
+    public Task<PostResponse> PostReturn(DeliveryOrderHeader deliveryOrderHeader)
+        => apiService.PostReturn(deliveryOrderHeader);
 }

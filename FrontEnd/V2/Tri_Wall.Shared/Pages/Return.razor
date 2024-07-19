@@ -1,8 +1,8 @@
-﻿@page "/deliveryorder"
-@inherits MvvmComponentBase<DeliveryOrderViewModel>
+﻿@page "/return"
+@inherits MvvmComponentBase<ReturnViewModel>
 @rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
-<PageTitle>Delivery Order</PageTitle>
+<PageTitle>Return</PageTitle>
 @if (ViewModel.IsView is false)
 {
     <p>Loading ........</p>
@@ -17,10 +17,10 @@ else
                 <FluentBreadcrumb>
                     <FluentBreadcrumbItem>
                         @stringDisplay
-                        <FluentIcon Value="@(new Icons.Regular.Size16.Archive())" Color="@Color.Neutral" Slot="start"/>
+                        <FluentIcon Value="@(new Icons.Regular.Size16.Archive())" Color="@Color.Neutral" Slot="start" />
                     </FluentBreadcrumbItem>
                 </FluentBreadcrumb>
-                <FluentSpacer/>
+                <FluentSpacer />
                 <FluentButton OnClick="ListCopyFromPurchaseOrder" IconEnd="@(new Icons.Filled.Size24.Search())">
                     Copy @fromWord
                 </FluentButton>
@@ -49,16 +49,16 @@ else
                                               OptionText="@(i => i.SeriesName)"
                                               OptionValue="@(i => i.Code)"
                                               SelectedOption="@ViewModel.Series.FirstOrDefault()"
-                                              @bind-Value="@ViewModel.DeliveryOrderForm.Series"/>
+                                              @bind-Value="@ViewModel.DeliveryOrderForm.Series" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentTextField Value="@ViewModel.DeliveryOrderForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" Label="DocDate" style="width: 100%;"/>
+                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" Label="DocDate" style="width: 100%;" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.TaxDate" Label="TaxDate" style="width: 100%;"/>
+                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.TaxDate" Label="TaxDate" style="width: 100%;" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                                 <FluentAutocomplete Required
@@ -72,7 +72,7 @@ else
                                                     Items="ViewModel.Customers"
                                                     MaximumSelectedOptions="1"
                                                     OptionText="@(item => $"{item.VendorCode} - {item.VendorName}")"
-                                                    @bind-SelectedOptions="@selectedVendor"/>
+                                                    @bind-SelectedOptions="@selectedVendor" />
 
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -84,7 +84,7 @@ else
                                               OptionText="@(i => i.ContactName)"
                                               OptionValue="@(i => i.ContactName)"
                                               SelectedOption="ViewModel.ContactPeople.Where(x => x.CardCode == selectedVendor.FirstOrDefault()?.VendorCode).FirstOrDefault()"
-                                              @bind-Value="ViewModel.DeliveryOrderForm.ContactPersonCode"/>
+                                              @bind-Value="ViewModel.DeliveryOrderForm.ContactPersonCode" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
@@ -101,7 +101,7 @@ else
                                                     GridTemplateColumns="0.25fr 1fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
                                                     Style=@dataGrid
                                                     Items="ViewModel.DeliveryOrderForm.Lines?.AsQueryable()">
-                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
+                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
                                         <TemplateColumn Tooltip="true" Title="Action">
                                             <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLine(ViewModel.DeliveryOrderForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                                 Delete
@@ -110,13 +110,13 @@ else
                                                 Edit
                                             </FluentButton>
                                         </TemplateColumn>
-                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
-                                        <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true"/>
-                                        <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true"/>
-                                        <PropertyColumn Title="VatCode" Property="@(c => c.VatCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Warehouse" Property="@(c => c.WarehouseCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Manage Item" Property="@(c => c.ManageItem)" Tooltip="true"/>
+                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
+                                        <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true" />
+                                        <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true" />
+                                        <PropertyColumn Title="VatCode" Property="@(c => c.VatCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Warehouse" Property="@(c => c.WarehouseCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Manage Item" Property="@(c => c.ManageItem)" Tooltip="true" />
                                     </FluentDataGrid>
                                 </div>
                             </FluentGridItem>
@@ -128,12 +128,11 @@ else
     }
     else
     {
-        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm
-            AddNew="OnView"
-            Search="OpenListDataAsyncAsync"
-            OnViewBatchOrSerial="OnGetBatchOrSerial"
-            GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-            GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
+        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
+                                                                  Search="OpenListDataAsyncAsync"
+                                                                  OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
+                                                                  GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
     }
 
     <FluentOverlay @bind-Visible=@visible
@@ -141,6 +140,6 @@ else
                    FullScreen="true"
                    OnClose="OnCloseOverlay"
                    PreventScroll=true>
-        <FluentProgressRing/>
+        <FluentProgressRing />
     </FluentOverlay>
 }
