@@ -1,5 +1,5 @@
-﻿@API_HostAddress = http://localhost:5253
-#@API_HostAddress = http://1.10.143.138:8429/BarCodeBackEnd
+﻿#@API_HostAddress = http://localhost:5253
+@API_HostAddress = http://192.168.10.107:8429/ApiTriWall/
 
 
 #http://localhost/APITRIWALL http://192.168.10.2/AddOnProgram
@@ -22,7 +22,15 @@ Content-Type: application/json
 #   "Par4": "",
 #   "Par5": ""
 # }
-{"storeName":"_USP_CALLTRANS_EWTRANSACTION","dbType":"OnGetBatchOrSerialInIssueForProduction","par1":"B","par2":"TEST-B-01","par3":"","par4":"","par5":""}
+{
+  "storeName":"_USP_CALLTRANS_EWTRANSACTION",
+  "dbType":"GetBatchSerialDeliveryOrder",
+  "par1":"117",
+  "par2":"",
+  "par3":"",
+  "par4":"",
+  "par5":""
+}
 
 ###
 

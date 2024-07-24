@@ -106,15 +106,14 @@
                                                         OnOptionsSearch="OnSearchSerial"
                                                         MaximumOptionsSearch="1"
                                                         Virtualize="true"
-                                                        Disabled=@(DataResult.BaseEntry != 0 ? false : true)
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
                                                         @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                        ValueChanged="@(e=> OnSelectedSerialOrBatch(e,_batchReceiptPo.IndexOf(context),"Batch"))" />
+                                                        ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))"/>
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty">
-                                    <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double" />
+                                    <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double"/>
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty Available">
                                     <FluentNumberField ReadOnly Value="@context.QtyAvailable" Placeholder="Qty"></FluentNumberField>
@@ -155,12 +154,30 @@
                                                         OnOptionsSearch="OnSearchSerial"
                                                         MaximumOptionsSearch="1"
                                                         Virtualize="true"
-                                                        Disabled=@(DataResult.BaseEntry != 0 ? false : true)
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
                                                         @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                        ValueChanged="@((e)=>OnSelectedSerialOrBatch(e,_serialReceiptPo.IndexOf(context),"Serial"))"/>
+                                                        ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))"/>
+                                    @* @if (DataResult.BaseEntry == 0) *@
+                                    @* { *@
+                                    @*     <FluentAutocomplete Required *@
+                                    @*                         TOption="GetBatchOrSerial" *@
+                                    @*                         Width="100%" *@
+                                    @*                         Placeholder="Serial Code" *@
+                                    @*                         OnOptionsSearch="OnSearchSerial" *@
+                                    @*                         MaximumOptionsSearch="1" *@
+                                    @*                         Virtualize="true" *@
+                                    @*                         Items="_serialBatchDeliveryOrders" *@
+                                    @*                         MaximumSelectedOptions="1" *@
+                                    @*                         OptionText="@(item => $"{item.SerialBatch}")" *@
+                                    @*                         @bind-SelectedOptions="@context.OnSelectedBatchOrSerial" *@
+                                    @*                         ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))"/> *@
+                                    @* } *@
+                                    @* else *@
+                                    @* { *@
+                                    @*     <FluentTextField @bind-Value=@context.SerialCode Placeholder="SerialCode" ReadOnly></FluentTextField> *@
+                                    @* } *@
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty">
                                     <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">

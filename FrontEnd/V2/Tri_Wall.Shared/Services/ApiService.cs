@@ -53,9 +53,9 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GetLineByDocNum(string storeType,string docEntry)
         => apiService.GetLineByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", storeType, docEntry));
-    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(string docEntry,string type)
+    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(string docEntry,string type,string lineNum="")
         => apiService.GetBatchOrSerial(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", type, docEntry));
+            "_USP_CALLTRANS_EWTRANSACTION", type, docEntry,lineNum));
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,string itemType,string itemCode,string docEntry="")
         => apiService.GetBatchOrSerial(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType,itemCode,docEntry));
