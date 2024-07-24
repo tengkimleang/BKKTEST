@@ -19,52 +19,52 @@ public class AddGoodReturnCommandHandler : IRequestHandler<AddGoodReturnCommand,
     {
         Company oCompany = unitOfWork.Connect();
         unitOfWork.BeginTransaction(oCompany);
-        var oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
-        oDeliveryOrder.CardCode = request.CustomerCode;
-        oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
-        oDeliveryOrder.NumAtCard = request.NumAtCard;
-        oDeliveryOrder.Series = request.Series;
-        oDeliveryOrder.DocDate = request.DocDate;
-        oDeliveryOrder.DocDueDate = request.TaxDate;
-        oDeliveryOrder.Comments = request.Remarks;
-        oDeliveryOrder.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
+        var oPurchaseReturn = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+        oPurchaseReturn.CardCode = request.CustomerCode;
+        oPurchaseReturn.ContactPersonCode = request.ContactPersonCode;
+        oPurchaseReturn.NumAtCard = request.NumAtCard;
+        oPurchaseReturn.Series = request.Series;
+        oPurchaseReturn.DocDate = request.DocDate;
+        oPurchaseReturn.DocDueDate = request.TaxDate;
+        oPurchaseReturn.Comments = request.Remarks;
+        oPurchaseReturn.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
         foreach (var l in request.Lines!)
         {
-            oDeliveryOrder.Lines.ItemCode = l.ItemCode;
-            oDeliveryOrder.Lines.Quantity = l.Qty;
-            oDeliveryOrder.Lines.UnitPrice = l.Price;
-            oDeliveryOrder.Lines.VatGroup = l.VatCode;
-            oDeliveryOrder.Lines.WarehouseCode = l.WarehouseCode;
+            oPurchaseReturn.Lines.ItemCode = l.ItemCode;
+            oPurchaseReturn.Lines.Quantity = l.Qty;
+            oPurchaseReturn.Lines.UnitPrice = l.Price;
+            oPurchaseReturn.Lines.VatGroup = l.VatCode;
+            oPurchaseReturn.Lines.WarehouseCode = l.WarehouseCode;
             if (l.BaseEntry != 0)
             {
-                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
-                oDeliveryOrder.Lines.BaseType = 20;
-                oDeliveryOrder.Lines.BaseLine = l.BaseLine;
+                oPurchaseReturn.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
+                oPurchaseReturn.Lines.BaseType = 20;
+                oPurchaseReturn.Lines.BaseLine = l.BaseLine;
             }
 
             if (l.ManageItem == "S")
             {
                 foreach (var serial in l.Serials!)
                 {
-                    //oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
-                    oDeliveryOrder.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
-                    oDeliveryOrder.Lines.SerialNumbers.Add();
+                    //oPurchaseReturn.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
+                    oPurchaseReturn.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
+                    oPurchaseReturn.Lines.SerialNumbers.Add();
                 }
             }
             else if (l.ManageItem == "B")
             {
                 foreach (var batch in l.Batches!)
                 {
-                    oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
-                    oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;
-                    oDeliveryOrder.Lines.BatchNumbers.Add();
+                    oPurchaseReturn.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
+                    oPurchaseReturn.Lines.BatchNumbers.Quantity = batch.Qty;
+                    oPurchaseReturn.Lines.BatchNumbers.Add();
                 }
             }
 
-            oDeliveryOrder.Lines.Add();
+            oPurchaseReturn.Lines.Add();
         }
 
-        if (oDeliveryOrder.Add() != 0)
+        if (oPurchaseReturn.Add() != 0)
         {
             unitOfWork.Rollback(oCompany);
             return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(),
