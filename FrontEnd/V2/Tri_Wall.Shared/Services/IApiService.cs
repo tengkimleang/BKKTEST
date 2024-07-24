@@ -75,4 +75,7 @@ public interface IApiService
     [Post("/return")]
     public Task<PostResponse> PostReturn(
         [Body] DeliveryOrderHeader request);
+    [Post("/goodReturn")]
+    public Task<PostResponse> PostGoodReturn(
+        [Body] DeliveryOrderHeader request);
 }

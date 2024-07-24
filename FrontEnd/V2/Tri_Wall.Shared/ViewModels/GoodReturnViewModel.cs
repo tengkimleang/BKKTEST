@@ -69,7 +69,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     async Task Submit()
     {
         DeliveryOrderForm.ContactPersonCode = "0";
-        PostResponses = await apiService.PostReturn(DeliveryOrderForm);
+        PostResponses = await apiService.PostGoodReturn(DeliveryOrderForm);
     }
 
     [RelayCommand]
@@ -145,14 +145,16 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
         GetPurchaseOrderLineByDocNums =
-            (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry)).Data ?? new();
+            (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry)).Data ??
+            new();
         foreach (var obj in GetPurchaseOrderLineByDocNums)
         {
             if (obj.ManageItem == "S")
             {
                 obj.Serials = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn", obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn",
+                        obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objSerial in rs)
                 {
@@ -171,7 +173,8 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             {
                 obj.Batches = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn", obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn",
+                        obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objBatch in rs)
                 {
