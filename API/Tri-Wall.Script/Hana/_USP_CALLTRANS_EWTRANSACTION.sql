@@ -3609,7 +3609,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS B ON A."ItemCode"=B."ItemCode" AND B."SysNumber"=A."SysSerial"
 			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=A."ItemCode" And C."SysSerial"=A."SysSerial"
 			WHERE A."BaseEntry"=:par1 
-				AND A."BaseType"=16 
+				AND A."BaseType"=16
 				--And C."Status"<>0
 					
 			UNION ALL

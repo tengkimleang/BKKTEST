@@ -56,6 +56,9 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
     [ObservableProperty]
+    ObservableCollection<GetBatchOrSerial> _getBatchOrSerialReturns = new();
+
+    [ObservableProperty]
     ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
 
     [ObservableProperty]

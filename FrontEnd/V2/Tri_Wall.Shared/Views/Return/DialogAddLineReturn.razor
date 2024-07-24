@@ -36,7 +36,6 @@
             <FluentBodyContent Class="body-content" Style="overflow: auto">
                 <div class="content">
                     <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-
                         <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                             <FluentAutocomplete Required
                                                 TOption="Items"
@@ -107,7 +106,7 @@
                                                         OnOptionsSearch="OnSearchSerial"
                                                         MaximumOptionsSearch="1"
                                                         Virtualize="true"
-                                                        Disabled=@(DataResult.BaseEntry== 0 ? false : true)
+                                                        Disabled=@(DataResult.BaseEntry != 0 ? false : true)
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
@@ -156,7 +155,7 @@
                                                         OnOptionsSearch="OnSearchSerial"
                                                         MaximumOptionsSearch="1"
                                                         Virtualize="true"
-                                                        Disabled=@(DataResult.BaseEntry== 0 ? false : true)
+                                                        Disabled=@(DataResult.BaseEntry != 0 ? false : true)
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"

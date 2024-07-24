@@ -31,6 +31,8 @@ public partial class Return
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
+        Console.WriteLine(JsonSerializer.Serialize(deliveryOrderLine));
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetBatchOrSerialReturns));
         var dictionary = new Dictionary<string, object>
         {
             { "item", ViewModel.Items },
@@ -136,6 +138,7 @@ public partial class Return
     }
     Task OnSeleted(string e)
     {
+        Console.WriteLine("Hello123");
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         isView = true;
@@ -150,6 +153,7 @@ public partial class Return
     }
     Task OnView()
     {
+
         isView = false;
         StateHasChanged();
         return Task.CompletedTask;
@@ -235,6 +239,7 @@ public partial class Return
 
     async Task OnSeletedPurchaseOrder(string e)
     {
+        Console.WriteLine("Hello123");
         Console.WriteLine(e);
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
         ViewModel.DeliveryOrderForm.DocDate = Convert.ToDateTime(objData?.DocDate);
