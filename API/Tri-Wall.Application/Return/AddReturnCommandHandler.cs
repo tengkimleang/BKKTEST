@@ -39,7 +39,7 @@ public class AddReturnCommandHandler : IRequestHandler<AddReturnCommand, ErrorOr
             if (l.BaseDocEntry != 0)
             {
                 oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseDocEntry);
-                oDeliveryOrder.Lines.BaseType = 17;
+                oDeliveryOrder.Lines.BaseType = 15;
                 oDeliveryOrder.Lines.BaseLine = l.BaseLineNumber;
             }
 
