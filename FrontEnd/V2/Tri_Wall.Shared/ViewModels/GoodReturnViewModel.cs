@@ -1,22 +1,21 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Pages;
 using Tri_Wall.Shared.Services;
-using static Microsoft.FluentUI.AspNetCore.Components.Emojis.Symbols.Color.Default;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class ReturnViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 
-    [ObservableProperty] ObservableCollection<Vendors> _customers = loadMasterData.GetCustomers;
+    [ObservableProperty] ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
 
     [ObservableProperty] ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
 
@@ -50,9 +49,9 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("16")).Data ?? new());
-        Customers = await CheckingValueT(Customers, async () =>
-            (await apiService.GetCustomers()).Data ?? new());
+            (await apiService.GetSeries("21")).Data ?? new());
+        Vendors = await CheckingValueT(Vendors, async () =>
+            (await apiService.GetVendors()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
             (await apiService.GetContactPersons()).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
@@ -61,8 +60,8 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("Return")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
         IsView = true;
     }
 
@@ -78,7 +77,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetReturnHeader", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -122,7 +121,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderReturn", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReceiptPOReturn", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -135,25 +134,25 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
         GoodReceiptPoHeaderDeatialByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Return_Header_Detail_By_DocNum"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum"))
             .Data ?? new();
         GoodReceiptPoLineByDocNums =
-            (await apiService.GetLineByDocNum("GetReturnLineDetailByDocEntry", docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialReturn")).Data ?? new();
+            (await apiService.GetLineByDocNum("GetGoodReturnLineDetailByDocEntry", docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReturn")).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
         GetPurchaseOrderLineByDocNums =
-            (await apiService.GetLineByDocNum("GetDeliveryOrderLineForReturnDetailByDocEntry", docEntry)).Data ?? new();
+            (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry)).Data ?? new();
         foreach (var obj in GetPurchaseOrderLineByDocNums)
         {
             if (obj.ManageItem == "S")
             {
                 obj.Serials = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialDeliveryOrder", obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn", obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objSerial in rs)
                 {
@@ -172,7 +171,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             {
                 obj.Batches = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialDeliveryOrder", obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn", obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objBatch in rs)
                 {
@@ -196,7 +195,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("ReturnDoHeader", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReturnDoHeader", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

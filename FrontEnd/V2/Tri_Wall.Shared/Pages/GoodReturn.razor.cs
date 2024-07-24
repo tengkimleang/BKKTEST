@@ -1,22 +1,22 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Refit;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Views.Return;
 using Tri_Wall.Shared.Views.GoodReceptPo;
-using System.Text.Json;
+using Tri_Wall.Shared.Views.Return;
 
 namespace Tri_Wall.Shared.Pages;
 
-public partial class Return
+public partial class GoodReturn
 {
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
-    private string stringDisplay = "Return";
+    private string stringDisplay = "Good Return";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
@@ -74,7 +74,7 @@ public partial class Return
 
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
-        e.Items = ViewModel.Customers.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = ViewModel.Vendors.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                  i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.VendorCode);
     }
@@ -90,7 +90,7 @@ public partial class Return
         }
         else
         {
-            stringDisplay = "Return";
+            stringDisplay = "Good Return";
             fromWord = "From";
             saveWord = "Save";
             dataGrid = "width: 1600px;height:405px";
@@ -211,7 +211,7 @@ public partial class Return
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Return",
+            Title = "List Good Reutrn",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -238,7 +238,7 @@ public partial class Return
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Delivery Order",
+            Title = "List Good Receipt PO",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -258,7 +258,7 @@ public partial class Return
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
         ViewModel.DeliveryOrderForm.DocDate = Convert.ToDateTime(objData?.DocDate);
         ViewModel.DeliveryOrderForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
-        selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
+        selectedVendor = ViewModel.Vendors.Where(x => x.VendorCode == objData?.VendorCode);
         await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
         var i = 1;

@@ -1,83 +1,77 @@
 ﻿using ErrorOr;
 using MediatR;
 using SAPbobsCOM;
-using Throw;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
 
-namespace Tri_Wall.Application.GoodReturn
+namespace Tri_Wall.Application.GoodReturn;
+
+public class AddGoodReturnCommandHandler : IRequestHandler<AddGoodReturnCommand, ErrorOr<PostResponse>>
 {
-    public class AddGoodReturnCommandHandler : IRequestHandler<AddGoodReturnCommand, ErrorOr<PostResponse>>
+    private readonly IUnitOfWork unitOfWork;
+
+    public AddGoodReturnCommandHandler(IUnitOfWork unitOfWork)
     {
-        private readonly IConnection connection;
-        private readonly IUnitOfWork unitOfWork;
-        public AddGoodReturnCommandHandler(IConnection connection, IUnitOfWork unitOfWork)
-        {
-            this.connection = connection;
-            this.unitOfWork = unitOfWork;
-        }
+        this.unitOfWork = unitOfWork;
+    }
 
-        public Task<ErrorOr<PostResponse>> Handle(AddGoodReturnCommand request, CancellationToken cancellationToken)
+    public Task<ErrorOr<PostResponse>> Handle(AddGoodReturnCommand request, CancellationToken cancellationToken)
+    {
+        Company oCompany = unitOfWork.Connect();
+        unitOfWork.BeginTransaction(oCompany);
+        var oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+        oDeliveryOrder.CardCode = request.CustomerCode;
+        oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
+        oDeliveryOrder.NumAtCard = request.NumAtCard;
+        oDeliveryOrder.Series = request.Series;
+        oDeliveryOrder.DocDate = request.DocDate;
+        oDeliveryOrder.DocDueDate = request.TaxDate;
+        oDeliveryOrder.Comments = request.Remarks;
+        oDeliveryOrder.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
+        foreach (var l in request.Lines!)
         {
-            Documents oGoodReturn;
-            Company oCompany;
-            oCompany = connection.Connect();
-            oCompany.Throw("Invalid Connection to SAP");
-            unitOfWork.BeginTransaction(oCompany);
-            oGoodReturn = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseReturns);
-            if (request.IsDraft) oGoodReturn.DocObjectCode = BoObjectTypes.oPurchaseReturns;
-            oGoodReturn.CardCode = request.VendorCode;
-            oGoodReturn.ContactPersonCode = request.ContactPersonCode;
-            oGoodReturn.NumAtCard = request.NumAtCard;
-            oGoodReturn.Series = request.Series;
-            oGoodReturn.DocDate = request.DocDate;
-            oGoodReturn.DocDueDate = request.TaxDate;
-            oGoodReturn.Comments = request.Remarks;
-            oGoodReturn.UserFields.Fields.Item("U_WebID").Value = Guid.NewGuid().ToString();
-            foreach (var l in request.Lines)
+            oDeliveryOrder.Lines.ItemCode = l.ItemCode;
+            oDeliveryOrder.Lines.Quantity = l.Qty;
+            oDeliveryOrder.Lines.UnitPrice = l.Price;
+            oDeliveryOrder.Lines.VatGroup = l.VatCode;
+            oDeliveryOrder.Lines.WarehouseCode = l.WarehouseCode;
+            if (l.BaseEntry != 0)
             {
-                oGoodReturn.Lines.ItemCode = l.ItemCode;
-                oGoodReturn.Lines.Quantity = l.Qty;
-                oGoodReturn.Lines.UnitPrice = l.Price;
-                oGoodReturn.Lines.VatGroup = l.VatCode;
-                oGoodReturn.Lines.WarehouseCode = l.WarehouseCode;
-                if (l.BaseDocEntry != 0)
-                {
-                    oGoodReturn.Lines.BaseEntry = l.BaseDocEntry;
-                    oGoodReturn.Lines.BaseType = 20;
-                    oGoodReturn.Lines.BaseLine = l.BaseLineNumber;
-                }
-
-                if (l.ManageItem == "S")
-                    foreach (var serial in l.Serials)
-                    {
-                        oGoodReturn.Lines.SerialNumbers.Quantity = 1;
-                        oGoodReturn.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
-                        oGoodReturn.Lines.SerialNumbers.Quantity = 1;
-                        oGoodReturn.Lines.SerialNumbers.ManufacturerSerialNumber = serial.MfrNo;
-                        oGoodReturn.Lines.SerialNumbers.ManufactureDate = serial.MfrDate;
-                        oGoodReturn.Lines.SerialNumbers.ExpiryDate = serial.ExpDate;
-                        oGoodReturn.Lines.SerialNumbers.Add();
-                    }
-                else if (l.ManageItem == "B")
-                    foreach (var batch in l.Batches)
-                    {
-                        oGoodReturn.Lines.BatchNumbers.AddmisionDate = batch.AdmissionDate;
-                        oGoodReturn.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
-                        oGoodReturn.Lines.BatchNumbers.Quantity = batch.Qty;
-                        oGoodReturn.Lines.BatchNumbers.ExpiryDate = batch.ExpireDate;
-                        oGoodReturn.Lines.BatchNumbers.AddmisionDate =
-                        oGoodReturn.Lines.BatchNumbers.ManufacturingDate = batch.ManfectureDate;
-                        oGoodReturn.Lines.BatchNumbers.InternalSerialNumber = batch.LotNo;
-                        oGoodReturn.Lines.BatchNumbers.Add();
-                    }
-
-                oGoodReturn.Lines.Add();
+                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
+                oDeliveryOrder.Lines.BaseType = 20;
+                oDeliveryOrder.Lines.BaseLine = l.BaseLine;
             }
-            (oGoodReturn.Add() != 0).Throw(oCompany.GetLastErrorDescription());
-            unitOfWork.Commit(oCompany);
-            return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
+
+            if (l.ManageItem == "S")
+            {
+                foreach (var serial in l.Serials!)
+                {
+                    //oDeliveryOrder.Lines.SerialNumbers.SystemSerialNumber = Convert.ToInt32(serial.SerialCode);
+                    oDeliveryOrder.Lines.SerialNumbers.InternalSerialNumber = serial.SerialCode;
+                    oDeliveryOrder.Lines.SerialNumbers.Add();
+                }
+            }
+            else if (l.ManageItem == "B")
+            {
+                foreach (var batch in l.Batches!)
+                {
+                    oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
+                    oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;
+                    oDeliveryOrder.Lines.BatchNumbers.Add();
+                }
+            }
+
+            oDeliveryOrder.Lines.Add();
         }
+
+        if (oDeliveryOrder.Add() != 0)
+        {
+            unitOfWork.Rollback(oCompany);
+            return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(),
+                oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
+        }
+
+        unitOfWork.Commit(oCompany);
+        return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
     }
 }

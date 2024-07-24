@@ -31,6 +31,7 @@ public static class Dependencies
         services.AddTransient<IssueProductionOrderViewModel>();
         services.AddTransient<ReceiptFromProductionOrderViewModel>();
         services.AddTransient<ReturnViewModel>();
+        services.AddTransient<GoodReturnViewModel>();
         #endregion
         #region Validator
         var assembly = Assembly.GetAssembly(typeof(Dependencies));

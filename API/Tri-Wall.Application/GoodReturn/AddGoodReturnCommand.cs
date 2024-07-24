@@ -6,7 +6,7 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.Application.GoodReturn;
 
 public record AddGoodReturnCommand(
-    string VendorCode,
+    string CustomerCode,
     int Series,
     DateTime DocDate,
     DateTime TaxDate,
@@ -23,8 +23,8 @@ public record GoodReturnLine(
     string VatCode,
     string WarehouseCode,
     string ManageItem,
-    int BaseDocEntry,
-    int BaseLineNumber,
+    int BaseEntry,
+    int BaseLine,
     List<BatchGoodReturn> Batches,
     List<SerialGoodReturn> Serials);
 
