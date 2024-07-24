@@ -10,6 +10,7 @@ namespace Tri_Wall.Application.Return;
 public class AddReturnCommandHandler : IRequestHandler<AddReturnCommand, ErrorOr<PostResponse>>
 {
     private readonly IUnitOfWork unitOfWork;
+
     public AddReturnCommandHandler(IUnitOfWork unitOfWork)
     {
         this.unitOfWork = unitOfWork;
@@ -36,11 +37,11 @@ public class AddReturnCommandHandler : IRequestHandler<AddReturnCommand, ErrorOr
             oDeliveryOrder.Lines.UnitPrice = l.Price;
             oDeliveryOrder.Lines.VatGroup = l.VatCode;
             oDeliveryOrder.Lines.WarehouseCode = l.WarehouseCode;
-            if (l.BaseDocEntry != 0)
+            if (l.BaseEntry != 0)
             {
-                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseDocEntry);
+                oDeliveryOrder.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
                 oDeliveryOrder.Lines.BaseType = 15;
-                oDeliveryOrder.Lines.BaseLine = l.BaseLineNumber;
+                oDeliveryOrder.Lines.BaseLine = l.BaseLine;
             }
 
             if (l.ManageItem == "S")
@@ -64,13 +65,15 @@ public class AddReturnCommandHandler : IRequestHandler<AddReturnCommand, ErrorOr
 
             oDeliveryOrder.Lines.Add();
         }
+
         if (oDeliveryOrder.Add() != 0)
         {
             unitOfWork.Rollback(oCompany);
-            return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(), oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
+            return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(),
+                oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
         }
+
         unitOfWork.Commit(oCompany);
         return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
-
     }
 }

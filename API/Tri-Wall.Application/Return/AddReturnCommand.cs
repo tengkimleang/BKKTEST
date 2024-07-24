@@ -23,8 +23,8 @@ public record ReturnLine(
     string VatCode,
     string WarehouseCode,
     string ManageItem,
-    int BaseDocEntry,
-    int BaseLineNumber,
+    int BaseEntry,
+    int BaseLine,
     List<BatchReturn> Batches,
     List<SerialReturn> Serials);
 
