@@ -33,7 +33,7 @@ public partial class GoodReturn
         var dictionary = new Dictionary<string, object>
         {
             { "item", ViewModel.Items },
-            { "taxPurchase", ViewModel.TaxSales },
+            { "taxPurchase", ViewModel.TaxPurchases },
             { "warehouse", ViewModel.Warehouses },
             { "line", deliveryOrderLine },
             {

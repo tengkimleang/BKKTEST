@@ -21,7 +21,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
 
     [ObservableProperty] ObservableCollection<Items> _items = loadMasterData.GetItems;
 
-    [ObservableProperty] ObservableCollection<VatGroups> _taxSales = loadMasterData.GetTaxSales;
+    [ObservableProperty] ObservableCollection<VatGroups> _taxPurchases = loadMasterData.GetTaxPurchases;
 
     [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
@@ -56,8 +56,8 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             (await apiService.GetContactPersons()).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
             (await apiService.GetItems()).Data ?? new());
-        TaxSales = await CheckingValueT(TaxSales, async () =>
-            (await apiService.GetTaxSales()).Data ?? new());
+        TaxPurchases = await CheckingValueT(TaxPurchases, async () =>
+            (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
@@ -91,12 +91,12 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     {
         try
         {
-            // GetBatchOrSerialsByItemCode = (
-            //     await apiService.GetBatchOrSerialByItemCode(
-            //         "OnGetBatchOrSerialAvailableByItemCode",
-            //         dictionary["ItemType"],
-            //         dictionary["ItemCode"])
-            // ).Data ?? new();
+            GetBatchOrSerialsByItemCode = (
+                await apiService.GetBatchOrSerialByItemCode(
+                    "OnGetBatchOrSerialAvailableByItemCode",
+                    dictionary["ItemType"],
+                    dictionary["ItemCode"])
+            ).Data ?? new();
             //if(dictionary["DocEntry"]=="" && dictionary["DocEntry"] == "0")
             //{
             //}

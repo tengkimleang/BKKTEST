@@ -18,8 +18,8 @@ public static class Dependencies
             .ConfigureHttpClient(static client =>
             {
                 client.Timeout = TimeSpan.FromMinutes(5);
-                // client.BaseAddress = new Uri("http://localhost:5253");
-                client.BaseAddress = new Uri("http://192.168.10.107:8429/ApiTriWall");
+                client.BaseAddress = new Uri("http://localhost:5253");
+                //client.BaseAddress = new Uri("http://192.168.10.107:8429/ApiTriWall");
             })
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         #endregion
