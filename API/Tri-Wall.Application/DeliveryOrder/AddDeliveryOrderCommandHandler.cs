@@ -1,9 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using SAPbobsCOM;
-using Throw;
 using Tri_Wall.Application.Common.Interfaces;
-using Tri_Wall.Application.Common.Interfaces.Setting;
 using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.DeliveryOrder;
