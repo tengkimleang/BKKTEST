@@ -95,12 +95,13 @@ public partial class DialogAddLineGoodReturn
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";
         if (firstItem?.ItemType != "N")
-        {
             _serialBatchDeliveryOrders = await GetSerialBatch(new Dictionary<string, string>
-            {
-                { "ItemCode", firstItem?.ItemCode ?? "" },
-                { "ItemType", firstItem?.ItemType ?? "" }
-            });
+                {
+                    {"ItemCode", firstItem?.ItemCode ??""},
+                    {"ItemType", firstItem?.ItemType ??""}
+                });
+        if (firstItem?.ItemType != "N")
+        {
             if (_isItemBatch == true)
             {
                 var tmpBatch = _serialBatchDeliveryOrders.ToList();
@@ -135,12 +136,10 @@ public partial class DialogAddLineGoodReturn
                         "S",
                         DataResult.LineNum.ToString()
                     ));
-                }
 
+                }
                 _serialBatchDeliveryOrders = tmpBatch.AsEnumerable();
             }
-
-            Console.WriteLine("Hello Get And Update");
             Console.WriteLine(JsonSerializer.Serialize(_serialBatchDeliveryOrders));
         }
     }
@@ -173,7 +172,7 @@ public partial class DialogAddLineGoodReturn
         }
     }
 
-    private void AddLineToBatchOrSerial()
+    private void AddLineToBatchOrSerialAsync()
     {
         if (_isItemBatch)
         {

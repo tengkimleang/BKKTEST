@@ -85,7 +85,7 @@
                     </FluentGrid>
                     @if (_isItemBatch)
                     {
-                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerialAsync" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
                         <div class="grid" style="width: 100%; overflow-x:auto;">
@@ -175,7 +175,7 @@
                     }
                     @if (_isItemSerial)
                     {
-                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerial" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+                        <FluentButton Style="margin-top:20px" OnClick="AddLineToBatchOrSerialAsync" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
                             Add Line
                         </FluentButton>
                         <div class="grid" style="width: 100%; overflow-x:auto;">

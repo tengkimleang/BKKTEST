@@ -703,12 +703,18 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "Series" AS "Code"
 				,"SeriesName"
-				,A."NextNumber" As "DocNum"
-			FROM TRIWALL_TRAINKEY."NNM1" A 
+				,(SELECT 
+					IFNULL(MAX("DocNum")+1,B."InitialNum") 
+				  FROM TRIWALL_TRAINKEY."OPDN" 
+				  WHERE "Series"=B."Series"
+				 )AS "DocNum"
+			FROM TRIWALL_TRAINKEY."OFPR" AS A 
+			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
-				A."Indicator"=YEAR(CURRENT_DATE) 
-				AND A."ObjectCode"=14 
-				AND A."Indicator"<>'Default';
+				A."Category"=YEAR(CURRENT_DATE)
+				AND TO_VARCHAR(B."ObjectCode")=14 
+				AND "SubNum"=MONTH(CURRENT_DATE) 
+				And B."Indicator"<>'Default';
 		ELSE IF :par1='67' THEN
 			SELECT 
 				 "Series" AS "Code"

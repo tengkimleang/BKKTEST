@@ -40,7 +40,7 @@ public class AddARCreditMemoCommandHandler : IRequestHandler<AddDeliveryOrderCom
             if (l.BaseEntry != 0)
             {
                 oCreditNotes.Lines.BaseEntry = Convert.ToInt32(l.BaseEntry);
-                oCreditNotes.Lines.BaseType = 17;
+                oCreditNotes.Lines.BaseType = 13;
                 oCreditNotes.Lines.BaseLine = l.BaseLine;
             }
 
