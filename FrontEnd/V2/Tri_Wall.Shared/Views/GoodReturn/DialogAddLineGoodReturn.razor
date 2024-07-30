@@ -110,27 +110,7 @@
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
                                                         @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                        ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))" />
-                                   @*  @if (context?.OnSelectedBatchOrSerial.Count() != 0)
-                                    {
-                                        <FluentAutocomplete Required
-                                                            TOption="GetBatchOrSerial"
-                                                            Width="100%"
-                                                            Placeholder="Serial Code"
-                                                            OnOptionsSearch="OnSearchSerial"
-                                                            MaximumOptionsSearch="1"
-                                                            Virtualize="true"
-                                                            Items="_serialBatchDeliveryOrders"
-                                                            MaximumSelectedOptions="1"
-                                                            OptionText="@(item => $"{item.SerialBatch}")"
-                                                            @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                            ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))"/>
-                                    }
-                                    else
-                                    {
-                                        <FluentTextField @bind-Value="@(@context!.BatchCode)" Placeholder="BatchCode">
-                                        </FluentTextField>
-                                    } *@
+                                                        ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))"/>
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty">
                                     <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty" TValue="double"/>
@@ -200,27 +180,7 @@
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
                                                         @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                        ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))" />
-                                    @* @if (context?.OnSelectedBatchOrSerial.Count() != 0)
-                                    {
-                                        <FluentAutocomplete Required
-                                                            TOption="GetBatchOrSerial"
-                                                            Width="100%"
-                                                            Placeholder="Serial Code"
-                                                            OnOptionsSearch="OnSearchSerial"
-                                                            MaximumOptionsSearch="1"
-                                                            Virtualize="true"
-                                                            Items="_serialBatchDeliveryOrders"
-                                                            MaximumSelectedOptions="1"
-                                                            OptionText="@(item => $"{item.SerialBatch}")"
-                                                            @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                            ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))"/>
-                                    }
-                                    else
-                                    {
-                                        <FluentTextField @bind-Value="@(@context!.SerialCode)" Placeholder="SerialCode">
-                                        </FluentTextField>
-                                    } *@
+                                                        ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))"/>
                                 </TemplateColumn>
                                 <TemplateColumn Tooltip="true" Title="Qty">
                                     <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
