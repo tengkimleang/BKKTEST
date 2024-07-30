@@ -4,6 +4,7 @@
 @using Orientation = Microsoft.FluentUI.AspNetCore.Components.Orientation
 @using Color = Microsoft.FluentUI.AspNetCore.Components.Color
 @using ApexCharts
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
 <PageTitle>Home</PageTitle>
 @if (_isView is false)
 {
@@ -15,8 +16,8 @@ else
 
         <FluentHeader Style="background-color: transparent;padding: 0px;z-index: 0;">
             <FluentBreadcrumb>
-                <FluentBreadcrumbItem>  
-                    Home
+                <FluentBreadcrumbItem>
+                    Home @UserName
                     <FluentIcon Value="@(new Icons.Regular.Size16.Home())" Color="@Color.Neutral" Slot="start"/>
                 </FluentBreadcrumbItem>
             </FluentBreadcrumb>
@@ -94,6 +95,7 @@ else
     private ApexChartOptions<MyData> options { get; set; } = new();
     private ApexChartOptions<MyData> options1 { get; set; } = new();
     private Boolean _isView = false;
+    private string UserName = "";
 
     protected override void OnInitialized()
     {
@@ -135,6 +137,15 @@ else
             }
         };
         _isView = true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            UserName = localStorage.GetItem<string>("name") ?? "";
+            StateHasChanged();
+        }
     }
 
     public class MyData

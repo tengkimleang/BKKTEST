@@ -1,8 +1,10 @@
 ﻿@rendermode InteractiveAuto
 
 <div class="navmenu">
-    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
-    <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
+    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon"/>
+    <label for="navmenu-toggle" class="navmenu-icon">
+        <FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill"/>
+    </label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu" @bind-Expanded="expanded">
             <FluentNavLink title="Home" Href="/home" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
@@ -14,11 +16,9 @@
             <FluentNavLink title="Issue For Production" Href="issueforproduction" Icon="@(new Icons.Regular.Size20.Production())" IconColor="Color.Accent">Issue For Production</FluentNavLink>
             <FluentNavLink title="Receipt From Production" Href="receiptfromproductionform" Icon="@(new Icons.Filled.Size20.GroupReturn())" IconColor="Color.Accent">Receipt From Production</FluentNavLink>
             <FluentNavLink title="A/R Credit Memo" Href="arcreditmemo" Icon="@(new Icons.Regular.Size20.WalletCreditCard())" IconColor="Color.Accent">A/R Credit Memo</FluentNavLink>
+            <FluentNavLink title="Inventory Counting" Href="inventorycounting" Icon="@(new Icons.Regular.Size20.BookAdd())" IconColor="Color.Accent">Inventory Counting</FluentNavLink>
             @*<FluentNavLink title="Return Component" Href="returncomponent" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Return Component</FluentNavLink>
             <FluentNavLink title="Production Process" Href="productionprocess" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Production Process</FluentNavLink>*@
-            @*
-            
-            <FluentNavLink title="Inventory Counting" Href="inventorycounting" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Inventory Counting</FluentNavLink>*@
         </FluentNavMenu>
     </nav>
 </div>

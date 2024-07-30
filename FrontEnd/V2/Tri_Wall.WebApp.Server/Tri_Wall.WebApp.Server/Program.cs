@@ -1,4 +1,5 @@
 
+using Blazored.LocalStorage;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Shared;
@@ -17,6 +18,7 @@ builder.Services.AddFluentUIComponents()
     .AddViewModels();
 builder.Services.AddSingleton<ILoadMasterData, LoadMasterData>();
 builder.Services.AddHostedService<LoadMasterDataService>();
+builder.Services.AddBlazoredLocalStorage();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

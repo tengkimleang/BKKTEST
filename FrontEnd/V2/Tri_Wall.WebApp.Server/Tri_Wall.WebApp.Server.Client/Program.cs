@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
 
@@ -13,4 +14,5 @@ builder.Services
         .AddViewModels();
 builder.Services.AddSingleton<ILoadMasterData, LoadMasterData>();
 builder.Services.AddHostedService<LoadMasterDataService>();
+builder.Services.AddBlazoredLocalStorage();
 await builder.Build().RunAsync();

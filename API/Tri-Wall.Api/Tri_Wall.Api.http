@@ -330,9 +330,9 @@ Content-Type: application/json
       "Batches": [],
       "Serials": [
         {
-          "SerialCode": "123",
+          "SerialCode": "1232",
           "Qty": 1,
-          "MfrNo": "123",
+          "MfrNo": "1232",
           "MfrDate": null,
           "ExpDate": null,
           "OnSelectedBatchOrSerial": [

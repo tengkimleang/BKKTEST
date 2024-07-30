@@ -4083,6 +4083,16 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			WHERE A."BaseEntry"=:par1 
 				AND A."BaseType"=13
 				AND A."BaseLinNum"=:par2
+				AND B."DistNumber" NOT IN (
+					SELECT 
+						T1."DistNumber"
+					FROM TRIWALL_TRAINKEY."SRI1" AS T0
+					LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS T1 ON T0."ItemCode"=T1."ItemCode" AND T1."SysNumber"=T0."SysSerial"
+					LEFT JOIN TRIWALL_TRAINKEY."ORIN" AS T2 ON T0."BaseEntry"=T2."DocEntry"
+					 WHERE 	T0."BsDocType"='13' 
+					 		AND T0."BaseType"='14'
+					 		AND T2."CANCELED"='N'
+				)
 				--And C."Status"<>0
 					
 			UNION ALL
@@ -4101,6 +4111,16 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			WHERE A."BaseEntry"=:par1
 				AND A."BaseType"=13
 				AND A."BaseLinNum"=:par2
+				/*AND B."DistNumber" NOT IN (
+					SELECT 
+						T1."DistNumber"
+					FROM TRIWALL_TRAINKEY."IBT1" AS T0
+					LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS T1 ON T0."ItemCode"=T1."ItemCode" AND T1."DistNumber"=T0."BatchNum"
+					LEFT JOIN TRIWALL_TRAINKEY."ORIN" AS T2 ON T0."BaseEntry"=T2."DocEntry"
+					 WHERE 	T0."BsDocType"='13' 
+					 		AND T0."BaseType"='14'
+					 		AND T2."CANCELED"='N'
+				)*/
 		
 		)AS A;
 	ELSE IF :DTYPE='ARCreditMemoHeader' THEN

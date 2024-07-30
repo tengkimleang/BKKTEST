@@ -33,6 +33,7 @@ public static class Dependencies
         services.AddTransient<ReturnViewModel>();
         services.AddTransient<GoodReturnViewModel>();
         services.AddTransient<ARCreditMemoViewModel>();
+        services.AddTransient<InventoryCountingViewModel>();
         #endregion
         #region Validator
         var assembly = Assembly.GetAssembly(typeof(Dependencies));
