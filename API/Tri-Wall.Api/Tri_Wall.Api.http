@@ -302,3 +302,55 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{API_HostAddress}}/arCreditMemo
+Content-Type: application/json
+
+{
+  "CustomerCode": "A020-00",
+  "ContactPersonCode": 0,
+  "NumAtCard": "",
+  "Series": "170",
+  "DocDate": "2024-07-30T11:15:05.899+07:00",
+  "TaxDate": "2024-05-23T00:00:00",
+  "Remarks": "",
+  "IsDraft": false,
+  "Lines": [
+    {
+      "ItemCode": "20",
+      "ItemName": "10",
+      "Qty": 1,
+      "LineNum": 1,
+      "Price": 2,
+      "VatCode": "S00",
+      "WarehouseCode": "RS02",
+      "ManageItem": "S",
+      "BaseEntry": 99,
+      "BaseLine": 0,
+      "Batches": [],
+      "Serials": [
+        {
+          "SerialCode": "123",
+          "Qty": 1,
+          "MfrNo": "123",
+          "MfrDate": null,
+          "ExpDate": null,
+          "OnSelectedBatchOrSerial": [
+            {
+              "ItemCode": "20",
+              "Qty": "1",
+              "SerialBatch": "123",
+              "MfrSerialNo": "123",
+              "ExpDate": "",
+              "MrfDate": "",
+              "Type": "Serial",
+              "LineNum": "1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+###

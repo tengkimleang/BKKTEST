@@ -6,21 +6,14 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.DeliveryOrder;
 
-public class AddDeliveryOrderCommandHandler : IRequestHandler<AddDeliveryOrderCommand, ErrorOr<PostResponse>>
+public class AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork)
+    : IRequestHandler<AddDeliveryOrderCommand, ErrorOr<PostResponse>>
 {
-    private readonly IUnitOfWork unitOfWork;
-
-    public AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork)
-    {
-        this.unitOfWork = unitOfWork;
-    }
-
     public Task<ErrorOr<PostResponse>> Handle(AddDeliveryOrderCommand request, CancellationToken cancellationToken)
     {
         Company oCompany = unitOfWork.Connect();
         unitOfWork.BeginTransaction(oCompany);
-        Documents oDeliveryOrder;
-        oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
+        var oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
         oDeliveryOrder.CardCode = request.CustomerCode;
         oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
         oDeliveryOrder.NumAtCard = request.NumAtCard;

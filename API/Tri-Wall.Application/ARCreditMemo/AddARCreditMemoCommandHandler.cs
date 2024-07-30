@@ -8,16 +8,10 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.ARCreditMemo;
 
-public class AddARCreditMemoCommandHandler : IRequestHandler<AddDeliveryOrderCommand, ErrorOr<PostResponse>>
+public class AddArCreditMemoCommandHandler(IUnitOfWork unitOfWork)
+    : IRequestHandler<AddARCreditMemoCommand, ErrorOr<PostResponse>>
 {
-    private readonly IUnitOfWork unitOfWork;
-
-    public AddARCreditMemoCommandHandler(IUnitOfWork unitOfWork)
-    {
-        this.unitOfWork = unitOfWork;
-    }
-
-    public Task<ErrorOr<PostResponse>> Handle(AddDeliveryOrderCommand request, CancellationToken cancellationToken)
+    public Task<ErrorOr<PostResponse>> Handle(AddARCreditMemoCommand request, CancellationToken cancellationToken)
     {
         Company oCompany = unitOfWork.Connect();
         unitOfWork.BeginTransaction(oCompany);

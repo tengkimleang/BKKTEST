@@ -5,9 +5,9 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.Application.ARCreditMemo;
 
 public record AddARCreditMemoCommand(
-    string VendorCode,
+    string CustomerCode,
     int ContactPersonCode,
-    string VendorNo,
+    string NumAtCard,
     int Series,
     DateTime DocDate,
     DateTime TaxDate,

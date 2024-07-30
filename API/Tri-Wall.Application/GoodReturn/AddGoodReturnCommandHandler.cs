@@ -6,15 +6,9 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.GoodReturn;
 
-public class AddGoodReturnCommandHandler : IRequestHandler<AddGoodReturnCommand, ErrorOr<PostResponse>>
+public class AddGoodReturnCommandHandler(IUnitOfWork unitOfWork)
+    : IRequestHandler<AddGoodReturnCommand, ErrorOr<PostResponse>>
 {
-    private readonly IUnitOfWork unitOfWork;
-
-    public AddGoodReturnCommandHandler(IUnitOfWork unitOfWork)
-    {
-        this.unitOfWork = unitOfWork;
-    }
-
     public Task<ErrorOr<PostResponse>> Handle(AddGoodReturnCommand request, CancellationToken cancellationToken)
     {
         Company oCompany = unitOfWork.Connect();

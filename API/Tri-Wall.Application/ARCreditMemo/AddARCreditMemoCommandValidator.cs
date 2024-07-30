@@ -8,7 +8,7 @@ public class AddARCreditMemoCommandValidator : AbstractValidator<AddARCreditMemo
 {
     public AddARCreditMemoCommandValidator()
     {
-        RuleFor(x => x.VendorCode).NotEmpty().WithMessage("VendorCode is required");
+        RuleFor(x => x.CustomerCode).NotEmpty().WithMessage("VendorCode is required");
         RuleFor(x => x.Series).GreaterThan(0).WithMessage("Series is required");
         RuleFor(x => x.DocDate).NotNull().WithMessage("DocDate is required");
         RuleFor(x => x.TaxDate).NotNull().WithMessage("TaxDate   is required");

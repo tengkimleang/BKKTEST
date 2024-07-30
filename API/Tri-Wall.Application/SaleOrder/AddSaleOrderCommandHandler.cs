@@ -8,24 +8,15 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.Application.SaleOrder
 {
-    public class AddSaleOrderCommandHandler : IRequestHandler<AddSaleOrderCommand, ErrorOr<PostResponse>>
+    public class AddSaleOrderCommandHandler(IUnitOfWork unitOfWork, IConnection connection)
+        : IRequestHandler<AddSaleOrderCommand, ErrorOr<PostResponse>>
     {
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IConnection connection;
-
-        public AddSaleOrderCommandHandler(IUnitOfWork unitOfWork, IConnection connection)
-        {
-            this.unitOfWork = unitOfWork;
-            this.connection = connection;
-        }
-
         public Task<ErrorOr<PostResponse>> Handle(AddSaleOrderCommand request, CancellationToken cancellationToken)
         {
             Company oCompany = connection.Connect();
             oCompany.ThrowIfNull("Invalid Connection Company");
             unitOfWork.BeginTransaction(oCompany);
-            Documents oSaleOrder;
-            oSaleOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oOrders);
+            var oSaleOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oOrders);
             oSaleOrder.CardCode = request.CardCode;
             oSaleOrder.ContactPersonCode = request.ContactPersonCode;
             oSaleOrder.NumAtCard = request.NumAtCard;
