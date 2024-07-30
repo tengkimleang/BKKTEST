@@ -17,7 +17,7 @@ public partial class ARCreditMemoForm
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
-    private string stringDisplay = "Return";
+    private string stringDisplay = "AR Credit Memo";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
@@ -91,7 +91,7 @@ public partial class ARCreditMemoForm
         }
         else
         {
-            stringDisplay = "Return";
+            stringDisplay = "AR Credit Memo";
             fromWord = "From";
             saveWord = "Save";
             dataGrid = "width: 1600px;height:405px";
@@ -239,7 +239,7 @@ public partial class ARCreditMemoForm
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Delivery Order",
+            Title = "List AR Invoice Open Status",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",

@@ -81,4 +81,6 @@ public class ApiService(IApiService apiService)
         => apiService.PostReturn(deliveryOrderHeader);
     public Task<PostResponse> PostGoodReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostGoodReturn(deliveryOrderHeader);
+    public Task<PostResponse> PostARCreditMemo(DeliveryOrderHeader deliveryOrderHeader)
+        => apiService.PostARCreditMemo(deliveryOrderHeader);
 }

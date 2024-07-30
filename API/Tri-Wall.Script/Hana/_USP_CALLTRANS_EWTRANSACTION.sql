@@ -2910,6 +2910,12 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ORPD";
 		ELSE IF :par1='GoodReceiptPOReturn' THEN
 			SELECT COUNT("CardCode") AS "AllItem" FROM TRIWALL_TRAINKEY."OPDN" WHERE "DocStatus"='O';
+		ELSE IF :par1='ARCreditMemo' THEN
+			SELECT COUNT("CardCode")  AS "AllItem" FROM TRIWALL_TRAINKEY."ORIN";
+		ELSE IF :par1='ARInvoiceOpenStatus' THEN
+			SELECT COUNT("CardCode") AS "AllItem" FROM TRIWALL_TRAINKEY."OINV" WHERE "DocStatus"='O';
+		END IF;
+		END IF;
 		END IF;
 		END IF;
 		END IF;
@@ -3773,6 +3779,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
 		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
 		WHERE A."DocEntry"=:par1 AND B."LineStatus"='O';
+		
 	ELSE IF :DTYPE='ReturnDoHeader' THEN
 	
 		IF :par2='' THEN
@@ -3913,6 +3920,229 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				AND A."BaseLinNum"=:par2
 		
 		)AS A;
+	ELSE IF :DTYPE='GetARCreditMemoHeader' THEN
+		IF :par2='' THEN
+			DECLARE offset INT;
+			SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORIN" 
+			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		ELSE IF :par2='condition' THEN
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORIN" 
+			WHERE "DocStatus"='O'
+			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
+			ORDER BY "DocEntry";
+		END IF;
+		END IF;
+	ELSE IF :DTYPE='GetARInvoiceInCreditMemo' THEN
+
+		DECLARE offset INT;
+		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "DocumentNumber"
+			,"DocDate" AS "DocDate"
+			,"CardCode" AS "VendorCode"
+			,"Comments" AS "Remarks"
+			,"TaxDate" AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."OINV" 
+		WHERE "DocStatus"='O'
+		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+	ELSE IF :DTYPE='GET_AR_Credit_Memo_Header_Detail_By_DocNum' THEN
+	
+		SELECT 
+			 F."SeriesName" AS "SeriesName"
+			,A."DocNum" AS "DocNum"
+			,TO_VARCHAR(A."DocDate",'yyyy-mm-dd') AS "DocDate"
+			,TO_VARCHAR(A."TaxDate",'yyyy-mm-dd') AS "TaxDate"
+			,A."CardCode"|| ' - ' || A."CardName" AS "Vendor"
+			,IFNULL(C."Name",'') AS "ContactPerson"
+			,IFNULL(A."NumAtCard",'') AS "RefInv"
+		FROM TRIWALL_TRAINKEY."ORIN" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
+		WHERE 
+			A."DocEntry"=:par1;
+	ELSE IF :DTYPE='GetARCreditMemoLineDetailByDocEntry' THEN
+	
+		SELECT 
+			 B."LineNum" AS "BaseLineNumber"
+			,B."DocEntry" AS "DocEntry"
+			,B."ItemCode" AS "ItemCode"
+			,B."Dscription" AS "ItemName"
+			,B."OpenQty" AS "Qty"
+			,B."Price" AS "Price"
+			,B."LineTotal" AS "LineTotal"
+			,B."TaxCode" AS "VatCode"
+			,B."WhsCode" AS "WarehouseCode"
+			,E."CodeBars" AS "BarCode"
+			,CASE WHEN E."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN E."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ManageItem"
+		FROM TRIWALL_TRAINKEY."ORIN" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."RIN1" AS B ON A."DocEntry"=B."DocEntry"
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1;
+		
+	ELSE IF :DTYPE='GetBatchSerialARCreditMemo' THEN
+	
+		SELECT ROW_NUMBER() OVER(ORDER BY "ItemCode") AS "LineNum",* FROM (
+		
+			SELECT 
+				 A."ItemCode" AS "ItemCode"	
+				,C."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR(B."ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Serial' AS "Type"
+			FROM TRIWALL_TRAINKEY."SRI1" AS A
+			LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS B ON A."ItemCode"=B."ItemCode" AND B."SysNumber"=A."SysSerial"
+			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=A."ItemCode" And C."SysSerial"=A."SysSerial"
+			WHERE A."BaseEntry"=:par1 
+				AND A."BaseType"=14
+				--And C."Status"<>0
+					
+			UNION ALL
+			
+			SELECT 
+				 A."ItemCode" AS "ItemCode"	
+				,A."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR("ExpDate",'dd-MM-yyyy') AS "ExpDate"
+				,B."MnfDate" AS "MrfDate"
+				,'Batch' AS "Type"
+			FROM TRIWALL_TRAINKEY."IBT1" AS A 
+			LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS B ON A."ItemCode"=B."ItemCode" AND A."BatchNum"=B."DistNumber"
+			--LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=A."ItemCode" and B."SysNumber"=C."SysNumber"
+			WHERE A."BaseEntry"=:par1
+				AND A."BaseType"=14
+		
+		)AS A;
+	ELSE IF :DTYPE='GetARInvoiceLineForARCreditMemoDetailByDocEntry' THEN
+	
+		SELECT 
+			 B."LineNum" AS "BaseLineNumber"
+			,B."DocEntry" AS "DocEntry"
+			,B."ItemCode" AS "ItemCode"
+			,B."Dscription" AS "ItemName"
+			,B."OpenQty" AS "Qty"
+			,B."Price" AS "Price"
+			,B."LineTotal" AS "LineTotal"
+			,B."TaxCode" AS "VatCode"
+			,B."WhsCode" AS "WarehouseCode"
+			,E."CodeBars" AS "BarCode"
+			,CASE WHEN E."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN E."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ManageItem"
+		FROM TRIWALL_TRAINKEY."OINV" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."INV1" AS B ON A."DocEntry"=B."DocEntry"
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS E ON E."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1 AND B."LineStatus"='O';
+	ELSE IF :DTYPE='GetBatchSerialARInvoiceForARCreditMemo' THEN
+	
+		SELECT ROW_NUMBER() OVER(ORDER BY "ItemCode") AS "LineNum",* FROM (
+		
+			SELECT 
+				 A."ItemCode" AS "ItemCode"	
+				,1 AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR(B."ExpDate",'yyyy-MM-dd') AS "ExpDate"
+				,TO_VARCHAR(B."MnfDate",'yyyy-MM-dd') AS "MrfDate"
+				,'Serial' AS "Type"
+			FROM TRIWALL_TRAINKEY."SRI1" AS A
+			LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS B ON A."ItemCode"=B."ItemCode" AND B."SysNumber"=A."SysSerial"
+			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=A."ItemCode" And C."SysSerial"=A."SysSerial"
+			WHERE A."BaseEntry"=:par1 
+				AND A."BaseType"=13
+				AND A."BaseLinNum"=:par2
+				--And C."Status"<>0
+					
+			UNION ALL
+			
+			SELECT 
+				 A."ItemCode" AS "ItemCode"	
+				,A."Quantity" AS "Qty"
+				,B."DistNumber" AS "SerialBatch"
+				,B."MnfSerial" AS "MfrSerialNo"
+				,TO_VARCHAR("ExpDate",'yyyy-MM-dd') AS "ExpDate"
+				,TO_VARCHAR(B."MnfDate",'yyyy-MM-dd') AS "MrfDate"
+				,'Batch' AS "Type"
+			FROM TRIWALL_TRAINKEY."IBT1" AS A 
+			LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS B ON A."ItemCode"=B."ItemCode" AND A."BatchNum"=B."DistNumber"
+			--LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=A."ItemCode" and B."SysNumber"=C."SysNumber"
+			WHERE A."BaseEntry"=:par1
+				AND A."BaseType"=13
+				AND A."BaseLinNum"=:par2
+		
+		)AS A;
+	ELSE IF :DTYPE='ARCreditMemoHeader' THEN
+	
+		IF :par2='' THEN
+			DECLARE offset INT;
+			SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+	
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORIN" 
+			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		ELSE IF :par2='condition' THEN
+		
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,"DocDate" AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,"TaxDate" AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORIN" 
+			WHERE "DocStatus"='O'
+			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
+			ORDER BY "DocEntry";
+			
+		END IF;
+		END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	END IF;	
+	END IF;
+	END IF;
+	END IF;
 	END IF;	
 	END IF;	
 	END IF;

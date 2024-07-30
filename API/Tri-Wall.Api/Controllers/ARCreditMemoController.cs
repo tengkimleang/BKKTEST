@@ -7,7 +7,7 @@ using Tri_Wall.Domain.Common;
 namespace Tri_Wall.API.Controllers;
 
 
-[Route("/deliveryOrders")]
+[Route("/arCreditMemo")]
 public class ARCreditMemoController(ISender mediator) : ApiController
 {
     [HttpPost]

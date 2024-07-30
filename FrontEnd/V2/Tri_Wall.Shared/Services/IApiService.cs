@@ -78,4 +78,7 @@ public interface IApiService
     [Post("/goodReturn")]
     public Task<PostResponse> PostGoodReturn(
         [Body] DeliveryOrderHeader request);
+    [Post("/arCreditMemo")]
+    public Task<PostResponse> PostARCreditMemo(
+        [Body] DeliveryOrderHeader request);
 }
