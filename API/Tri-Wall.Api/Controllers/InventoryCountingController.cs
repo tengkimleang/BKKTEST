@@ -6,11 +6,12 @@ using Tri_Wall.Domain.Common;
 
 namespace Tri_Wall.API.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("/inventoryCounting")]
+[Route("/inventoryCounting")]
 public class InventoryCountingController(ISender mediator) : ApiController
 {
     [HttpPost]
-    public async Task<IActionResult> Create(AddInventoryCountingCommand command, IValidator<AddInventoryCountingCommand> validator)
+    public async Task<IActionResult> Create(AddInventoryCountingCommand command,
+        IValidator<AddInventoryCountingCommand> validator)
     {
         var validationResult = await validator.ValidateAsync(command).ConfigureAwait(false);
 
