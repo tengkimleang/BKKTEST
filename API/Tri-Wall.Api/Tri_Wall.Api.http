@@ -24,8 +24,8 @@ Content-Type: application/json
 # }
 {
   "storeName":"_USP_CALLTRANS_EWTRANSACTION",
-  "dbType":"GetBatchSerialDeliveryOrder",
-  "par1":"117",
+  "dbType":"GetInventoryCountingLine",
+  "par1":"48",
   "par2":"",
   "par3":"",
   "par4":"",

@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
@@ -12,11 +12,9 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
 {
      #region Data Member
 
-    [ObservableProperty] IssueProductionHeader _issueProduction = new();
+    [ObservableProperty] InventoryCountingHeader _inventoryCountingHeader = new();
     
-    [ObservableProperty] ObservableCollection<IssueProductionLine> _issueProductionLine = new();
-
-    [ObservableProperty] ObservableCollection<Series> _series = new();
+    [ObservableProperty] ObservableCollection<InventoryCountingLine> _inventoryCountingLines = new();
 
     [ObservableProperty] PostResponse _postResponses = new();
 
@@ -24,9 +22,9 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
-    [ObservableProperty] ObservableCollection<GetProductionOrder> _getProductionOrder = new();
+    [ObservableProperty] ObservableCollection<GetInventoryCountingList> _getInventoryCountingLists = new();
     
-    [ObservableProperty] ObservableCollection<GetProductionOrderLines> _getProductionOrderLines = new();
+    [ObservableProperty] ObservableCollection<GetInventoryCountingLines> _getInventoryCountingLines = new();
 
     [ObservableProperty] Boolean _isView = false;
     
@@ -45,10 +43,8 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
 
     public override async Task Loaded()
     {
-        Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("60")).Data ?? new());
-        GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
-            (await apiService.GetProductionOrders("GetForIssueProduction")).Data ?? new());
+        GetInventoryCountingLists = await CheckingValueT(GetInventoryCountingLists, async () =>
+            (await apiService.GetInventoryCountingLists("GetInventoryCountingList")).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction")).Data ?? new();
@@ -58,7 +54,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostIssueProduction(IssueProduction);
+        PostResponses = await apiService.PostInventoryCounting(InventoryCountingHeader);
     }
 
     [RelayCommand]
@@ -129,8 +125,8 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetProductionOrderLines = new();
-            GetProductionOrderLines = (await apiService.GetProductionOrderLines(docEntry)).Data ?? new();
+            GetInventoryCountingLines = new();
+            GetInventoryCountingLines = (await apiService.GetInventoryCountingLines(docEntry)).Data ?? new();
         }
         catch (Exception e)
         {

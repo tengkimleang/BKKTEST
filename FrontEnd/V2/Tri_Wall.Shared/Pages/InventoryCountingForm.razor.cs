@@ -8,47 +8,44 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.VisualBasic;
 using Refit;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Views.GoodReceptPo;
+using Tri_Wall.Shared.Views.InventoryCounting;
 using Tri_Wall.Shared.Views.IssueForProduction;
 
 namespace Tri_Wall.Shared.Pages;
 
 public partial class InventoryCountingForm
 {
-    [Inject] public IValidator<IssueProductionHeader>? Validator { get; init; }
-    [Inject] public IValidator<IssueProductionLine>? ValidatorLine { get; init; }
+    [Inject] public IValidator<InventoryCountingHeader>? Validator { get; init; }
+    [Inject] public IValidator<InventoryCountingLine>? ValidatorLine { get; init; }
+    [Inject] public Blazored.LocalStorage.ISyncLocalStorageService? LocalStorage { get; init; }
 
     private string stringDisplay = "Inventory Counting";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
     bool isView = false;
     protected void OnCloseOverlay() => visible = true;
-    private IEnumerable<GetProductionOrder> _getProductionOrder = new List<GetProductionOrder>();
+    private IEnumerable<GetInventoryCountingList> _getProductionOrder = new List<GetInventoryCountingList>();
 
-    private IEnumerable<GetProductionOrder> SelectedProductionOrder
+    private IEnumerable<GetInventoryCountingList> SelectedProductionOrder
     {
         get => _getProductionOrder;
         set
         {
-            if (value.Count() != 0)
-            {
-                string param = String.Empty;
-                foreach (var obj in value)
-                {
-                    param = param + "''" + obj.DocEntry + "'',";
-                }
-
-                param = Strings.Left(param, Strings.Len(param) - 3);
-                param += "''";
-                ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(param).ConfigureAwait(false);
-            }
-            else
-            {
-                ViewModel.GetProductionOrderLines = new();
-            }
-
+            if (!value.Any()) return;
+            ViewModel.InventoryCountingHeader.DocEntry = Convert.ToInt32(value.ToList()[0].DocEntry);
+            ViewModel.InventoryCountingHeader.Series = value.ToList()[0].Series;
+            ViewModel.InventoryCountingHeader.CreateDate = Convert.ToDateTime(value.ToList()[0].CreateDate);
+            ViewModel.InventoryCountingHeader.CreateTime = value.ToList()[0].CreateTime;
+            ViewModel.InventoryCountingHeader.OtherRemark = value.ToList()[0].OtherRemark;
+            ViewModel.InventoryCountingHeader.Ref2 = value.ToList()[0].Ref2;
+            Console.WriteLine(value.ToList()[0].DocEntry);
+            ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(value.ToList()[0].DocEntry)
+                .ConfigureAwait(false);
             _getProductionOrder = value;
+            StateHasChanged();
         }
     }
 
@@ -56,34 +53,17 @@ public partial class InventoryCountingForm
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
     {
+        Console.WriteLine(JsonSerializer.Serialize(dictionary));
         await ViewModel.GetBatchOrSerialByItemCodeCommand.ExecuteAsync(dictionary);
         return ViewModel.GetBatchOrSerialsByItemCode;
     }
 
-    async Task OpenDialogAsync(IssueProductionLine issueProductionLine)
+    async Task OpenDialogAsync(InventoryCountingLine issueProductionLine)
     {
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetProductionOrderLines));
-        IEnumerable<GetProductionOrderLines> listGetProductionOrderLines = ViewModel.GetProductionOrderLines
-            .GroupBy(item => new
-            {
-                item.ItemCode,
-                item.ItemName,
-                item.Uom,
-                item.WarehouseCode,
-                item.ItemType
-            })
-            .Select(group => new GetProductionOrderLines
-            {
-                ItemCode = group.Key.ItemCode,
-                ItemName = group.Key.ItemName,
-                Qty = (group.Sum(x => Convert.ToDouble(x.Qty))).ToString(CultureInfo.InvariantCulture),
-                Uom = group.First().Uom,
-                WarehouseCode = group.First().WarehouseCode,
-                ItemType = group.First().ItemType,
-            }).ToImmutableList();
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetInventoryCountingLines));
         var dictionary = new Dictionary<string, object>
         {
-            { "item", listGetProductionOrderLines },
+            { "item", ViewModel.GetInventoryCountingLines },
             { "line", issueProductionLine },
             { "warehouse", ViewModel.Warehouses },
             {
@@ -91,7 +71,7 @@ public partial class InventoryCountingForm
                 new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
             }
         };
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineIssueProductionOrder>(dictionary
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineInventoryCounting>(dictionary
             , new DialogParameters
             {
                 Title = (issueProductionLine.ItemCode == "") ? "Add Line" : "Update Line",
@@ -104,33 +84,35 @@ public partial class InventoryCountingForm
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if (ViewModel.IssueProduction?.Lines == null)
-                ViewModel.IssueProduction!.Lines = new List<IssueProductionLine>();
-            if (data["data"] is IssueProductionLine issueProductionLineDialog)
+            Console.WriteLine(JsonSerializer.Serialize(result.Data));
+            if (ViewModel.InventoryCountingHeader?.Lines == null)
+                ViewModel.InventoryCountingHeader!.Lines = new List<InventoryCountingLine>();
+            if (data["data"] is InventoryCountingLine inventoryCountingLineDialog)
             {
-                if (issueProductionLineDialog.LineNum == 0)
+                Console.WriteLine(JsonSerializer.Serialize(inventoryCountingLineDialog));
+                if (inventoryCountingLineDialog.LineNum == 0)
                 {
-                    issueProductionLineDialog.LineNum =
-                        ViewModel.IssueProductionLine?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
-                    ViewModel.IssueProductionLine?.Add(issueProductionLineDialog);
+                    inventoryCountingLineDialog.LineNum =
+                        ViewModel.InventoryCountingHeader?.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.InventoryCountingHeader?.Lines?.Add(inventoryCountingLineDialog);
                 }
                 else
                 {
-                    var index = ViewModel.IssueProductionLine.ToList()
-                        .FindIndex(i => i.LineNum == issueProductionLineDialog.LineNum);
-                    ViewModel.IssueProductionLine[index] = issueProductionLineDialog;
+                    var index = ViewModel.InventoryCountingHeader.Lines.ToList()
+                        .FindIndex(i => i.LineNum == inventoryCountingLineDialog.LineNum);
+                    ViewModel.InventoryCountingHeader.Lines[index] = inventoryCountingLineDialog;
                 }
             }
         }
     }
 
-    private void OnSearch(OptionsSearchEventArgs<GetProductionOrder> e)
+    private void OnSearch(OptionsSearchEventArgs<GetInventoryCountingList> e)
     {
-        e.Items = ViewModel.GetProductionOrder.Where(i => i.DocNum.Contains(e.Text,
-                                                              StringComparison.OrdinalIgnoreCase) ||
-                                                          i.DocNum.Contains(e.Text
-                                                              , StringComparison.OrdinalIgnoreCase))
-            .OrderBy(i => i.DocNum);
+        e.Items = ViewModel.GetInventoryCountingLists.Where(i => i.Series.Contains(e.Text,
+                                                                     StringComparison.OrdinalIgnoreCase) ||
+                                                                 i.Series.Contains(e.Text
+                                                                     , StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.Series);
     }
 
     void UpdateGridSize(GridItemSize size)
@@ -151,50 +133,15 @@ public partial class InventoryCountingForm
 
     private void DeleteLine(int index)
     {
-        ViewModel.IssueProductionLine!.RemoveAt(index);
+        ViewModel.InventoryCountingHeader.Lines!.RemoveAt(index);
     }
 
     async Task OnSaveTransaction(string type = "")
     {
-        var issueProductionLines = ViewModel.IssueProductionLine.ToList();
-        var serializedIssueProductionLine = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
-        var serializedProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
-
-        ViewModel.IssueProduction.Lines = new();
-
-        foreach (var line in issueProductionLines)
-        {
-            var totalQty = ViewModel.GetProductionOrderLines?
-                .Where(x => x.ItemCode == line.ItemCode)
-                .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
-
-            var productionOrderLines = ViewModel.GetProductionOrderLines!
-                .Where(x => x.ItemCode == line.ItemCode)
-                .ToList();
-
-            foreach (var vmIssueProductionLine in productionOrderLines)
-            {
-                var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty ?? "0") / totalQty) * line.Qty, 6);
-
-                if (line.ManageItem == "S")
-                {
-                    ProcessSerials(line, vmIssueProductionLine, actualQty);
-                }
-                else if (line.ManageItem == "B")
-                {
-                    ProcessBatches(line, vmIssueProductionLine, actualQty, issueProductionLines);
-                }
-                else
-                {
-                    AddIssueProductionLine(vmIssueProductionLine, line, actualQty);
-                }
-            }
-        }
-
-        RestoreViewModelState(serializedIssueProductionLine, serializedProductionOrderLines);
-
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
-        var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+        if (LocalStorage != null)
+            ViewModel.InventoryCountingHeader.Counters.Add(
+                new Models.InventoryCounting.Counter(Convert.ToInt32(LocalStorage.GetItem<string>("name"))));
+        var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
 
         if (!result.IsValid)
         {
@@ -202,112 +149,27 @@ public partial class InventoryCountingForm
             {
                 ToastService!.ShowError(error.ErrorMessage);
             }
+
             return;
         }
 
         await SubmitTransaction(type);
     }
 
-    private void ProcessSerials(IssueProductionLine line, GetProductionOrderLines vmIssueProductionLine, double actualQty)
+    private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line,
+        double actualQty)
     {
-        var serials = new List<SerialIssueProduction>();
-
-        for (var i = 0; i < actualQty; i++)
-        {
-            if (line.Serials?.Count > 0)
-            {
-                serials.Add(line.Serials.First());
-                line.Serials.RemoveAt(0);
-            }
-        }
-
-        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+        ViewModel.InventoryCountingHeader.Lines.Add(new InventoryCountingLine
         {
             ItemCode = vmIssueProductionLine.ItemCode,
-            ItemName = vmIssueProductionLine.ItemName,
+            // ItemName = vmIssueProductionLine.ItemName,
             Qty = actualQty,
-            UomName = vmIssueProductionLine.Uom,
-            WhsCode = line.WhsCode,
+            // UomName = vmIssueProductionLine.Uom,
+            // WhsCode = line.WhsCode,
             ManageItem = vmIssueProductionLine.ItemType,
-            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-            DocNum = vmIssueProductionLine.DocEntry,
-            Serials = serials,
+            // BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
+            // DocNum = vmIssueProductionLine.DocEntry
         });
-    }
-
-    private void ProcessBatches(IssueProductionLine line, GetProductionOrderLines vmIssueProductionLine, double actualQty, List<IssueProductionLine> issueProductionLines)
-    {
-        var batches = new List<BatchIssueProduction>();
-        var remainingQty = actualQty;
-
-        foreach (var batch in line.Batches!.ToList())
-        {
-            if (remainingQty == 0) break;
-
-            var index = line.Batches!.IndexOf(batch);
-            var indexHeader = issueProductionLines.IndexOf(line);
-
-            batches.Add(new BatchIssueProduction
-            {
-                AdmissionDate = batch.AdmissionDate,
-                BatchCode = batch.BatchCode ?? "",
-                ExpDate = batch.ExpDate,
-                Qty = Math.Min(batch.Qty, remainingQty)
-            });
-
-            if (batch.Qty > remainingQty)
-            {
-                issueProductionLines[indexHeader].Batches![index].Qty = Math.Round(batch.Qty - remainingQty, 6);
-                remainingQty = 0;
-            }
-            else
-            {
-                remainingQty -= batch.Qty;
-                issueProductionLines[indexHeader].Batches![index].Qty = 0;
-            }
-
-            if (batch.Qty == 0)
-            {
-                line.Batches!.Remove(batch);
-            }
-        }
-
-        if (batches.Count > 0)
-        {
-            ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
-            {
-                ItemCode = vmIssueProductionLine.ItemCode,
-                ItemName = vmIssueProductionLine.ItemName,
-                Qty = actualQty,
-                UomName = vmIssueProductionLine.Uom,
-                WhsCode = line.WhsCode,
-                ManageItem = vmIssueProductionLine.ItemType,
-                BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-                DocNum = vmIssueProductionLine.DocEntry,
-                Batches = batches,
-            });
-        }
-    }
-
-    private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line, double actualQty)
-    {
-        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
-        {
-            ItemCode = vmIssueProductionLine.ItemCode,
-            ItemName = vmIssueProductionLine.ItemName,
-            Qty = actualQty,
-            UomName = vmIssueProductionLine.Uom,
-            WhsCode = line.WhsCode,
-            ManageItem = vmIssueProductionLine.ItemType,
-            BaseLineNum = Convert.ToInt32(vmIssueProductionLine.OrderLineNum),
-            DocNum = vmIssueProductionLine.DocEntry
-        });
-    }
-
-    private void RestoreViewModelState(string serializedIssueProductionLine, string serializedProductionOrderLines)
-    {
-        ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<IssueProductionLine>>(serializedIssueProductionLine) ?? new();
-        ViewModel.GetProductionOrderLines = JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(serializedProductionOrderLines) ?? new();
     }
 
     private async Task SubmitTransaction(string type)
@@ -320,9 +182,9 @@ public partial class InventoryCountingForm
 
             if (string.IsNullOrEmpty(ViewModel.PostResponses.ErrorCode))
             {
-                SelectedProductionOrder = new List<GetProductionOrder>();
-                ViewModel.IssueProduction = new();
-                ViewModel.IssueProductionLine = new();
+                SelectedProductionOrder = new List<GetInventoryCountingList>();
+                ViewModel.InventoryCountingHeader = new();
+                ViewModel.InventoryCountingLines = new();
                 ToastService.ShowSuccess("Success");
 
                 if (type == "print")
@@ -372,11 +234,13 @@ public partial class InventoryCountingForm
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
+
     async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
     {
         await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(e);
         return ViewModel.GetListData;
     }
+
     async Task OpenListDataAsyncAsync()
     {
         var dictionary = new Dictionary<string, object>
@@ -386,7 +250,10 @@ public partial class InventoryCountingForm
             //{ "isDelete", true },
             { "isSelete", true },
             { "onSelete", new Func<string, Task>(OnSeleted) },
-            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)},
+            {
+                "onSearch",
+                new Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)
+            },
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
@@ -398,6 +265,7 @@ public partial class InventoryCountingForm
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task OnGetBatchOrSerial()
     {
         var dictionary = new Dictionary<string, object>
@@ -413,5 +281,4 @@ public partial class InventoryCountingForm
             Height = "80%"
         }).ConfigureAwait(false);
     }
-
 }

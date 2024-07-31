@@ -4,6 +4,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.InventoryTransfer;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
@@ -73,6 +74,12 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
+    public Task<ResponseData<ObservableCollection<GetInventoryCountingList>>> GetInventoryCountingLists(string type)
+        => apiService.GetInventoryCountingLists(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingList",type));
+    public Task<ResponseData<ObservableCollection<GetInventoryCountingLines>>> GetInventoryCountingLines(string docEntry)
+        => apiService.GetInventoryCountingLines(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLine",docEntry));
     public Task<PostResponse> PostReturnFromProduction(ReturnComponentProductionHeader issueProductionHeader)
         => apiService.PostReturnFromProduction(issueProductionHeader);
     public Task<PostResponse> PostInventoryTransfer(InventoryTransferHeader inventoryTransfer)
@@ -83,4 +90,6 @@ public class ApiService(IApiService apiService)
         => apiService.PostGoodReturn(deliveryOrderHeader);
     public Task<PostResponse> PostARCreditMemo(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostARCreditMemo(deliveryOrderHeader);
+    public Task<PostResponse> PostInventoryCounting(InventoryCountingHeader deliveryOrderHeader)
+        => apiService.PostInventoryCounting(deliveryOrderHeader);
 }

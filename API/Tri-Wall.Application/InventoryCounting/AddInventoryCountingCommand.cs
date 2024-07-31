@@ -1,6 +1,4 @@
-﻿
-
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 using Tri_Wall.Domain.Common;
 
@@ -8,19 +6,22 @@ namespace Tri_Wall.Application.InventoryCounting;
 
 public record AddInventoryCountingCommand(
     int DocEntry,
+    TimeSpan CreateTime,
+    DateTime CreateDate,
+    string OtherRemark,
     string Ref2,
-    string Remarks,
-    int Series,
-    string OthRemark,
     List<Counter> Counters,
-    List<InventoryCountingLine> Lines) : IRequest<ErrorOr<PostResponse>>;
+    List<InventoryCountingLine> Lines,
+    bool IsDraft = false
+) : IRequest<ErrorOr<PostResponse>>;
 
 public record Counter(int CountId);
 
 public record InventoryCountingLine(
     string ItemCode,
-    double Qty,
-    string Counted,
+    // double Qty,
+    double QtyCounted,
+    string WhsCode,
     int LineNum,
     string ManageItem,
     int CountId,
@@ -31,6 +32,7 @@ public record InventoryCountingLine(
 
 public record InventoryCountingBatch(
     string ItemCode,
+    TypeSerial ConditionBatch,
     string BatchCode,
     double Qty,
     DateTime ExpireDate,
@@ -41,6 +43,7 @@ public record InventoryCountingBatch(
 
 public record InventoryCountingSerial(
     string ItemCode,
+    TypeSerial ConditionSerial,
     string SerialCode,
     int SystemSerialNumber,
     string MfrNo,
@@ -49,3 +52,10 @@ public record InventoryCountingSerial(
     string Location,
     DateTime ReceiptDate,
     int BinEntry);
+    
+    
+public enum TypeSerial
+{
+    NEW,
+    OLD
+}

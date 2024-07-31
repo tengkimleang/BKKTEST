@@ -4155,6 +4155,43 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			
 		END IF;
 		END IF;
+	ELSE IF :DTYPE='GetInventoryCountingList' THEN
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "Series"
+			,LEFT(CASE
+				WHEN LENGTH("Time") = 3  THEN CAST('0' || "Time" AS TIME) 
+				WHEN LENGTH("Time") = 2 THEN CAST('00' || "Time" AS TIME)
+				WHEN LENGTH("Time") = 1 THEN CAST('000' || "Time" AS TIME) 
+				ELSE CAST("Time" AS TIME) END ,5) AS "CreateTime"
+			,TO_VARCHAR("CountDate",'yyyy-MM-dd') AS "CreateDate"
+			,"Remarks" AS "OtherRemark"
+			,"Ref2" AS "Ref2"
+		FROM TRIWALL_TRAINKEY."OINC"
+		WHERE "Status"='O';
+	ELSE IF :DTYPE='GetInventoryCountingLine' THEN
+		SELECT 
+			 A."ItemCode" AS "ItemCode"
+			,A."ItemDesc" AS "ItemName"
+			,A."InWhsQty" AS "Qty"
+			,A."Counted" AS "Counted"
+			,A."LineNum" AS "LineNum"
+			,CASE WHEN B."ManBtchNum"='Y' THEN
+				'B'
+			 WHEN B."ManSerNum"='Y' THEN
+				'S'
+			 ELSE
+				'N'
+			 END AS "ItemType"
+			,'' AS "CountId"
+			,A."BinEntry" AS "BinEntry"
+			,A."UomCode" AS "Uom"
+			,A."WhsCode" AS "WarehouseCode"
+		FROM TRIWALL_TRAINKEY."INC1" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS B ON A."ItemCode"=B."ItemCode"
+		WHERE A."DocEntry"=:par1;
+	END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

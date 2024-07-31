@@ -39,29 +39,29 @@ else
                     <div class="content">
                         <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.IssueProduction.Series" Label="Series" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.InventoryCountingHeader.Series" Label="DocNum" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.IssueProduction.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.InventoryCountingHeader.CreateDate.ToShortDateString()" Label="Create Date" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.IssueProduction.DocDate" Required="true" Label="Posting Date" style="width: 100%;" ReadOnly/>
+                                <FluentTextField Value="@ViewModel.InventoryCountingHeader.CreateTime.ToString()" Label="Create Time" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Label="Ref 2" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.InventoryCountingHeader.Ref2" Label="Ref 2" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                                 <FluentAutocomplete Required
-                                                    TOption="GetProductionOrder"
+                                                    TOption="GetInventoryCountingList"
                                                     Width="100%"
                                                     Placeholder="Document Number"
                                                     OnOptionsSearch="OnSearch"
                                                     MaximumOptionsSearch="1"
                                                     Label="Document Order"
                                                     Virtualize="true"
-                                                    Items="ViewModel.GetProductionOrder"
-                                                    MaximumSelectedOptions="99"
-                                                    OptionText="@(item => $"{item.DocNum}")"
+                                                    Items="ViewModel.GetInventoryCountingLists"
+                                                    MaximumSelectedOptions="1"
+                                                    OptionText="@(item => $"{item.Series}")"
                                                     @bind-SelectedOptions="@SelectedProductionOrder"/>
 
                             </FluentGridItem>
@@ -72,28 +72,22 @@ else
                             </FluentGridItem>
                             <FluentGridItem xs="12">
                                 <div class="grid" style="width: 100%; overflow:auto;">
-                                    <FluentDataGrid TGridItem=@IssueProductionLine
+                                    <FluentDataGrid TGridItem=@InventoryCountingLine
                                                     ResizableColumns="true"
                                                     GridTemplateColumns="0.5fr 1.5fr 1.5fr 1.5fr 1fr 1.5fr"
                                                     Style=@dataGrid
-                                                    Items="ViewModel.IssueProductionLine?.AsQueryable()">
+                                                    Items="ViewModel.InventoryCountingHeader.Lines?.AsQueryable()">
                                         <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
                                         <TemplateColumn Tooltip="true" Title="Action">
-                                            <FluentButton Appearance="Appearance.Accent" OnClick="(e) => DeleteLine(ViewModel.IssueProductionLine!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete())">
+                                            <FluentButton Appearance="Appearance.Accent" OnClick="(e) => DeleteLine(ViewModel.InventoryCountingHeader.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete())">
                                                 Delete
                                             </FluentButton>
                                             <FluentButton OnClick="(e) => OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Edit().WithColor(Color.Info))">
                                                 Edit
                                             </FluentButton>
                                         </TemplateColumn>
-                                        @* <PropertyColumn Title="Production No" Property="@(c => c.DocNum)" Tooltip="true"/> *@
-                                        @* <PropertyColumn Title="P.Row" Property="@(c => c.BaseLineNum)" Tooltip="true"/> *@
                                         <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
                                         <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true"/>
-                                        @* <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true"/> *@
-                                        <PropertyColumn Title="Warehouse" Property="@(c => c.WhsCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Unit Of Measure" Property="@(c => c.UomName)" Tooltip="true"/>
                                     </FluentDataGrid>
                                 </div>
                             </FluentGridItem>
@@ -110,7 +104,7 @@ else
             Search="OpenListDataAsyncAsync"
             OnViewBatchOrSerial="OnGetBatchOrSerial"
             GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-            GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
+            GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
     }
 
     <FluentOverlay @bind-Visible=@visible

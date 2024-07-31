@@ -4,6 +4,7 @@ using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.InventoryTransfer;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
@@ -63,6 +64,12 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(
         [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetInventoryCountingList>>> GetInventoryCountingLists(
+        [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetInventoryCountingLines>>> GetInventoryCountingLines(
+        [Body] GetRequest request);
     [Post("/issueForProduction")]
     public Task<PostResponse> PostIssueProduction(
         [Body] IssueProductionHeader request);
@@ -81,4 +88,7 @@ public interface IApiService
     [Post("/arCreditMemo")]
     public Task<PostResponse> PostARCreditMemo(
         [Body] DeliveryOrderHeader request);
+    [Post("/inventoryCounting")]
+    public Task<PostResponse> PostInventoryCounting(
+        [Body] InventoryCountingHeader request);
 }
