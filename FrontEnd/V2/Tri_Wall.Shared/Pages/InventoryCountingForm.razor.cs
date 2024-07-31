@@ -141,19 +141,20 @@ public partial class InventoryCountingForm
         if (LocalStorage != null)
             ViewModel.InventoryCountingHeader.Counters.Add(
                 new Models.InventoryCounting.Counter(Convert.ToInt32(LocalStorage.GetItem<string>("name"))));
-        var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
-
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                ToastService!.ShowError(error.ErrorMessage);
-            }
-
-            return;
-        }
-
-        await SubmitTransaction(type);
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.InventoryCountingHeader));
+        // var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
+        //
+        // if (!result.IsValid)
+        // {
+        //     foreach (var error in result.Errors)
+        //     {
+        //         ToastService!.ShowError(error.ErrorMessage);
+        //     }
+        //
+        //     return;
+        // }
+        //
+        // await SubmitTransaction(type);
     }
 
     private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line,

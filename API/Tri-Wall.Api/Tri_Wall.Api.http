@@ -354,3 +354,53 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{API_HostAddress}}/inventoryCounting
+Content-Type: application/json
+
+{
+  "DocEntry": 43,
+  "CreateTime": "16:41",
+  "CreateDate": "2024-01-16T00:00:00",
+  "OtherRemark": "",
+  "Ref2": "",
+  "Series": "240100007",
+  "Counters": [
+    {
+      "CountId": 3
+    }
+  ],
+  "Lines": [
+    {
+      "ItemCode": "T009-1SB0008-00",
+      "ItemName": "SHEET BOARD",
+      "WhsCode": "RS02",
+      "Qty": 0,
+      "QtyCounted": 1,
+      "Counted": "",
+      "LineNum": 1,
+      "ManageItem": "S",
+      "CountId": 0,
+      "BinEntry": 0,
+      "Uom": "Manual",
+      "Batches": [],
+      "Serials": [
+        {
+          "ItemCode": "",
+          "ConditionSerial": 0,
+          "Qty": 1,
+          "SerialCode": "123xcasdasd",
+          "SystemSerialNumber": 0,
+          "MfrNo": "",
+          "Location": "",
+          "ReceiptDate": "0001-01-01T00:00:00",
+          "BinEntry": 0,
+          "IsSerialNew": "Y",
+          "OnSelectedBatchOrSerial": []
+        }
+      ]
+    }
+  ]
+}
+
+###
