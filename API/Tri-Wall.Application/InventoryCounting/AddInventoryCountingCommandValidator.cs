@@ -12,11 +12,6 @@ namespace Tri_Wall.Application.InventoryCounting
         public AddInventoryCountingCommandValidator()
         {
             RuleFor(x => x.DocEntry).NotEmpty().WithMessage("DocEntry is not Empty");
-            RuleFor(x => x.Counters).NotNull().WithMessage("DocEntry is not Empty")
-                .ForEach(rule => rule.ChildRules(item =>
-                {
-                    item.RuleFor(i => i.CountId).NotEqual(0).WithMessage("CountId must not be empty");
-                }));
         }
     }
 }

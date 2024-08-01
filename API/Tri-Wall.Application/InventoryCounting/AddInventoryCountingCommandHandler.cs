@@ -2,6 +2,7 @@
 using MediatR;
 using SAPbobsCOM;
 using Throw;
+using Tri_Wall.Application.Common.ErrorHandling;
 using Tri_Wall.Application.Common.Interfaces;
 using Tri_Wall.Domain.Common;
 
@@ -13,96 +14,176 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
     public Task<ErrorOr<PostResponse>> Handle(AddInventoryCountingCommand request, CancellationToken cancellationToken)
     {
         var oCompany = unitOfWork.Connect();
-        oCompany.ThrowIfNull("Company is null");
-        unitOfWork.BeginTransaction(oCompany);
-        var oCompanyService = oCompany.GetCompanyService();
-        var oInventoryCountingService =
-            (InventoryCountingsService)oCompanyService.GetBusinessService(ServiceTypes.InventoryCountingsService);
-        var oInventoryCountingParams =
-            (InventoryCountingParams)oInventoryCountingService.GetDataInterface(
-                InventoryCountingsServiceDataInterfaces.icsInventoryCountingParams);
-        oInventoryCountingParams.DocumentEntry = request.DocEntry;
-        var oInventoryCounting = oInventoryCountingService.Get(oInventoryCountingParams);
-        oInventoryCounting.Reference2 = request.Ref2;
-        oInventoryCounting.Remarks = request.OtherRemark;
-        oInventoryCounting.UserFields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
-        var oInventoryCountingLines = oInventoryCounting.InventoryCountingLines;
-        foreach (var line in request.Lines)
+        return ErrorHandlingHelper.ExecuteWithHandlingAsync(() =>
         {
-            var oInventoryCountingLine = oInventoryCountingLines.Item(line.LineNum);
-            oInventoryCountingLine.CountedQuantity = line.QtyCounted;
-            if (line.ManageItem.Contains("S") == true)
+            oCompany.ThrowIfNull("Company is null");
+            unitOfWork.BeginTransaction(oCompany);
+            var oCompanyService = oCompany.GetCompanyService();
+            var oInventoryCountingService =
+                (InventoryCountingsService)oCompanyService.GetBusinessService(ServiceTypes.InventoryCountingsService);
+            var oInventoryCountingParams =
+                (InventoryCountingParams)oInventoryCountingService.GetDataInterface(
+                    InventoryCountingsServiceDataInterfaces.icsInventoryCountingParams);
+            oInventoryCountingParams.DocumentEntry = request.DocEntry;
+            var oInventoryCounting = oInventoryCountingService.Get(oInventoryCountingParams);
+            oInventoryCounting.Reference2 = request.Ref2;
+            oInventoryCounting.Remarks = request.OtherRemark;
+            oInventoryCounting.UserFields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
+            var oInventoryCountingLines = oInventoryCounting.InventoryCountingLines;
+            if (request.InvnetoryCountingType != "")
             {
-                foreach (var serial in line.Serials)
+                for (var k = 0; oInventoryCountingLines.Count > k; k++)
                 {
-                    if (serial.ConditionSerial == TypeSerial.NEW)
+                    var oInventoryCountingLine = oInventoryCountingLines.Item(k);
+                    foreach (var line in request.Lines)
                     {
-                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
-                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
-                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
-                        oInventoryCountingSerialNumber.ManufacturerSerialNumber = serial.MfrNo;
-                        oInventoryCountingSerialNumber.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
-                        oInventoryCountingSerialNumber.ManufactureDate =
-                            Convert.ToDateTime(serial.MfrDate);
-                        oInventoryCountingSerialNumber.Location = serial.Location;
-                        oInventoryCountingSerialNumber.ReceptionDate =
-                            Convert.ToDateTime(serial.ReceiptDate);
+                        if (request.CounterID == oInventoryCountingLine.CounterID && line.ItemCode == oInventoryCountingLine.ItemCode)
+                        {
+                            oInventoryCountingLine.CountedQuantity = line.QtyCounted;
+                            if (line.ManageItem.Contains("S") == true)
+                            {
+                                if (oInventoryCountingLine.InventoryCountingSerialNumbers.Count > 0)
+                                    for (var i = 0; oInventoryCountingLine.InventoryCountingSerialNumbers.Count >= i; i++)
+                                        oInventoryCountingLine.InventoryCountingSerialNumbers.Remove(0);
+                                foreach (var serial in line.Serials)
+                                {
+                                    if (serial.ConditionSerial == TypeSerial.NEW)
+                                    {
+                                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                                        oInventoryCountingSerialNumber.ManufacturerSerialNumber = serial.MfrNo;
+                                        oInventoryCountingSerialNumber.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
+                                        oInventoryCountingSerialNumber.ManufactureDate =
+                                            Convert.ToDateTime(serial.MfrDate);
+                                        oInventoryCountingSerialNumber.Location = serial.Location;
+                                        oInventoryCountingSerialNumber.ReceptionDate =
+                                            Convert.ToDateTime(serial.ReceiptDate);
+                                    }
+                                    else if (serial.ConditionSerial == TypeSerial.OLD)
+                                    {
+                                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                                    }
+                                }
+                            }
+                            else if (line.ManageItem.Contains("B") == true)
+                            {
+                                for (var i = 0; oInventoryCountingLine.InventoryCountingBatchNumbers.Count >= i; i++)
+                                    oInventoryCountingLine.InventoryCountingBatchNumbers.Remove(0);
+                                foreach (var batch in line.Batches)
+                                {
+                                    if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&
+                                        !string.IsNullOrEmpty(batch.BatchCode))
+                                    {
+                                        if (batch.ConditionBatch == TypeSerial.NEW)
+                                        {
+                                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                                            oInventoryCountingBatchNumber.Quantity = batch.Qty;
+                                        }
+                                        else if (batch.ConditionBatch == TypeSerial.OLD)
+                                        {
+                                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                                            oInventoryCountingBatchNumber.Quantity = line.QtyCounted;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    else if (serial.ConditionSerial == TypeSerial.OLD)
+                }
+            }
+            else if (request.InvnetoryCountingType == "")
+            {
+                foreach (var line in request.Lines)
+                {
+                    var oInventoryCountingLine = oInventoryCountingLines.Item(line.LineNum);
+                    oInventoryCountingLine.CountedQuantity = line.QtyCounted;
+                    if (line.ManageItem.Contains("S") == true)
                     {
-                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
-                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
-                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                        if (oInventoryCountingLine.InventoryCountingSerialNumbers.Count > 0)
+                            for (var i = 0; oInventoryCountingLine.InventoryCountingSerialNumbers.Count >= i; i++)
+                                oInventoryCountingLine.InventoryCountingSerialNumbers.Remove(0);
+                        foreach (var serial in line.Serials)
+                        {
+                            if (serial.ConditionSerial == TypeSerial.NEW)
+                            {
+                                InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                                    oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                                oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                                oInventoryCountingSerialNumber.ManufacturerSerialNumber = serial.MfrNo;
+                                oInventoryCountingSerialNumber.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
+                                oInventoryCountingSerialNumber.ManufactureDate =
+                                    Convert.ToDateTime(serial.MfrDate);
+                                oInventoryCountingSerialNumber.Location = serial.Location;
+                                oInventoryCountingSerialNumber.ReceptionDate =
+                                    Convert.ToDateTime(serial.ReceiptDate);
+                            }
+                            else if (serial.ConditionSerial == TypeSerial.OLD)
+                            {
+                                InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                                    oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                                oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                            }
+                        }
+                    }
+                    else if (line.ManageItem.Contains("B") == true)
+                    {
+                        for (var i = 0; oInventoryCountingLine.InventoryCountingBatchNumbers.Count >= i; i++)
+                            oInventoryCountingLine.InventoryCountingBatchNumbers.Remove(0);
+                        foreach (var batch in line.Batches)
+                        {
+                            if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&
+                                !string.IsNullOrEmpty(batch.BatchCode))
+                            {
+                                if (batch.ConditionBatch == TypeSerial.NEW)
+                                {
+                                    InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                        oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                                    oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                                    oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                                    oInventoryCountingBatchNumber.Quantity = batch.Qty;
+                                }
+                                else if (batch.ConditionBatch == TypeSerial.OLD)
+                                {
+                                    InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                        oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                                    oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                                    oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                                    oInventoryCountingBatchNumber.Quantity = line.QtyCounted;
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            else if (line.ManageItem.Contains("B") == true)
+            oInventoryCountingService.Update(oInventoryCounting);
+            if (oCompany.GetLastErrorCode() != 0)
             {
-                foreach (var batch in line.Batches)
-                {
-                    if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&
-                        !string.IsNullOrEmpty(batch.BatchCode))
-                    {
-                        if (batch.ConditionBatch == TypeSerial.NEW)
-                        {
-                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
-                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
-                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
-                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
-                            oInventoryCountingBatchNumber.Quantity = batch.Qty;
-                        }
-                        else if (batch.ConditionBatch == TypeSerial.OLD)
-                        {
-                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
-                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
-                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
-                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
-                            oInventoryCountingBatchNumber.Quantity = line.QtyCounted;
-                        }
-                    }
-                }
+                unitOfWork.Rollback(oCompany);
+                return Task.FromResult(new PostResponse(
+                    oCompany.GetLastErrorCode().ToString(),
+                    oCompany.GetLastErrorDescription(),
+                    "",
+                    "",
+                    "").ToErrorOr());
             }
-        }
 
-        oInventoryCountingService.Update(oInventoryCounting);
-        if (oCompany.GetLastErrorCode() != 0)
-        {
-            unitOfWork.Rollback(oCompany);
+            unitOfWork.Commit(oCompany);
             return Task.FromResult(new PostResponse(
-                oCompany.GetLastErrorCode().ToString(),
-                oCompany.GetLastErrorDescription(),
                 "",
                 "",
-                "").ToErrorOr());
-        }
-
-        unitOfWork.Commit(oCompany);
-        return Task.FromResult(new PostResponse(
-            "",
-            "",
-            "",
-            "",
-            oInventoryCounting.DocumentEntry.ToString()).ToErrorOr());
+                "",
+                "",
+                oInventoryCounting.DocumentEntry.ToString()).ToErrorOr());
+        }, unitOfWork, oCompany);
     }
 }

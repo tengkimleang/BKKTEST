@@ -10,12 +10,12 @@ public record AddInventoryCountingCommand(
     DateTime CreateDate,
     string OtherRemark,
     string Ref2,
-    List<Counter> Counters,
+    string InvnetoryCountingType,
+    int CountingType,
+    int CounterID,
     List<InventoryCountingLine> Lines,
     bool IsDraft = false
 ) : IRequest<ErrorOr<PostResponse>>;
-
-public record Counter(int CountId);
 
 public record InventoryCountingLine(
     string ItemCode,
