@@ -27,74 +27,58 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
         oInventoryCounting.Remarks = request.OtherRemark;
         oInventoryCounting.UserFields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
         var oInventoryCountingLines = oInventoryCounting.InventoryCountingLines;
-        foreach (var counter in request.Counters)
+        foreach (var line in request.Lines)
         {
-            for (var i = 0; i < oInventoryCountingLines.Count; i++) //Each Counter
+            var oInventoryCountingLine = oInventoryCountingLines.Item(line.LineNum);
+            oInventoryCountingLine.CountedQuantity = line.QtyCounted;
+            if (line.ManageItem.Contains("S") == true)
             {
-                foreach (var line in request.Lines) //Each Line
+                foreach (var serial in line.Serials)
                 {
-                    var oInventoryCountingLine = oInventoryCountingLines.Item(i);
-                    if ((oInventoryCountingLine.CounterID == counter.CountId &&
-                         oInventoryCountingLine.ItemCode == line.ItemCode) || (oInventoryCountingLine.CounterID == -1 &&
-                                                                               oInventoryCountingLine.ItemCode ==
-                                                                               line.ItemCode))
+                    if (serial.ConditionSerial == TypeSerial.NEW)
                     {
-                        oInventoryCountingLine.CountedQuantity = line.QtyCounted;
-                        oInventoryCountingLine.UoMCode = line.UoM;
-                        if (line.ManageItem.Contains("S") == true)
-                        {
-                            foreach (var serial in line.Serials)
-                            {
-                                if (serial.ItemCode == line.ItemCode && !string.IsNullOrEmpty(serial.SerialCode))
-                                {
-                                    if (serial.ConditionSerial == TypeSerial.NEW)
-                                    {
-                                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
-                                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
-                                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
-                                        oInventoryCountingSerialNumber.ManufacturerSerialNumber = serial.MfrNo;
-                                        oInventoryCountingSerialNumber.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
-                                        oInventoryCountingSerialNumber.ManufactureDate =
-                                            Convert.ToDateTime(serial.MfrDate);
-                                        oInventoryCountingSerialNumber.Location = serial.Location;
-                                        oInventoryCountingSerialNumber.ReceptionDate =
-                                            Convert.ToDateTime(serial.ReceiptDate);
-                                    }
-                                    else if (serial.ConditionSerial == TypeSerial.OLD)
-                                    {
-                                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
-                                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
-                                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
-                                    }
-                                }
-                            }
-                        }
+                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                        oInventoryCountingSerialNumber.ManufacturerSerialNumber = serial.MfrNo;
+                        oInventoryCountingSerialNumber.ExpiryDate = Convert.ToDateTime(serial.ExpDate);
+                        oInventoryCountingSerialNumber.ManufactureDate =
+                            Convert.ToDateTime(serial.MfrDate);
+                        oInventoryCountingSerialNumber.Location = serial.Location;
+                        oInventoryCountingSerialNumber.ReceptionDate =
+                            Convert.ToDateTime(serial.ReceiptDate);
+                    }
+                    else if (serial.ConditionSerial == TypeSerial.OLD)
+                    {
+                        InventoryCountingSerialNumber oInventoryCountingSerialNumber =
+                            oInventoryCountingLine.InventoryCountingSerialNumbers.Add();
+                        oInventoryCountingSerialNumber.InternalSerialNumber = serial.SerialCode;
+                    }
+                }
+            }
 
-                        else if (line.ManageItem.Contains("B") == true)
+            else if (line.ManageItem.Contains("B") == true)
+            {
+                foreach (var batch in line.Batches)
+                {
+                    if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&
+                        !string.IsNullOrEmpty(batch.BatchCode))
+                    {
+                        if (batch.ConditionBatch == TypeSerial.NEW)
                         {
-                            foreach (var batch in line.Batches)
-                            {
-                                if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&
-                                    !string.IsNullOrEmpty(batch.BatchCode))
-                                {
-                                    if (batch.ConditionBatch == TypeSerial.NEW)
-                                    {
-                                        InventoryCountingBatchNumber oInventoryCountingBatchNumber =
-                                            oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
-                                        oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
-                                        oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
-                                        oInventoryCountingBatchNumber.Quantity = batch.Qty;
-                                    }
-                                    else if (batch.ConditionBatch == TypeSerial.OLD)
-                                    {
-                                        InventoryCountingBatchNumber oInventoryCountingBatchNumber =
-                                            oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
-                                        oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
-                                        oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
-                                        oInventoryCountingBatchNumber.Quantity = line.QtyCounted;
-                                    }
-                                }
-                            }
+                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                            oInventoryCountingBatchNumber.Quantity = batch.Qty;
+                        }
+                        else if (batch.ConditionBatch == TypeSerial.OLD)
+                        {
+                            InventoryCountingBatchNumber oInventoryCountingBatchNumber =
+                                oInventoryCountingLine.InventoryCountingBatchNumbers.Add();
+                            oInventoryCountingBatchNumber.BatchNumber = batch.BatchCode;
+                            oInventoryCountingBatchNumber.InternalSerialNumber = batch.BatchCode;
+                            oInventoryCountingBatchNumber.Quantity = line.QtyCounted;
                         }
                     }
                 }
@@ -102,7 +86,7 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
         }
 
         oInventoryCountingService.Update(oInventoryCounting);
-        if (oInventoryCounting.DocumentEntry != 0)
+        if (oCompany.GetLastErrorCode() != 0)
         {
             unitOfWork.Rollback(oCompany);
             return Task.FromResult(new PostResponse(
@@ -114,6 +98,11 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
         }
 
         unitOfWork.Commit(oCompany);
-        return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
+        return Task.FromResult(new PostResponse(
+            "",
+            "",
+            "",
+            "",
+            oInventoryCounting.DocumentEntry.ToString()).ToErrorOr());
     }
 }
