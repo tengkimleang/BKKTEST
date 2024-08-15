@@ -11,9 +11,9 @@ else
 {
     @if (isView == false)
     {
-        <FluentLayout Style="margin-top: 0px;">
+        <FluentLayout Style="margin-top: 0;">
 
-            <FluentHeader Style="background-color: transparent;padding: 0px;z-index: 0;">
+            <FluentHeader Style="background-color: transparent;padding: 0;z-index: 0;">
                 <FluentBreadcrumb>
                     <FluentBreadcrumbItem>
                         @stringDisplay
@@ -83,7 +83,7 @@ else
                                               Items="ViewModel.ContactPeople.Where(x => x.CardCode == selectedVendor.FirstOrDefault()?.VendorCode)"
                                               OptionText="@(i => i.ContactName)"
                                               OptionValue="@(i => i.ContactName)"
-                                              SelectedOption="ViewModel.ContactPeople.Where(x => x.CardCode == selectedVendor.FirstOrDefault()?.VendorCode).FirstOrDefault()"
+                                              SelectedOption="ViewModel.ContactPeople.FirstOrDefault(x => x.CardCode == selectedVendor.FirstOrDefault()?.VendorCode)"
                                               @bind-Value="ViewModel.DeliveryOrderForm.ContactPersonCode" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -131,7 +131,7 @@ else
         <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
                                                                   Search="OpenListDataAsyncAsync"
                                                                   OnViewBatchOrSerial="OnGetBatchOrSerial"
-                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
+                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()"
                                                                   GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
     }
 

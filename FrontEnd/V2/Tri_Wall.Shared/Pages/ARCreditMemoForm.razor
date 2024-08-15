@@ -1,5 +1,5 @@
 ﻿@page "/arcreditmemo"
-@inherits MvvmComponentBase<ARCreditMemoViewModel>
+@inherits MvvmComponentBase<ArCreditMemoViewModel>
 @rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
 <PageTitle>A/R Credit Memo</PageTitle>
@@ -49,16 +49,16 @@ else
                                               OptionText="@(i => i.SeriesName)"
                                               OptionValue="@(i => i.Code)"
                                               SelectedOption="@ViewModel.Series.FirstOrDefault()"
-                                              @bind-Value="@ViewModel.DeliveryOrderForm.Series" />
+                                              @bind-Value="@ViewModel.ARCreditMemoForm.Series" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.DeliveryOrderForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.ARCreditMemoForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" Label="DocDate" style="width: 100%;" />
+                                <FluentDatePicker @bind-Value="@ViewModel.ARCreditMemoForm.DocDate" Label="DocDate" style="width: 100%;" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.TaxDate" Label="TaxDate" style="width: 100%;" />
+                                <FluentDatePicker @bind-Value="@ViewModel.ARCreditMemoForm.TaxDate" Label="TaxDate" style="width: 100%;" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                                 <FluentAutocomplete Required
@@ -84,7 +84,7 @@ else
                                               OptionText="@(i => i.ContactName)"
                                               OptionValue="@(i => i.ContactName)"
                                               SelectedOption="ViewModel.ContactPeople.Where(x => x.CardCode == selectedVendor.FirstOrDefault()?.VendorCode).FirstOrDefault()"
-                                              @bind-Value="ViewModel.DeliveryOrderForm.ContactPersonCode" />
+                                              @bind-Value="ViewModel.ARCreditMemoForm.ContactPersonCode" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentTextField Label="Ref Inv" style="width: 100%;"></FluentTextField>
@@ -100,10 +100,10 @@ else
                                                     ResizableColumns="true"
                                                     GridTemplateColumns="0.25fr 1fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
                                                     Style=@dataGrid
-                                                    Items="ViewModel.DeliveryOrderForm.Lines?.AsQueryable()">
+                                                    Items="ViewModel.ARCreditMemoForm.Lines?.AsQueryable()">
                                         <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
                                         <TemplateColumn Tooltip="true" Title="Action">
-                                            <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLine(ViewModel.DeliveryOrderForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                            <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLine(ViewModel.ARCreditMemoForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                                 Delete
                                             </FluentButton>
                                             <FluentButton OnClick="(e) => OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Edit().WithColor(Color.Info))">
@@ -131,8 +131,8 @@ else
         <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
                                                                   Search="OpenListDataAsyncAsync"
                                                                   OnViewBatchOrSerial="OnGetBatchOrSerial"
-                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-                                                                  GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
+                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.ARCreditMemoHeaderDetailByDocNums.FirstOrDefault()"
+                                                                  GoodReceiptPoLineByDocNums="ViewModel.ARCreditMemoLineByDocNums" />
     }
 
     <FluentOverlay @bind-Visible=@visible

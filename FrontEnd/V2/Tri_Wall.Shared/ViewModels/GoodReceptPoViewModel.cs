@@ -35,7 +35,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDetailByDocNums = new();
 
     [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
 
@@ -43,9 +43,9 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
 
     [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
 
-    [ObservableProperty] ObservableCollection<GetGennerateBatchSerial> _getGennerateBatchSerial = new();
+    [ObservableProperty] ObservableCollection<GetGennerateBatchSerial> _getGenerateBatchSerial = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
 
     #endregion
 
@@ -144,7 +144,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums =
+        GoodReceiptPoHeaderDetailByDocNums =
             (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
                 "GET_GoodReceipt_PO_Header_Detail_By_DocNum")).Data ?? new();
         GoodReceiptPoLineByDocNums =
@@ -164,7 +164,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     {
         try
         {
-            GetGennerateBatchSerial = (await apiService.GennerateBatchSerial(data["itemCode"].ToString() ?? ""
+            GetGenerateBatchSerial = (await apiService.GennerateBatchSerial(data["itemCode"].ToString() ?? ""
                 , data["qty"].ToString() ?? "")).Data ?? new();
         }
         catch (Exception e)

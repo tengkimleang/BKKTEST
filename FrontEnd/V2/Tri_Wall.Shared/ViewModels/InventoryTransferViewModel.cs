@@ -39,10 +39,10 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _inventoryTransferHeaderDetailByDocNums = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    ObservableCollection<GoodReceiptPoLineByDocNum> _inventoryTransferLineByDocNums = new();
 
     [ObservableProperty]
     ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
@@ -54,7 +54,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
     [ObservableProperty]
-    Boolean _isView = false;
+    Boolean _isView;
 
     public override async Task Loaded()
     {
@@ -122,8 +122,8 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_DeliveryOrder_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetDeliveryOrderLineDetailByDocEntry", docEntry)).Data ?? new();
+        InventoryTransferHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_DeliveryOrder_Header_Detail_By_DocNum")).Data ?? new();
+        InventoryTransferLineByDocNums = (await apiService.GetLineByDocNum("GetDeliveryOrderLineDetailByDocEntry", docEntry)).Data ?? new();
         GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialDeliveryOrder")).Data ?? new();
     }
 

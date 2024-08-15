@@ -30,14 +30,14 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
             oInventoryCounting.Remarks = request.OtherRemark;
             oInventoryCounting.UserFields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
             var oInventoryCountingLines = oInventoryCounting.InventoryCountingLines;
-            if (request.InvnetoryCountingType != "")
+            if (request.InventoryCountingType == "Multiple Count")
             {
                 for (var k = 0; oInventoryCountingLines.Count > k; k++)
                 {
                     var oInventoryCountingLine = oInventoryCountingLines.Item(k);
                     foreach (var line in request.Lines)
                     {
-                        if (request.CounterID == oInventoryCountingLine.CounterID && line.ItemCode == oInventoryCountingLine.ItemCode)
+                        if (request.CounterId == oInventoryCountingLine.CounterID && line.ItemCode == oInventoryCountingLine.ItemCode)
                         {
                             oInventoryCountingLine.CountedQuantity = line.QtyCounted;
                             if (line.ManageItem.Contains("S") == true)
@@ -100,7 +100,7 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
                     }
                 }
             }
-            else if (request.InvnetoryCountingType == "")
+            else if (request.InventoryCountingType == "Single Count")
             {
                 foreach (var line in request.Lines)
                 {

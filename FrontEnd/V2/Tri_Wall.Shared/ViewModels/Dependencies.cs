@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using System.Reflection;
-using Tri_Wall.Shared.Models.DeliveryOrder;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
-using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
@@ -17,9 +14,9 @@ public static class Dependencies
         services.AddRefitClient<IApiService>()
             .ConfigureHttpClient(static client =>
             {
-                client.Timeout = TimeSpan.FromMinutes(5);
+                client.Timeout = TimeSpan.FromMinutes(10);
                 // client.BaseAddress = new Uri("http://localhost:5253");
-                client.BaseAddress = new Uri("http://192.168.10.107:8429/ApiTriWall");
+                client.BaseAddress = new Uri("http://localhost:8082");
             })
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         #endregion
@@ -32,7 +29,7 @@ public static class Dependencies
         services.AddTransient<ReceiptFromProductionOrderViewModel>();
         services.AddTransient<ReturnViewModel>();
         services.AddTransient<GoodReturnViewModel>();
-        services.AddTransient<ARCreditMemoViewModel>();
+        services.AddTransient<ArCreditMemoViewModel>();
         services.AddTransient<InventoryCountingViewModel>();
         #endregion
         #region Validator

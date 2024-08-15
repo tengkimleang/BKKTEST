@@ -10,71 +10,61 @@ namespace Tri_Wall.Shared.ViewModels;
 
 public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-    [ObservableProperty]
-    DeliveryOrderHeader _deliveryOrderForm=new();
+    #region Data Member
 
-    [ObservableProperty]
-    ObservableCollection<Series> _series = new();
+    [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
 
-    [ObservableProperty]
-    ObservableCollection<Vendors> _customers = loadMasterData.GetCustomers;
+    [ObservableProperty] ObservableCollection<Series> _series = new();
 
-    [ObservableProperty]
-    ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
+    [ObservableProperty] ObservableCollection<Vendors> _customers = loadMasterData.GetCustomers;
 
-    [ObservableProperty]
-    ObservableCollection<Items> _items = loadMasterData.GetItems;
+    [ObservableProperty] ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
 
-    [ObservableProperty]
-    ObservableCollection<VatGroups> _taxSales = loadMasterData.GetTaxSales;
+    [ObservableProperty] ObservableCollection<Items> _items = loadMasterData.GetItems;
 
-    [ObservableProperty]
-    ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+    [ObservableProperty] ObservableCollection<VatGroups> _taxSales = loadMasterData.GetTaxSales;
 
-    [ObservableProperty]
-    PostResponse _postResponses = new();
-    
-    [ObservableProperty]
-    ObservableCollection<TotalItemCount> _totalItemCount=new();
-    
-    [ObservableProperty]
-    ObservableCollection<TotalItemCount> _totalItemCountSalesOrder=new();
+    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
-    [ObservableProperty]
-    ObservableCollection<GetListData> _getListData = new();
+    [ObservableProperty] PostResponse _postResponses = new();
+
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCount = new();
+
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountSalesOrder = new();
+
+    [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
     ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
 
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
 
-    [ObservableProperty]
-    ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
-    
-    [ObservableProperty]
-    ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
-    [ObservableProperty]
-    ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
-    
-    [ObservableProperty]
-    Boolean _isView=false;
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
+
+    [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
+
+    [ObservableProperty] Boolean _isView;
+
+    #endregion
+
+    #region Method
 
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
-                 (await apiService.GetSeries("15")).Data ?? new());
+            (await apiService.GetSeries("15")).Data ?? new());
         Customers = await CheckingValueT(Customers, async () =>
-                        (await apiService.GetCustomers()).Data ?? new());
+            (await apiService.GetCustomers()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
-                    (await apiService.GetContactPersons()).Data ?? new());
+            (await apiService.GetContactPersons()).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
-                    (await apiService.GetItems()).Data ?? new());
+            (await apiService.GetItems()).Data ?? new());
         TaxSales = await CheckingValueT(TaxSales, async () =>
-                    (await apiService.GetTaxSales()).Data ?? new());
+            (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-                    (await apiService.GetWarehouses()).Data ?? new());
+            (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("DeliveryOrder")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("SaleOrder")).Data ?? new();
         IsView = true;
@@ -86,13 +76,13 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
         DeliveryOrderForm.ContactPersonCode = "0";
         PostResponses = await apiService.PostDelveryOrder(DeliveryOrderForm);
     }
-    
+
     [RelayCommand]
     async Task OnGetGoodReceiptPo(string perPage)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader",perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -100,12 +90,15 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             throw;
         }
     }
+
     [RelayCommand]
-    async Task OnGetBatchOrSerialByItemCode(Dictionary<string,string> dictionary)
+    async Task OnGetBatchOrSerialByItemCode(Dictionary<string, string> dictionary)
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode =
+                (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode",
+                    dictionary["ItemType"], dictionary["ItemCode"])).Data ?? new();
         }
         catch (Exception e)
         {
@@ -113,12 +106,13 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             throw;
         }
     }
+
     [RelayCommand]
     async Task OnGetPurchaseOrder(string perPage)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder",perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -130,16 +124,21 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_DeliveryOrder_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetDeliveryOrderLineDetailByDocEntry",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialDeliveryOrder")).Data ?? new();
+        GoodReceiptPoHeaderDeatialByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_DeliveryOrder_Header_Detail_By_DocNum"))
+            .Data ?? new();
+        GoodReceiptPoLineByDocNums =
+            (await apiService.GetLineByDocNum("GetDeliveryOrderLineDetailByDocEntry", docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialDeliveryOrder")).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
-        GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry)).Data ?? new();
+        GetPurchaseOrderLineByDocNums =
+            (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry)).Data ?? new();
     }
+
     [RelayCommand]
     async Task OnGetGoodReceiptPoBySearch(Dictionary<string, object> data)
     {
@@ -157,4 +156,6 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             throw;
         }
     }
+
+    #endregion
 }

@@ -8,5 +8,7 @@ public class InventoryCountingHeader
     public string OtherRemark { get; set; } = string.Empty;
     public string Ref2 { get; set; } = string.Empty;
     public string Series { get; set; } = string.Empty;
+    public string InventoryCountingType { get; set; } = string.Empty;
+    public int CounterId { get; set; }
     public List<InventoryCountingLine> Lines { get; set; } = new();
 }

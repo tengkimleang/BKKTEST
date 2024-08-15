@@ -55,19 +55,19 @@ public partial class ARCreditMemoForm
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if (ViewModel.DeliveryOrderForm.Lines == null)
-                ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+            if (ViewModel.ARCreditMemoForm.Lines == null)
+                ViewModel.ARCreditMemoForm.Lines = new List<DeliveryOrderLine>();
             if (data["data"] is DeliveryOrderLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
                 {
-                    receiptPoLine.LineNum = ViewModel.DeliveryOrderForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
-                    ViewModel.DeliveryOrderForm.Lines?.Add(receiptPoLine);
+                    receiptPoLine.LineNum = ViewModel.ARCreditMemoForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.ARCreditMemoForm.Lines?.Add(receiptPoLine);
                 }
                 else
                 {
-                    var index = ViewModel.DeliveryOrderForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
-                    ViewModel.DeliveryOrderForm.Lines[index] = receiptPoLine;
+                    var index = ViewModel.ARCreditMemoForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
+                    ViewModel.ARCreditMemoForm.Lines[index] = receiptPoLine;
                 }
             }
         }
@@ -100,14 +100,14 @@ public partial class ARCreditMemoForm
 
     private void DeleteLine(int index)
     {
-        ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
+        ViewModel.ARCreditMemoForm.Lines!.RemoveAt(index);
     }
 
     async Task OnSaveTransaction(string type = "")
     {
-        ViewModel.DeliveryOrderForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
+        ViewModel.ARCreditMemoForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+        ViewModel.ARCreditMemoForm.DocDate = DateTime.Now;
+        var result = await Validator!.ValidateAsync(ViewModel.ARCreditMemoForm).ConfigureAwait(false);
         if (!result.IsValid)
         {
             foreach (var error in result.Errors)
@@ -121,13 +121,13 @@ public partial class ARCreditMemoForm
         try
         {
             visible = true;
-            Console.WriteLine(JsonSerializer.Serialize(ViewModel.DeliveryOrderForm));
+            Console.WriteLine(JsonSerializer.Serialize(ViewModel.ARCreditMemoForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
                 selectedVendor = new List<Vendors>();
-                ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
+                ViewModel.ARCreditMemoForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
             }
@@ -147,7 +147,7 @@ public partial class ARCreditMemoForm
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
-        ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        ViewModel.GetArCreditMemoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         isView = true;
         StateHasChanged();
         return Task.CompletedTask;
@@ -185,13 +185,13 @@ public partial class ARCreditMemoForm
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         //OnGetPurchaseOrder
-        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
+        await ViewModel.GetArCreditMemoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
 
     async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
     {
-        await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(e);
+        await ViewModel.GetArCreditMemoBySearchCommand.ExecuteAsync(e);
         return ViewModel.GetListData;
     }
 
@@ -230,7 +230,7 @@ public partial class ARCreditMemoForm
     {
         var dictionary = new Dictionary<string, object>
         {
-            { "totalItemCount", ViewModel.TotalItemCountSalesOrder },
+            { "totalItemCount", ViewModel.TotalItemCountArInvoice },
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListDataPurchaseOrder) },
             //{ "isDelete", true },
             //{"onDelete",new Func<string,Task>(OnDelete)},
@@ -249,7 +249,7 @@ public partial class ARCreditMemoForm
 
     async Task<ObservableCollection<GetListData>> GetListDataPurchaseOrder(int p)
     {
-        await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(p.ToString());
+        await ViewModel.GetArInvoiceCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
 
@@ -257,13 +257,13 @@ public partial class ARCreditMemoForm
     {
         Console.WriteLine(e);
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
-        ViewModel.DeliveryOrderForm.DocDate = Convert.ToDateTime(objData?.DocDate);
-        ViewModel.DeliveryOrderForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
+        ViewModel.ARCreditMemoForm.DocDate = Convert.ToDateTime(objData?.DocDate);
+        ViewModel.ARCreditMemoForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
         selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
-        await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+        await ViewModel.GetArInvoiceLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        ViewModel.ARCreditMemoForm.Lines = new List<DeliveryOrderLine>();
         var i = 1;
-        foreach (var obj in ViewModel.GetPurchaseOrderLineByDocNums)
+        foreach (var obj in ViewModel.GetArInvoiceLineByDocNums)
         {
             var batch = new List<BatchDeliveryOrder>();
             var serial = new List<SerialDeliveryOrder>();
@@ -295,7 +295,7 @@ public partial class ARCreditMemoForm
                 });
             }
 
-            ViewModel.DeliveryOrderForm.Lines?.Add(new DeliveryOrderLine()
+            ViewModel.ARCreditMemoForm.Lines?.Add(new DeliveryOrderLine()
             {
                 ItemCode = obj.ItemCode,
                 ItemName = obj.ItemName,

@@ -5,14 +5,12 @@ using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Microsoft.VisualBasic;
 using Refit;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.InventoryCounting;
-using Tri_Wall.Shared.Views.IssueForProduction;
 
 namespace Tri_Wall.Shared.Pages;
 
@@ -41,6 +39,7 @@ public partial class InventoryCountingForm
             ViewModel.InventoryCountingHeader.CreateTime = value.ToList()[0].CreateTime;
             ViewModel.InventoryCountingHeader.OtherRemark = value.ToList()[0].OtherRemark;
             ViewModel.InventoryCountingHeader.Ref2 = value.ToList()[0].Ref2;
+            ViewModel.InventoryCountingHeader.InventoryCountingType=value.ToList()[0].InventoryCountingType;
             Console.WriteLine(value.ToList()[0].DocEntry);
             ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(value.ToList()[0].DocEntry)
                 .ConfigureAwait(false);
@@ -60,7 +59,6 @@ public partial class InventoryCountingForm
 
     async Task OpenDialogAsync(InventoryCountingLine issueProductionLine)
     {
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.GetInventoryCountingLines));
         var dictionary = new Dictionary<string, object>
         {
             { "item", ViewModel.GetInventoryCountingLines },
@@ -138,9 +136,6 @@ public partial class InventoryCountingForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        if (LocalStorage != null)
-            ViewModel.InventoryCountingHeader.Counters.Add(
-                new Models.InventoryCounting.Counter(Convert.ToInt32(LocalStorage.GetItem<string>("name"))));
         Console.WriteLine(JsonSerializer.Serialize(ViewModel.InventoryCountingHeader));
         // var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
         //

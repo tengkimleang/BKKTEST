@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
@@ -12,21 +13,21 @@ public partial class GoodReceiptPoForm
 {
     [Inject]
     public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
-    [Inject]
-    public IValidator<GoodReceiptPoLine>? ValidatorLine { get; init; }
+    // [Inject]
+    // public IValidator<GoodReceiptPoLine>? ValidatorLine { init; get; }
     
     private string stringDisplay = "Good Receipt PO";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
-    bool isView=false;
+    bool isView;
     protected void OnCloseOverlay() => visible = true;
     
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
-    bool visible = false;
+    bool visible;
     
-    async Task OpenDialogAsync(GoodReceiptPoLine goodReceiptPoLine)
+    async Task OpenDialogAsync(MouseEventArgs e,GoodReceiptPoLine goodReceiptPoLine)
     {
         var dictionary = new Dictionary<string, object>
         {
@@ -39,7 +40,7 @@ public partial class GoodReceiptPoForm
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = (goodReceiptPoLine is null) ? "Add Line" : "Update Line",
+            Title = (goodReceiptPoLine.ItemCode != "") ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -69,7 +70,7 @@ public partial class GoodReceiptPoForm
     private async Task<string> OnGetGenerateBatchOrSerial(Dictionary<string,object> e)
     {
         await ViewModel.GetGennerateBatchSerialCommand.ExecuteAsync(e);
-        return ViewModel.GetGennerateBatchSerial.FirstOrDefault()?.BatchOrSerial??"";
+        return ViewModel.GetGenerateBatchSerial.FirstOrDefault()?.BatchOrSerial??"";
     }
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
@@ -95,11 +96,11 @@ public partial class GoodReceiptPoForm
             dataGrid = "width: 1600px;height:405px";
         }
     }
-    private void DeleteLine(int index)
+    private void DeleteLine(MouseEventArgs e,int index)
     {
         ViewModel.GoodReceiptPoForm.Lines!.RemoveAt(index);
     }
-    async Task OnSaveTransaction(string type="")
+    async Task OnSaveTransaction(MouseEventArgs e,string type="")
     {
         ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
         ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
@@ -123,7 +124,7 @@ public partial class GoodReceiptPoForm
                 selectedVendor=new List<Vendors>();
                 ViewModel.GoodReceiptPoForm= new GoodReceiptPoHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
@@ -144,12 +145,11 @@ public partial class GoodReceiptPoForm
         StateHasChanged();
         return Task.CompletedTask;
     }
-    
-    Task OnDelete(string e)
-    {
-        Console.WriteLine(e);
-        return Task.CompletedTask;
-    }
+    // Task OnDelete(string e)
+    // {
+    //     Console.WriteLine(e);
+    //     return Task.CompletedTask;
+    // }
     Task OnView()
     {
         isView = false;

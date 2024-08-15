@@ -4167,6 +4167,11 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,TO_VARCHAR("CountDate",'yyyy-MM-dd') AS "CreateDate"
 			,"Remarks" AS "OtherRemark"
 			,"Ref2" AS "Ref2"
+			,CASE WHEN "CountType"=1 THEN
+				'Single Count'
+			 ELSE
+			 	'Multiple Count'
+			 END AS "InventoryCountingType"
 		FROM TRIWALL_TRAINKEY."OINC"
 		WHERE "Status"='O';
 	ELSE IF :DTYPE='GetInventoryCountingLine' THEN

@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Services;
-using static Microsoft.FluentUI.AspNetCore.Components.Emojis.Symbols.Color.Default;
 
 namespace Tri_Wall.Shared.ViewModels;
 
@@ -35,7 +33,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDetailByDocNums = new();
 
     [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
 
@@ -45,7 +43,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
 
     public override async Task Loaded()
     {
@@ -88,7 +86,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     }
 
     [RelayCommand]
-    async Task OnGetBatchOrSerialByItemCode(Dictionary<string, string> dictionary)
+    Task OnGetBatchOrSerialByItemCode(Dictionary<string, string> dictionary)
     {
         try
         {
@@ -115,6 +113,8 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             Console.WriteLine(e);
             throw;
         }
+
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
@@ -134,7 +134,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums =
+        GoodReceiptPoHeaderDetailByDocNums =
             (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Return_Header_Detail_By_DocNum"))
             .Data ?? new();
         GoodReceiptPoLineByDocNums =

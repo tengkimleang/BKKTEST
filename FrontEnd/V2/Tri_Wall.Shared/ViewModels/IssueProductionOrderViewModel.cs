@@ -3,9 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Models.IssueForProduction;
-using Tri_Wall.Shared.Pages;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
@@ -14,7 +12,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
 {
      #region Data Member
 
-    [ObservableProperty] IssueProductionHeader _issueProduction = new();
+    [ObservableProperty] IssueProductionHeader _issueProductionForm = new();
     
     [ObservableProperty] ObservableCollection<IssueProductionLine> _issueProductionLine = new();
 
@@ -30,7 +28,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     
     [ObservableProperty] ObservableCollection<GetProductionOrderLines> _getProductionOrderLines = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
     
     [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 
@@ -38,9 +36,9 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
-    [ObservableProperty] ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _issueProductionHeaderDetailByDocNums = new();
 
-    [ObservableProperty]  ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty]  ObservableCollection<GoodReceiptPoLineByDocNum> _issueProductionLineByDocNums = new();
     #endregion 
 
     #region Method
@@ -60,7 +58,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostIssueProduction(IssueProduction);
+        PostResponses = await apiService.PostIssueProduction(IssueProductionForm);
     }
 
     [RelayCommand]
@@ -154,10 +152,10 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
         }
     }
     [RelayCommand]
-    async Task OnIssueForProductionDeatialByDocNum(string docEntry)
+    async Task OnIssueForProductionDetailByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
+        IssueProductionHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum")).Data ?? new();
+        IssueProductionLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
         GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialIssueForProduction")).Data ?? new();
     }
     #endregion

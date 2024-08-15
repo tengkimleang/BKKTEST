@@ -14,18 +14,18 @@ namespace Tri_Wall.Shared.Pages;
 public partial class Return
 {
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
-    [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
+    // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
     private string stringDisplay = "Return";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
+    bool isView;
     protected void OnCloseOverlay() => visible = true;
 
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
-    bool visible = false;
+    bool visible;
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
@@ -39,12 +39,12 @@ public partial class Return
             {
                 "getSerialBatch",
                 new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
-            }
+            }   
         };
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReturn>(dictionary, new DialogParameters
         {
-            Title = (deliveryOrderLine == null) ? "Add Line" : "Update Line",
+            Title = (string.IsNullOrEmpty(deliveryOrderLine.ItemCode)) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -52,10 +52,9 @@ public partial class Return
         }).ConfigureAwait(false);
 
         var result = await dialog.Result.ConfigureAwait(false);
-        if (!result.Cancelled && result.Data is Dictionary<string, object> data)
+        if (result is { Cancelled: false, Data: Dictionary<string, object> data })
         {
-            if (ViewModel.DeliveryOrderForm.Lines == null)
-                ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+            ViewModel.DeliveryOrderForm.Lines ??= new();
             if (data["data"] is DeliveryOrderLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
@@ -128,7 +127,7 @@ public partial class Return
                 selectedVendor = new List<Vendors>();
                 ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
@@ -137,7 +136,7 @@ public partial class Return
         }
         catch (ApiException ex)
         {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
+            // var content = ex.GetContentAsAsync<Dictionary<String, String>>();
             ToastService!.ShowError(ex.ReasonPhrase ?? "");
             visible = false;
         }
@@ -152,11 +151,11 @@ public partial class Return
         return Task.CompletedTask;
     }
 
-    Task OnDelete(string e)
-    {
-        Console.WriteLine(e);
-        return Task.CompletedTask;
-    }
+    // Task OnDelete(string e)
+    // {
+    //     Console.WriteLine(e);
+    //     return Task.CompletedTask;
+    // }
 
     Task OnView()
     {

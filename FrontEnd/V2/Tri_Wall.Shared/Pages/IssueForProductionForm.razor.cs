@@ -17,12 +17,12 @@ namespace Tri_Wall.Shared.Pages;
 public partial class IssueForProductionForm
 {
     [Inject] public IValidator<IssueProductionHeader>? Validator { get; init; }
-    [Inject] public IValidator<IssueProductionLine>? ValidatorLine { get; init; }
+    // [Inject] public IValidator<IssueProductionLine>? ValidatorLine { get; init; }
 
     private string stringDisplay = "Issue For Production";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
+    bool isView;
     protected void OnCloseOverlay() => visible = true;
     private IEnumerable<GetProductionOrder> _getProductionOrder = new List<GetProductionOrder>();
 
@@ -102,17 +102,17 @@ public partial class IssueForProductionForm
             }).ConfigureAwait(false);
 
         var result = await dialog.Result.ConfigureAwait(false);
-        if (!result.Cancelled && result.Data is Dictionary<string, object> data)
+        if (result is { Cancelled: false, Data: Dictionary<string, object> data })
         {
-            if (ViewModel.IssueProduction?.Lines == null)
-                ViewModel.IssueProduction!.Lines = new List<IssueProductionLine>();
+            if (ViewModel.IssueProductionForm?.Lines == null)
+                ViewModel.IssueProductionForm!.Lines = new List<IssueProductionLine>();
             if (data["data"] is IssueProductionLine issueProductionLineDialog)
             {
                 if (issueProductionLineDialog.LineNum == 0)
                 {
                     issueProductionLineDialog.LineNum =
-                        ViewModel.IssueProductionLine?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
-                    ViewModel.IssueProductionLine?.Add(issueProductionLineDialog);
+                        ViewModel.IssueProductionLine.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.IssueProductionLine.Add(issueProductionLineDialog);
                 }
                 else
                 {
@@ -151,7 +151,7 @@ public partial class IssueForProductionForm
 
     private void DeleteLine(int index)
     {
-        ViewModel.IssueProductionLine!.RemoveAt(index);
+        ViewModel.IssueProductionLine.RemoveAt(index);
     }
 
     async Task OnSaveTransaction(string type = "")
@@ -160,7 +160,7 @@ public partial class IssueForProductionForm
         var serializedIssueProductionLine = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
         var serializedProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
 
-        ViewModel.IssueProduction.Lines = new();
+        ViewModel.IssueProductionForm.Lines = new();
 
         foreach (var line in issueProductionLines)
         {
@@ -174,7 +174,7 @@ public partial class IssueForProductionForm
 
             foreach (var vmIssueProductionLine in productionOrderLines)
             {
-                var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty ?? "0") / totalQty) * line.Qty, 6);
+                var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty) / totalQty) * line.Qty, 6);
 
                 if (line.ManageItem == "S")
                 {
@@ -193,8 +193,8 @@ public partial class IssueForProductionForm
 
         RestoreViewModelState(serializedIssueProductionLine, serializedProductionOrderLines);
 
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProduction));
-        var result = await Validator!.ValidateAsync(ViewModel.IssueProduction).ConfigureAwait(false);
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProductionForm));
+        var result = await Validator!.ValidateAsync(ViewModel.IssueProductionForm).ConfigureAwait(false);
 
         if (!result.IsValid)
         {
@@ -221,7 +221,7 @@ public partial class IssueForProductionForm
             }
         }
 
-        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+        ViewModel.IssueProductionForm.Lines.Add(new IssueProductionLine
         {
             ItemCode = vmIssueProductionLine.ItemCode,
             ItemName = vmIssueProductionLine.ItemName,
@@ -250,7 +250,7 @@ public partial class IssueForProductionForm
             batches.Add(new BatchIssueProduction
             {
                 AdmissionDate = batch.AdmissionDate,
-                BatchCode = batch.BatchCode ?? "",
+                BatchCode = batch.BatchCode,
                 ExpDate = batch.ExpDate,
                 Qty = Math.Min(batch.Qty, remainingQty)
             });
@@ -274,7 +274,7 @@ public partial class IssueForProductionForm
 
         if (batches.Count > 0)
         {
-            ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+            ViewModel.IssueProductionForm.Lines.Add(new IssueProductionLine
             {
                 ItemCode = vmIssueProductionLine.ItemCode,
                 ItemName = vmIssueProductionLine.ItemName,
@@ -291,7 +291,7 @@ public partial class IssueForProductionForm
 
     private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line, double actualQty)
     {
-        ViewModel.IssueProduction.Lines.Add(new IssueProductionLine
+        ViewModel.IssueProductionForm.Lines.Add(new IssueProductionLine
         {
             ItemCode = vmIssueProductionLine.ItemCode,
             ItemName = vmIssueProductionLine.ItemName,
@@ -321,13 +321,13 @@ public partial class IssueForProductionForm
             if (string.IsNullOrEmpty(ViewModel.PostResponses.ErrorCode))
             {
                 SelectedProductionOrder = new List<GetProductionOrder>();
-                ViewModel.IssueProduction = new();
+                ViewModel.IssueProductionForm = new();
                 ViewModel.IssueProductionLine = new();
                 ToastService.ShowSuccess("Success");
 
                 if (type == "print")
                 {
-                    await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                    await OnSeleted(ViewModel.PostResponses.DocEntry);
                 }
             }
             else
@@ -339,7 +339,7 @@ public partial class IssueForProductionForm
         }
         catch (ApiException ex)
         {
-            var content = await ex.GetContentAsAsync<Dictionary<string, string>>();
+            // var content = await ex.GetContentAsAsync<Dictionary<string, string>>();
             ToastService!.ShowError(ex.ReasonPhrase ?? "");
             visible = false;
         }
@@ -348,17 +348,17 @@ public partial class IssueForProductionForm
     Task OnSeleted(string e)
     {
         // Console.WriteLine(e);
-        ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        ViewModel.IssueForProductionDetailByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
 
-    Task OnDelete(string e)
-    {
-        Console.WriteLine(e);
-        return Task.CompletedTask;
-    }
+    // Task OnDelete(string e)
+    // {
+    //     Console.WriteLine(e);
+    //     return Task.CompletedTask;
+    // }
 
     Task OnView()
     {

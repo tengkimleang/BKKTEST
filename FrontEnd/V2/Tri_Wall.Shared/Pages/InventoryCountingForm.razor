@@ -65,6 +65,9 @@ else
                                                     @bind-SelectedOptions="@SelectedProductionOrder"/>
 
                             </FluentGridItem>
+                            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                                <FluentTextField Value="@ViewModel.InventoryCountingHeader.InventoryCountingType" Label="Counting Type" style="width: 100%;" ReadOnly></FluentTextField>
+                            </FluentGridItem>
                             <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
                                 <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="async (e) => await OpenDialogAsync(new()).ConfigureAwait(false)">
                                     Add Line
@@ -74,7 +77,7 @@ else
                                 <div class="grid" style="width: 100%; overflow:auto;">
                                     <FluentDataGrid TGridItem=@InventoryCountingLine
                                                     ResizableColumns="true"
-                                                    GridTemplateColumns="0.5fr 1.5fr 1.5fr 1.5fr 1fr 1.5fr"
+                                                    GridTemplateColumns="0.5fr 1.7fr 1.5fr 1.5fr 1fr 1.5fr"
                                                     Style=@dataGrid
                                                     Items="ViewModel.InventoryCountingHeader.Lines?.AsQueryable()">
                                         <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
@@ -87,7 +90,10 @@ else
                                             </FluentButton>
                                         </TemplateColumn>
                                         <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true"/>
+                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
+                                        <PropertyColumn Title="Whs Name" Property="@(c => c.WhsCode)" Tooltip="true"/>
+                                        <PropertyColumn Title="Qty in Whs" Property="@(c => c.Qty)" Tooltip="true"/>
+                                        <PropertyColumn Title="Qty Counted" Property="@(c => c.QtyCounted)" Tooltip="true"/>
                                     </FluentDataGrid>
                                 </div>
                             </FluentGridItem>

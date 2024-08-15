@@ -4,14 +4,15 @@ using CommunityToolkit.Mvvm.Input;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Pages;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
 public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-    [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
+    #region Data Member
+
+    [ObservableProperty] DeliveryOrderHeader _goodReturnForm = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 
@@ -34,9 +35,9 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReturnHeaderDetailByDocNums = new();
 
-    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReturnLineByDocNums = new();
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
@@ -44,7 +45,11 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
+
+    #endregion
+
+    #region Method
 
     public override async Task Loaded()
     {
@@ -68,8 +73,8 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     [RelayCommand]
     async Task Submit()
     {
-        DeliveryOrderForm.ContactPersonCode = "0";
-        PostResponses = await apiService.PostGoodReturn(DeliveryOrderForm);
+        GoodReturnForm.ContactPersonCode = "0";
+        PostResponses = await apiService.PostGoodReturn(GoodReturnForm);
     }
 
     [RelayCommand]
@@ -133,10 +138,10 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums =
+        GoodReturnHeaderDetailByDocNums =
             (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum"))
             .Data ?? new();
-        GoodReceiptPoLineByDocNums =
+        GoodReturnLineByDocNums =
             (await apiService.GetLineByDocNum("GetGoodReturnLineDetailByDocEntry", docEntry)).Data ?? new();
         GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReturn")).Data ?? new();
     }
@@ -210,4 +215,6 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             throw;
         }
     }
+
+    #endregion
 }

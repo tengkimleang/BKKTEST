@@ -1,6 +1,4 @@
-﻿
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models;
@@ -10,9 +8,11 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
-    [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
+    #region Data Member
+
+    [ObservableProperty] DeliveryOrderHeader _aRCreditMemoForm = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 
@@ -30,22 +30,26 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
 
     [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCount = new();
 
-    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountSalesOrder = new();
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountArInvoice = new();
 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
     [ObservableProperty]
-    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _aRCreditMemoHeaderDetailByDocNums = new();
 
-    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _aRCreditMemoLineByDocNums = new();
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
-    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _getPurchaseOrderLineByDocNums = new();
+    [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _getArInvoiceLineByDocNums = new();
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
+
+    #endregion
+
+    #region Method
 
     public override async Task Loaded()
     {
@@ -62,19 +66,19 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
+        TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        DeliveryOrderForm.ContactPersonCode = "0";
-        PostResponses = await apiService.PostARCreditMemo(DeliveryOrderForm);
+        ARCreditMemoForm.ContactPersonCode = "0";
+        PostResponses = await apiService.PostARCreditMemo(ARCreditMemoForm);
     }
 
     [RelayCommand]
-    async Task OnGetGoodReceiptPo(string perPage)
+    async Task OnGetArCreditMemo(string perPage)
     {
         try
         {
@@ -107,7 +111,7 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     }
 
     [RelayCommand]
-    async Task OnGetPurchaseOrder(string perPage)
+    async Task OnGetArInvoice(string perPage)
     {
         try
         {
@@ -121,23 +125,23 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     }
 
     [RelayCommand]
-    async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
+    async Task OnGetArCreditMemoHeaderDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums =
+        ARCreditMemoHeaderDetailByDocNums =
             (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum"))
             .Data ?? new();
-        GoodReceiptPoLineByDocNums =
+        ARCreditMemoLineByDocNums =
             (await apiService.GetLineByDocNum("GetARCreditMemoLineDetailByDocEntry", docEntry)).Data ?? new();
         GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARCreditMemo")).Data ?? new();
     }
 
     [RelayCommand]
-    async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
+    async Task OnGetArInvoiceLineByDocNum(string docEntry)
     {
-        GetPurchaseOrderLineByDocNums =
+        GetArInvoiceLineByDocNums =
             (await apiService.GetLineByDocNum("GetARInvoiceLineForARCreditMemoDetailByDocEntry", docEntry)).Data ??
             new();
-        foreach (var obj in GetPurchaseOrderLineByDocNums)
+        foreach (var obj in GetArInvoiceLineByDocNums)
         {
             if (obj.ManageItem == "S")
             {
@@ -153,8 +157,12 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
                         MfrNo = objSerial.MfrSerialNo,
                         SerialCode = objSerial.SerialBatch,
                         Qty = Convert.ToInt32(objSerial.Qty),
-                        MfrDate =string.IsNullOrEmpty(objSerial.MrfDate) ? (DateTime?)null : Convert.ToDateTime(objSerial.MrfDate),
-                        ExpDate =string.IsNullOrEmpty(objSerial.ExpDate) ? (DateTime?)null : Convert.ToDateTime(objSerial.ExpDate),
+                        MfrDate = string.IsNullOrEmpty(objSerial.MrfDate)
+                            ? null
+                            : Convert.ToDateTime(objSerial.MrfDate),
+                        ExpDate = string.IsNullOrEmpty(objSerial.ExpDate)
+                            ? null
+                            : Convert.ToDateTime(objSerial.ExpDate),
                         OnSelectedBatchOrSerial = new[] { objSerial },
                     });
                 }
@@ -173,8 +181,12 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
                         LotNo = objBatch.MfrSerialNo,
                         BatchCode = objBatch.SerialBatch,
                         Qty = Convert.ToDouble(objBatch.Qty),
-                        ManfectureDate = string.IsNullOrEmpty(objBatch.MrfDate) ? (DateTime?)null : Convert.ToDateTime(objBatch.MrfDate),
-                        ExpDate = string.IsNullOrEmpty(objBatch.ExpDate) ? (DateTime?)null : Convert.ToDateTime(objBatch.ExpDate),
+                        ManfectureDate = string.IsNullOrEmpty(objBatch.MrfDate)
+                            ? null
+                            : Convert.ToDateTime(objBatch.MrfDate),
+                        ExpDate = string.IsNullOrEmpty(objBatch.ExpDate)
+                            ? null
+                            : Convert.ToDateTime(objBatch.ExpDate),
                         QtyAvailable = Convert.ToDouble(objBatch.Qty),
                         OnSelectedBatchOrSerial = new[] { objBatch },
                     });
@@ -184,7 +196,7 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     }
 
     [RelayCommand]
-    async Task OnGetGoodReceiptPoBySearch(Dictionary<string, object> data)
+    async Task OnGetArCreditMemoBySearch(Dictionary<string, object> data)
     {
         try
         {
@@ -200,4 +212,6 @@ public partial class ARCreditMemoViewModel(ApiService apiService, ILoadMasterDat
             throw;
         }
     }
+
+    #endregion
 }

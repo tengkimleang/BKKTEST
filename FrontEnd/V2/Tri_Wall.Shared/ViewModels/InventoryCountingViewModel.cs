@@ -26,7 +26,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     
     [ObservableProperty] ObservableCollection<GetInventoryCountingLines> _getInventoryCountingLines = new();
 
-    [ObservableProperty] Boolean _isView = false;
+    [ObservableProperty] Boolean _isView;
     
     [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
 

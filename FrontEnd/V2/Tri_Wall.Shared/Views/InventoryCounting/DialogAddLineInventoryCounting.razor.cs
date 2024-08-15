@@ -134,11 +134,21 @@ public partial class DialogAddLineInventoryCounting
     {
         if (IsItemBatch)
         {
-            _batchReceiptPo[index].IsBatchNew = _batchReceiptPo[index].IsBatchNew == "Y" ? "N" : "Y";
+            var condition = _batchReceiptPo[index].IsBatchNew == "Y" ? "N" : "Y";
+            _batchReceiptPo[index]=new ()
+            {
+                IsBatchNew = condition,
+                Qty = 1,
+            };
         }
         else if (IsItemSerial)
         {
-            _serialReceiptPo[index].IsSerialNew = _serialReceiptPo[index].IsSerialNew == "Y" ? "N" : "Y";
+            var condition = _serialReceiptPo[index].IsSerialNew == "Y" ? "N" : "Y";
+            _serialReceiptPo[index]=new ()
+            {
+                IsSerialNew = condition,
+                Qty = 1,
+            };
         }
     }
 
