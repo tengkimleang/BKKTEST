@@ -38,7 +38,7 @@ public class Connection : IConnection, IUnitOfWork
 
     public Company Connect()
     {
-        //cheecking coonection
+        //checking connection
         if (_company.Connected) return _company;
         //set value from setting to _company
         _company = new Company
