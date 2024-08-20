@@ -18,10 +18,10 @@ else
                 <FluentBreadcrumb>
                     <FluentBreadcrumbItem>
                         @stringDisplay
-                        <FluentIcon Value="@(new Icons.Filled.Size20.Production())" Color="@Color.Neutral" Slot="start"/>
+                        <FluentIcon Value="@(new Icons.Filled.Size20.Production())" Color="@Color.Neutral" Slot="start" />
                     </FluentBreadcrumbItem>
                 </FluentBreadcrumb>
-                <FluentSpacer/>
+                <FluentSpacer />
                 &nbsp;&nbsp;
                 <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
                     Search
@@ -46,14 +46,16 @@ else
                                               Items="ViewModel.Series"
                                               OptionText="@(i => i.SeriesName)"
                                               OptionValue="@(i => i.Code)"
-                                              SelectedOption="@ViewModel.Series.FirstOrDefault()"
-                                              @bind-Value="@ViewModel.ReceiptFromProductionOrderForm.Series"/>
+                                              @bind-Value="@ViewModel.ReceiptFromProductionOrderForm.Series" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.ReceiptFromProductionOrderForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.Series.First(x=>x.Code==ViewModel.ReceiptFromProductionOrderForm.Series).DocNum"
+                                                 Label="Document Number"
+                                                 style="width: 100%;"
+                                                 ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentDatePicker @bind-Value="@ViewModel.ReceiptFromProductionOrderForm.DocDate" Required="true" Label="Posting Date" style="width: 100%;"/>
+                                <FluentDatePicker @bind-Value="@ViewModel.ReceiptFromProductionOrderForm.DocDate" Required="true" Label="Posting Date" style="width: 100%;" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentTextField Label="Ref 2" style="width: 100%;"></FluentTextField>
@@ -70,7 +72,7 @@ else
                                                     Items="ViewModel.GetProductionOrder"
                                                     MaximumSelectedOptions="99"
                                                     OptionText="@(item => $"{item.DocNum}")"
-                                                    @bind-SelectedOptions="@SelectedProductionOrder"/>
+                                                    @bind-SelectedOptions="@SelectedProductionOrder" />
 
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
@@ -85,7 +87,7 @@ else
                                                     GridTemplateColumns="0.5fr 1.5fr 1.5fr 1.5fr 1fr 1.5fr"
                                                     Style=@dataGrid
                                                     Items="ViewModel.IssueProductionLine.AsQueryable()">
-                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
+                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
                                         <TemplateColumn Tooltip="true" Title="Action">
                                             <FluentButton Appearance="Appearance.Accent" OnClick="(e) => DeleteLine(ViewModel.ReceiptFromProductionOrderForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete())">
                                                 Delete
@@ -96,12 +98,12 @@ else
                                         </TemplateColumn>
                                         @* <PropertyColumn Title="Production No" Property="@(c => c.DocNum)" Tooltip="true"/> *@
                                         @* <PropertyColumn Title="P.Row" Property="@(c => c.BaseLineNum)" Tooltip="true"/> *@
-                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
-                                        <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true"/>
+                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
+                                        <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true" />
                                         @* <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true"/> *@
-                                        <PropertyColumn Title="Warehouse" Property="@(c => c.WhsCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Unit Of Measure" Property="@(c => c.UomName)" Tooltip="true"/>
+                                        <PropertyColumn Title="Warehouse" Property="@(c => c.WhsCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Unit Of Measure" Property="@(c => c.UomName)" Tooltip="true" />
                                     </FluentDataGrid>
                                 </div>
                             </FluentGridItem>
@@ -113,12 +115,12 @@ else
     }
     else
     {
-        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm
-            AddNew="OnView"
-            Search="OpenListDataAsyncAsync"
-            OnViewBatchOrSerial="OnGetBatchOrSerial"
-            GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()"
-            GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
+        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
+                                                                  Search="OpenListDataAsyncAsync"
+                                                                  OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                                                  Title="Receipt From Production"
+                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()"
+                                                                  GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
     }
 
     <FluentOverlay @bind-Visible=@visible
@@ -126,6 +128,6 @@ else
                    FullScreen="true"
                    OnClose="OnCloseOverlay"
                    PreventScroll=true>
-        <FluentProgressRing/>
+        <FluentProgressRing />
     </FluentOverlay>
 }

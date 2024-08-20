@@ -92,4 +92,11 @@ public class ApiService(IApiService apiService)
         => apiService.PostARCreditMemo(deliveryOrderHeader);
     public Task<PostResponse> PostInventoryCounting(InventoryCountingHeader deliveryOrderHeader)
         => apiService.PostInventoryCounting(deliveryOrderHeader);
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingHeaderByDocNum>>> GetDetailInventoryCountingHeaderByDocNum(string docEntry)
+        => apiService.GetDetailInventoryCountingHeaderByDocNum(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_InventoryCounting_Header_Detail_By_DocNum", docEntry));
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(string docEntry)
+        => apiService.GetDetailInventoryCountingLineByDocNum(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLineDetailByDocEntry", docEntry));
+
 }

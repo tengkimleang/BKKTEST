@@ -17,10 +17,10 @@ else
                 <FluentBreadcrumb>
                     <FluentBreadcrumbItem>
                         @stringDisplay
-                        <FluentIcon Value="@(new Icons.Filled.Size20.BookAdd())" Color="@Color.Neutral" Slot="start"/>
+                        <FluentIcon Value="@(new Icons.Filled.Size20.BookAdd())" Color="@Color.Neutral" Slot="start" />
                     </FluentBreadcrumbItem>
                 </FluentBreadcrumb>
-                <FluentSpacer/>
+                <FluentSpacer />
                 &nbsp;&nbsp;
                 <FluentButton OnClick="OpenListDataAsyncAsync" IconEnd="@(new Icons.Filled.Size24.Search())">
                     Search
@@ -62,7 +62,7 @@ else
                                                     Items="ViewModel.GetInventoryCountingLists"
                                                     MaximumSelectedOptions="1"
                                                     OptionText="@(item => $"{item.Series}")"
-                                                    @bind-SelectedOptions="@SelectedProductionOrder"/>
+                                                    @bind-SelectedOptions="@SelectedProductionOrder" />
 
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -80,7 +80,7 @@ else
                                                     GridTemplateColumns="0.5fr 1.7fr 1.5fr 1.5fr 1fr 1.5fr"
                                                     Style=@dataGrid
                                                     Items="ViewModel.InventoryCountingHeader.Lines?.AsQueryable()">
-                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
+                                        <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true" />
                                         <TemplateColumn Tooltip="true" Title="Action">
                                             <FluentButton Appearance="Appearance.Accent" OnClick="(e) => DeleteLine(ViewModel.InventoryCountingHeader.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete())">
                                                 Delete
@@ -89,11 +89,11 @@ else
                                                 Edit
                                             </FluentButton>
                                         </TemplateColumn>
-                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
-                                        <PropertyColumn Title="Whs Name" Property="@(c => c.WhsCode)" Tooltip="true"/>
-                                        <PropertyColumn Title="Qty in Whs" Property="@(c => c.Qty)" Tooltip="true"/>
-                                        <PropertyColumn Title="Qty Counted" Property="@(c => c.QtyCounted)" Tooltip="true"/>
+                                        <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
+                                        <PropertyColumn Title="Whs Name" Property="@(c => c.WhsCode)" Tooltip="true" />
+                                        <PropertyColumn Title="Qty in Whs" Property="@(c => c.Qty)" Tooltip="true" />
+                                        <PropertyColumn Title="Qty Counted" Property="@(c => c.QtyCounted)" Tooltip="true" />
                                     </FluentDataGrid>
                                 </div>
                             </FluentGridItem>
@@ -105,12 +105,12 @@ else
     }
     else
     {
-        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm
-            AddNew="OnView"
-            Search="OpenListDataAsyncAsync"
-            OnViewBatchOrSerial="OnGetBatchOrSerial"
-            GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-            GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
+        <ViewInventoryCountingForm AddNew="OnView"
+                                   Search="OpenListDataAsyncAsync"
+                                   OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                   Title="Inventory Counting"
+                                   GetDetailInventoryCountingHeaderByDocNums="ViewModel.GetDetailInventoryCountingHeaderByDocNums.FirstOrDefault()"
+                                   GetDetailInventoryCountingLineByDocNums="ViewModel.GetDetailInventoryCountingLineByDocNums" />
     }
 
     <FluentOverlay @bind-Visible=@visible
@@ -118,6 +118,6 @@ else
                    FullScreen="true"
                    OnClose="OnCloseOverlay"
                    PreventScroll=true>
-        <FluentProgressRing/>
+        <FluentProgressRing />
     </FluentOverlay>
 }

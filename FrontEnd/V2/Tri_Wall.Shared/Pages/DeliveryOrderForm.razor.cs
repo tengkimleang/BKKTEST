@@ -5,6 +5,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Refit;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.DeliveryOrder;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 
@@ -16,18 +17,18 @@ public partial class DeliveryOrderForm
     public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     [Inject]
     public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
-    
+
     private string stringDisplay = "Delivery Order";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
-    bool isView=false;
+    bool isView = false;
     protected void OnCloseOverlay() => visible = true;
-    
+
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
     bool visible = false;
-    
+
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
         var dictionary = new Dictionary<string, object>
@@ -51,8 +52,8 @@ public partial class DeliveryOrderForm
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if(ViewModel.DeliveryOrderForm.Lines==null) ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
-            if(data["data"] is DeliveryOrderLine receiptPoLine)
+            if (ViewModel.DeliveryOrderForm.Lines == null) ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+            if (data["data"] is DeliveryOrderLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
                 {
@@ -96,52 +97,46 @@ public partial class DeliveryOrderForm
     {
         ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
     }
-    async Task OnSaveTransaction(string type="")
+    async Task OnSaveTransaction(string type = "")
     {
-        ViewModel.DeliveryOrderForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
-        if (!result.IsValid)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            foreach (var error in result.Errors)
+            ViewModel.DeliveryOrderForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
             }
-            return;
-        }
-        try
-        {
             visible = true;
-            
+
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor=new List<Vendors>();
-                ViewModel.DeliveryOrderForm= new DeliveryOrderHeader();
+                selectedVendor = new List<Vendors>();
+                ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase??"");
-            visible = false;
-        }
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView =true;
+        isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
-    
+
     Task OnDelete(string e)
     {
         Console.WriteLine(e);

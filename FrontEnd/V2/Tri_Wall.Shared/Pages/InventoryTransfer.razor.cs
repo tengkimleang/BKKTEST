@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.InventoryTransfer;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.InventoryTransfer;
 
@@ -89,18 +90,18 @@ public partial class InventoryTransfer
     }
     async Task OnSaveTransaction(string type = "")
     {
-        ViewModel.InventoryTransferForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.InventoryTransferForm).ConfigureAwait(false);
-        if (!result.IsValid)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            foreach (var error in result.Errors)
+            ViewModel.InventoryTransferForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.InventoryTransferForm).ConfigureAwait(false);
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
             }
-            return;
-        }
-        try
-        {
             visible = true;
 
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
@@ -113,14 +114,8 @@ public partial class InventoryTransfer
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
-        }
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
     Task OnSeleted(string e)
     {
@@ -182,7 +177,7 @@ public partial class InventoryTransfer
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Delivery Order",
+            Title = "List Inventory Transfer",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",

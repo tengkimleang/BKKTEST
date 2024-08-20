@@ -9,6 +9,7 @@ using Microsoft.VisualBasic;
 using Refit;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.IssueForProduction;
 
@@ -156,56 +157,60 @@ public partial class IssueForProductionForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        var issueProductionLines = ViewModel.IssueProductionLine.ToList();
-        var serializedIssueProductionLine = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
-        var serializedProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
-
-        ViewModel.IssueProductionForm.Lines = new();
-
-        foreach (var line in issueProductionLines)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            var totalQty = ViewModel.GetProductionOrderLines?
-                .Where(x => x.ItemCode == line.ItemCode)
-                .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
+            var issueProductionLines = ViewModel.IssueProductionLine.ToList();
+            var serializedIssueProductionLine = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
+            var serializedProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
 
-            var productionOrderLines = ViewModel.GetProductionOrderLines!
-                .Where(x => x.ItemCode == line.ItemCode)
-                .ToList();
+            ViewModel.IssueProductionForm.Lines = new();
 
-            foreach (var vmIssueProductionLine in productionOrderLines)
+            foreach (var line in issueProductionLines)
             {
-                var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty) / totalQty) * line.Qty, 6);
+                var totalQty = ViewModel.GetProductionOrderLines?
+                    .Where(x => x.ItemCode == line.ItemCode)
+                    .Sum(x => Convert.ToDouble(x.Qty)) ?? 0;
 
-                if (line.ManageItem == "S")
+                var productionOrderLines = ViewModel.GetProductionOrderLines!
+                    .Where(x => x.ItemCode == line.ItemCode)
+                    .ToList();
+
+                foreach (var vmIssueProductionLine in productionOrderLines)
                 {
-                    ProcessSerials(line, vmIssueProductionLine, actualQty);
-                }
-                else if (line.ManageItem == "B")
-                {
-                    ProcessBatches(line, vmIssueProductionLine, actualQty, issueProductionLines);
-                }
-                else
-                {
-                    AddIssueProductionLine(vmIssueProductionLine, line, actualQty);
+                    var actualQty = Math.Round((Convert.ToDouble(vmIssueProductionLine.Qty) / totalQty) * line.Qty, 6);
+
+                    if (line.ManageItem == "S")
+                    {
+                        ProcessSerials(line, vmIssueProductionLine, actualQty);
+                    }
+                    else if (line.ManageItem == "B")
+                    {
+                        ProcessBatches(line, vmIssueProductionLine, actualQty, issueProductionLines);
+                    }
+                    else
+                    {
+                        AddIssueProductionLine(vmIssueProductionLine, line, actualQty);
+                    }
                 }
             }
-        }
 
-        RestoreViewModelState(serializedIssueProductionLine, serializedProductionOrderLines);
+            RestoreViewModelState(serializedIssueProductionLine, serializedProductionOrderLines);
 
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProductionForm));
-        var result = await Validator!.ValidateAsync(ViewModel.IssueProductionForm).ConfigureAwait(false);
+            Console.WriteLine(JsonSerializer.Serialize(ViewModel.IssueProductionForm));
+            var result = await Validator!.ValidateAsync(ViewModel.IssueProductionForm).ConfigureAwait(false);
 
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
             }
-            return;
-        }
 
-        await SubmitTransaction(type);
+            await SubmitTransaction(type);
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
 
     private void ProcessSerials(IssueProductionLine line, GetProductionOrderLines vmIssueProductionLine, double actualQty)

@@ -9,6 +9,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.VisualBasic;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.ReceiptFromProduction;
 
@@ -159,26 +160,30 @@ public partial class ReceiptFromProductionForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        var productionOrder = ViewModel.IssueProductionLine.ToList();
-        ViewModel.ReceiptFromProductionOrderForm.Lines = new();
-        var strMP = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
-        foreach (var line in productionOrder.ToList())
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            if (line.ManageItem == "N")
+            var productionOrder = ViewModel.IssueProductionLine.ToList();
+            ViewModel.ReceiptFromProductionOrderForm.Lines = new();
+            var strMP = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
+            foreach (var line in productionOrder.ToList())
             {
-                ProcessItemNones(line);
+                if (line.ManageItem == "N")
+                {
+                    ProcessItemNones(line);
+                }
+                else if (line.ManageItem == "B")
+                {
+                    ProcessItemBatch(line);
+                }
+                else if (line.ManageItem == "S")
+                {
+                    ProcessItemSerial(line);
+                }
             }
-            else if (line.ManageItem == "B")
-            {
-                ProcessItemBatch(line);
-            }
-            else if (line.ManageItem == "S")
-            {
-                ProcessItemSerial(line);
-            }
-        }
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.ReceiptFromProductionOrderForm));
-        ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMP) ?? new();
+            Console.WriteLine(JsonSerializer.Serialize(ViewModel.ReceiptFromProductionOrderForm));
+            ViewModel.IssueProductionLine = JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMP) ?? new();
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
 
     Task OnSeleted(string e)

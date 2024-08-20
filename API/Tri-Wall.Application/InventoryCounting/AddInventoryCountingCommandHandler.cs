@@ -30,7 +30,7 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
             oInventoryCounting.Remarks = request.OtherRemark;
             oInventoryCounting.UserFields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
             var oInventoryCountingLines = oInventoryCounting.InventoryCountingLines;
-            if (request.InventoryCountingType == "Multiple Count")
+            if (request.InventoryCountingType == "Multiple Count")  
             {
                 for (var k = 0; oInventoryCountingLines.Count > k; k++)
                 {

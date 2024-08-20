@@ -48,11 +48,13 @@ else
                                               Items="ViewModel.Series"
                                               OptionText="@(i => i.SeriesName)"
                                               OptionValue="@(i => i.Code)"
-                                              SelectedOption="@ViewModel.Series.FirstOrDefault()"
                                               @bind-Value="@ViewModel.DeliveryOrderForm.Series" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.DeliveryOrderForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.Series.First(x=>x.Code==ViewModel.DeliveryOrderForm.Series).DocNum" 
+                                                 Label="Document Number" 
+                                                 style="width: 100%;" 
+                                                 ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" Label="DocDate" style="width: 100%;" />
@@ -131,6 +133,7 @@ else
         <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
                                                                   Search="OpenListDataAsyncAsync"
                                                                   OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                                                  Title="Return"
                                                                   GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()"
                                                                   GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
     }

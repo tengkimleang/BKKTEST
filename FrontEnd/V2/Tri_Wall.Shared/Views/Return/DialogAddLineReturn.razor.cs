@@ -34,7 +34,8 @@ public partial class DialogAddLineReturn
 
     private IEnumerable<VatGroups>? _vatGroup => Content["taxPurchase"] as IEnumerable<VatGroups>;
     private IEnumerable<Warehouses>? _warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
-    string? dataGrid = "width: 1600px;overflow-x:scroll;";
+
+    string? dataGrid = "width: 1600px;";
 
     protected override async void OnInitialized()
     {
@@ -200,8 +201,6 @@ public partial class DialogAddLineReturn
 
     private void UpdateGridSize(GridItemSize size)
     {
-        dataGrid = size == GridItemSize.Xs
-            ? "width: 1600px;height:205px"
-            : "width: 1600px;overflow-x:scroll;max-height: 400px;";
+        dataGrid = size == GridItemSize.Xs ? "width: 1200px;height:205px" : "width: 100%;height:405px";
     }
 }

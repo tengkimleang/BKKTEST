@@ -8,5 +8,7 @@ public record GoodReceiptPoHeaderDeatialByDocNum(
     string TaxDate,
     string Vendor,
     string ContactPerson,
-    string RefInv
+    string RefInv,
+    string WhsFrom,
+    string WhsTo
     );

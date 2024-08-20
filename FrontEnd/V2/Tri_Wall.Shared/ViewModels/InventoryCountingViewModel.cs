@@ -34,9 +34,9 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerials = new();
 
-    [ObservableProperty] ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _goodReceiptPoHeaderDeatialByDocNums = new();
+    [ObservableProperty] ObservableCollection<GetDetailInventoryCountingHeaderByDocNum> _getDetailInventoryCountingHeaderByDocNums = new();
 
-    [ObservableProperty]  ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
+    [ObservableProperty]  ObservableCollection<GetDetailInventoryCountingLineByDocNum> _getDetailInventoryCountingLineByDocNums = new();
     #endregion 
 
     #region Method
@@ -47,7 +47,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
             (await apiService.GetInventoryCountingLists("GetInventoryCountingList")).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("InventoryCounting")).Data ?? new();
         IsView = true;
     }
 
@@ -62,7 +62,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("InventoryCounting", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -76,7 +76,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("InventoryCounting", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -150,9 +150,9 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task OnIssueForProductionDeatialByDocNum(string docEntry)
     {
-        GoodReceiptPoHeaderDeatialByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum")).Data ?? new();
-        GoodReceiptPoLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialIssueForProduction")).Data ?? new();
+        GetDetailInventoryCountingHeaderByDocNums = (await apiService.GetDetailInventoryCountingHeaderByDocNum(docEntry)).Data ?? new();
+        GetDetailInventoryCountingLineByDocNums = (await apiService.GetDetailInventoryCountingLineByDocNum(docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryCounting")).Data ?? new();
     }
     #endregion
 }

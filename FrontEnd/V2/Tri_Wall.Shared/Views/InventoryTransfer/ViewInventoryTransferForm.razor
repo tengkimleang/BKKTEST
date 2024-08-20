@@ -1,12 +1,11 @@
-﻿@using Tri_Wall.Shared.Models.Gets
-@rendermode InteractiveWebAssembly
+﻿@rendermode InteractiveWebAssembly
 @attribute [StreamRendering]
 
 <FluentLayout Style="margin-top: 0px;">
     <FluentHeader Style="background-color: transparent;padding: 0px;z-index: 0;">
         <FluentBreadcrumb>
             <FluentBreadcrumbItem>
-                @Title
+                Inventory Transfer
                 <FluentIcon Value="@(new Icons.Regular.Size16.Cart())" Color="@Color.Neutral" Slot="start" />
             </FluentBreadcrumbItem>
         </FluentBreadcrumb>
@@ -37,18 +36,16 @@
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.TaxDate ?? "") : null)" ReadOnly Label="TaxDate" style="width: 100%;" />
                     </FluentGridItem>
-                    <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.Vendor ?? "")" Label="Vendor" style="width: 100%;" ReadOnly></FluentTextField>
-                        </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentTextField ReadOnly Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.WhsFrom ?? "")" Label="Warehouse From" style="width: 100%;"></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.ContactPerson ?? "")" Label="Contact Person" style="width: 100%;" ReadOnly></FluentTextField>
-                        </FluentGridItem>
+                        <FluentTextField ReadOnly Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.WhsTo ?? "")" Label="Warehouse To" style="width: 100%;"></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentTextField ReadOnly Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.RefInv ?? "")" Label="Ref Inv" style="width: 100%;"></FluentTextField>
+                    </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentButton IconEnd="@(new Icons.Filled.Size24.ViewDesktop())"

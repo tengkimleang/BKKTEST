@@ -9,6 +9,7 @@ using Refit;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.InventoryCounting;
 
@@ -136,20 +137,22 @@ public partial class InventoryCountingForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        Console.WriteLine(JsonSerializer.Serialize(ViewModel.InventoryCountingHeader));
-        // var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
-        //
-        // if (!result.IsValid)
-        // {
-        //     foreach (var error in result.Errors)
-        //     {
-        //         ToastService!.ShowError(error.ErrorMessage);
-        //     }
-        //
-        //     return;
-        // }
-        //
-        // await SubmitTransaction(type);
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
+        {
+            var result = await Validator!.ValidateAsync(ViewModel.InventoryCountingHeader).ConfigureAwait(false);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
+            }
+            visible = true;
+            await SubmitTransaction(type);
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;        
     }
 
     private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line,

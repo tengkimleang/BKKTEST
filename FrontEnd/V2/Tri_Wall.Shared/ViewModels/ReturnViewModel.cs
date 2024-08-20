@@ -10,6 +10,7 @@ namespace Tri_Wall.Shared.ViewModels;
 
 public partial class ReturnViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
+    #region Data Member
     [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
@@ -43,8 +44,10 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView;
+    [ObservableProperty] bool _isView;
+    #endregion
 
+    #region Method
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
@@ -61,13 +64,14 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("Return")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
+        DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        DeliveryOrderForm.ContactPersonCode = "0";
+        DeliveryOrderForm.ContactPersonCode = string.IsNullOrEmpty(DeliveryOrderForm.ContactPersonCode) ? "0" : DeliveryOrderForm.ContactPersonCode;
         PostResponses = await apiService.PostReturn(DeliveryOrderForm);
     }
 
@@ -208,4 +212,6 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             throw;
         }
     }
+    #endregion
+
 }

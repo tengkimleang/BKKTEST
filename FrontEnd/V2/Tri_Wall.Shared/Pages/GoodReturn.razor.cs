@@ -6,6 +6,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Refit;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.GoodReturn;
 
@@ -104,21 +105,20 @@ public partial class GoodReturn
 
     async Task OnSaveTransaction(string type = "")
     {
-        ViewModel.GoodReturnForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        ViewModel.GoodReturnForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.GoodReturnForm).ConfigureAwait(false);
-        if (!result.IsValid)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            foreach (var error in result.Errors)
+            visible = false;
+            ViewModel.GoodReturnForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.GoodReturnForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.GoodReturnForm).ConfigureAwait(false);
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
             }
-
-            return;
-        }
-
-        try
-        {
             visible = true;
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.GoodReturnForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
@@ -132,15 +132,8 @@ public partial class GoodReturn
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            // var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
-        }
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
 
     Task OnSeleted(string e)

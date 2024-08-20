@@ -45,11 +45,13 @@ else
                                               Items="ViewModel.Series"
                                               OptionText="@(i => i.SeriesName)"
                                               OptionValue="@(i => i.Code)"
-                                              SelectedOption="@ViewModel.Series.FirstOrDefault()"
                                               @bind-Value="@ViewModel.InventoryTransferForm.Series" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                                <FluentTextField Value="@ViewModel.InventoryTransferForm.Series" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
+                                <FluentTextField Value="@ViewModel.Series.First(x=>x.Code==ViewModel.InventoryTransferForm.Series).DocNum"
+                                                 Label="Document Number"
+                                                 style="width: 100%;"
+                                                 ReadOnly></FluentTextField>
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentDatePicker @bind-Value="@ViewModel.InventoryTransferForm.DocDate" Label="DocDate" style="width: 100%;" />
@@ -65,7 +67,7 @@ else
                                               Items="ViewModel.Warehouses"
                                               OptionText="@(i => i.Name)"
                                               OptionValue="@(i => i.Code)"
-                                              @bind-Value="ViewModel.InventoryTransferForm.FromWarehouse" />    
+                                              @bind-Value="ViewModel.InventoryTransferForm.FromWarehouse" />
                             </FluentGridItem>
                             <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                                 <FluentSelect Width="100%"
@@ -116,11 +118,11 @@ else
     }
     else
     {
-        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
-                                                                  Search="OpenListDataAsyncAsync"
-                                                                  OnViewBatchOrSerial="OnGetBatchOrSerial"
-                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.InventoryTransferHeaderDetailByDocNums.FirstOrDefault()"
-                                                                  GoodReceiptPoLineByDocNums="ViewModel.InventoryTransferLineByDocNums" />
+        <Tri_Wall.Shared.Views.InventoryTransfer.ViewInventoryTransferForm AddNew="OnView"
+                                                                           Search="OpenListDataAsyncAsync"
+                                                                           OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                                                           GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.InventoryTransferHeaderDetailByDocNums.FirstOrDefault()"
+                                                                           GoodReceiptPoLineByDocNums="ViewModel.InventoryTransferLineByDocNums" />
     }
 
     <FluentOverlay @bind-Visible=@visible

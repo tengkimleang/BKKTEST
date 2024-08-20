@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Refit;
+using Tri_Wall.Shared.Services;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using Tri_Wall.Shared.Models.DeliveryOrder;
@@ -105,23 +105,21 @@ public partial class ARCreditMemoForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        ViewModel.ARCreditMemoForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        ViewModel.ARCreditMemoForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.ARCreditMemoForm).ConfigureAwait(false);
-        if (!result.IsValid)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            foreach (var error in result.Errors)
+            ViewModel.ARCreditMemoForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.ARCreditMemoForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.ARCreditMemoForm).ConfigureAwait(false);
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+
+                return;
             }
-
-            return;
-        }
-
-        try
-        {
             visible = true;
-            Console.WriteLine(JsonSerializer.Serialize(ViewModel.ARCreditMemoForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
@@ -133,15 +131,8 @@ public partial class ARCreditMemoForm
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-
-            visible = false;
-        }
-        catch (ApiException ex)
-        {
-            var content = ex.GetContentAsAsync<Dictionary<String, String>>();
-            ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
-        }
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
 
     Task OnSeleted(string e)

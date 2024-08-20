@@ -67,13 +67,14 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
         TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
+        ARCreditMemoForm.Series = Series.First().Code;
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        ARCreditMemoForm.ContactPersonCode = "0";
+        ARCreditMemoForm.ContactPersonCode = string.IsNullOrEmpty(ARCreditMemoForm.ContactPersonCode) ? "0" : ARCreditMemoForm.ContactPersonCode;
         PostResponses = await apiService.PostARCreditMemo(ARCreditMemoForm);
     }
 
@@ -128,7 +129,7 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     async Task OnGetArCreditMemoHeaderDeatialByDocNum(string docEntry)
     {
         ARCreditMemoHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_AR_Credit_Memo_Header_Detail_By_DocNum"))
             .Data ?? new();
         ARCreditMemoLineByDocNums =
             (await apiService.GetLineByDocNum("GetARCreditMemoLineDetailByDocEntry", docEntry)).Data ?? new();

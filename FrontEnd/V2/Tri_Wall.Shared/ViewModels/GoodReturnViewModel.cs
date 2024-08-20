@@ -67,13 +67,14 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
+        GoodReturnForm.Series = Series.First().Code;
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        GoodReturnForm.ContactPersonCode = "0";
+        GoodReturnForm.ContactPersonCode = string.IsNullOrEmpty(GoodReturnForm.ContactPersonCode) ? "0" : GoodReturnForm.ContactPersonCode;
         PostResponses = await apiService.PostGoodReturn(GoodReturnForm);
     }
 

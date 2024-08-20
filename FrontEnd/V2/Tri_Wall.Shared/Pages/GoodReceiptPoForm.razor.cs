@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.GoodReceiptPo;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 
 namespace Tri_Wall.Shared.Pages;
@@ -15,19 +17,19 @@ public partial class GoodReceiptPoForm
     public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
     // [Inject]
     // public IValidator<GoodReceiptPoLine>? ValidatorLine { init; get; }
-    
+
     private string stringDisplay = "Good Receipt PO";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
     bool isView;
     protected void OnCloseOverlay() => visible = true;
-    
+
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
     bool visible;
-    
-    async Task OpenDialogAsync(MouseEventArgs e,GoodReceiptPoLine goodReceiptPoLine)
+
+    async Task OpenDialogAsync(MouseEventArgs e, GoodReceiptPoLine goodReceiptPoLine)
     {
         var dictionary = new Dictionary<string, object>
         {
@@ -40,7 +42,7 @@ public partial class GoodReceiptPoForm
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = (goodReceiptPoLine.ItemCode != "") ? "Add Line" : "Update Line",
+            Title = string.IsNullOrEmpty(goodReceiptPoLine.ItemCode) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -50,8 +52,8 @@ public partial class GoodReceiptPoForm
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if(ViewModel.GoodReceiptPoForm.Lines==null) ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
-            if(data["data"] is GoodReceiptPoLine receiptPoLine)
+            if (ViewModel.GoodReceiptPoForm.Lines == null) ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
+            if (data["data"] is GoodReceiptPoLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
                 {
@@ -67,10 +69,10 @@ public partial class GoodReceiptPoForm
         }
     }
 
-    private async Task<string> OnGetGenerateBatchOrSerial(Dictionary<string,object> e)
+    private async Task<string> OnGetGenerateBatchOrSerial(Dictionary<string, object> e)
     {
         await ViewModel.GetGennerateBatchSerialCommand.ExecuteAsync(e);
-        return ViewModel.GetGenerateBatchSerial.FirstOrDefault()?.BatchOrSerial??"";
+        return ViewModel.GetGenerateBatchSerial.FirstOrDefault()?.BatchOrSerial ?? "";
     }
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
@@ -96,52 +98,45 @@ public partial class GoodReceiptPoForm
             dataGrid = "width: 1600px;height:405px";
         }
     }
-    private void DeleteLine(MouseEventArgs e,int index)
+    private void DeleteLine(MouseEventArgs e, int index)
     {
         ViewModel.GoodReceiptPoForm.Lines!.RemoveAt(index);
     }
-    async Task OnSaveTransaction(MouseEventArgs e,string type="")
+    async Task OnSaveTransaction(MouseEventArgs e, string type = "")
     {
-        ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-        ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
-        var result = await Validator!.ValidateAsync(ViewModel.GoodReceiptPoForm).ConfigureAwait(false);
-        if (!result.IsValid)
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            foreach (var error in result.Errors)
+            ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.GoodReceiptPoForm).ConfigureAwait(false);
+            if (!result.IsValid)
             {
-                ToastService!.ShowError(error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+                return;
             }
-            return;
-        }
-        try
-        {
             visible = true;
-            
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
-
+            Console.WriteLine(JsonSerializer.Serialize(ViewModel.PostResponses));
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor=new List<Vendors>();
-                ViewModel.GoodReceiptPoForm= new GoodReceiptPoHeader();
+                selectedVendor = new List<Vendors>();
+                ViewModel.GoodReceiptPoForm = new GoodReceiptPoHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
-            visible = false;
-        }
-        catch (Exception ex)
-        {
-            string errorMessage = ex.InnerException?.Message ?? ex.Message;
-            ToastService!.ShowError(errorMessage);
-            visible = false;
-        }
+        }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        visible = false;
     }
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView =true;
+        isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -157,10 +152,10 @@ public partial class GoodReceiptPoForm
         return Task.CompletedTask;
     }
 
-    async Task<ObservableCollection<GetListData>> OnSearchPurchaseOrder(Dictionary<string,object> e)
+    async Task<ObservableCollection<GetListData>> OnSearchPurchaseOrder(Dictionary<string, object> e)
     {
-         await ViewModel.GetPurchaseOrderBySearchCommand.ExecuteAsync(e);
-         return ViewModel.GetListData;
+        await ViewModel.GetPurchaseOrderBySearchCommand.ExecuteAsync(e);
+        return ViewModel.GetListData;
     }
 
     async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
@@ -171,7 +166,7 @@ public partial class GoodReceiptPoForm
 
     async Task OnGetBatchOrSerial()
     {
-        Console.WriteLine(ViewModel.GetBatchOrSerials.Count());
+        //Console.WriteLine(ViewModel.GetBatchOrSerials.Count());
         var dictionary = new Dictionary<string, object>
         {
             { "getData", ViewModel.GetBatchOrSerials },

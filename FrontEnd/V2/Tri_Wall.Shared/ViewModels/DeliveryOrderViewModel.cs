@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Tri_Wall.Shared.Models;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Pages;
 using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
@@ -67,13 +68,14 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("DeliveryOrder")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("SaleOrder")).Data ?? new();
+        DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        DeliveryOrderForm.ContactPersonCode = "0";
+        DeliveryOrderForm.ContactPersonCode = string.IsNullOrEmpty(DeliveryOrderForm.ContactPersonCode) ? "0" : DeliveryOrderForm.ContactPersonCode;
         PostResponses = await apiService.PostDelveryOrder(DeliveryOrderForm);
     }
 

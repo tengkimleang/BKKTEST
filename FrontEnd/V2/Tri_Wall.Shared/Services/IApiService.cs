@@ -91,4 +91,10 @@ public interface IApiService
     [Post("/inventoryCounting")]
     public Task<PostResponse> PostInventoryCounting(
         [Body] InventoryCountingHeader request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingHeaderByDocNum>>> GetDetailInventoryCountingHeaderByDocNum(
+        [Body] GetRequest request);
+    [Post("/getQuery")]
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(
+        [Body] GetRequest request);
 }

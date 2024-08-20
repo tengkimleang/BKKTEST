@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Pages;
 
-namespace Tri_Wall.Shared.Views.GoodReceptPo;
+namespace Tri_Wall.Shared.Views.InventoryTransfer;
 
-public partial class ViewGoodReceiptPoForm
+public partial class ViewInventoryTransferForm
 {
     [Parameter]
     public Func<Task> AddNew { get; set; } = default!;
@@ -18,8 +18,6 @@ public partial class ViewGoodReceiptPoForm
     public GoodReceiptPoHeaderDeatialByDocNum? GetGoodReceiptPoHeaderDetailByDocNum { get; set; }
     [Parameter]
     public ObservableCollection<GoodReceiptPoLineByDocNum> GoodReceiptPoLineByDocNums { get; set; } = new ObservableCollection<GoodReceiptPoLineByDocNum>();
-    [Parameter]
-    public string Title { get; set; } = string.Empty;
     string dataGrid = "width: 100%;height:405px";
     void UpdateGridSize(GridItemSize size)
     {

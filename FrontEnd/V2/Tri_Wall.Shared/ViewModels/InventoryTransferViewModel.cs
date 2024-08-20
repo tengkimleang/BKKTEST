@@ -68,8 +68,9 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
                            (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer")).Data ?? new();
         TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest")).Data ?? new();
-        InventoryTransferForm.FromWarehouse = Warehouses.FirstOrDefault()?.Code ?? "";
-        InventoryTransferForm.ToWarehouse = WarehousesTo.FirstOrDefault()?.Code ?? "";
+        InventoryTransferForm.FromWarehouse = Warehouses.First().Code ?? "";
+        InventoryTransferForm.ToWarehouse = WarehousesTo.First().Code ?? "";
+        InventoryTransferForm.Series= Series.First().Code ?? "";
         IsView = true;
     }
 
@@ -84,7 +85,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetInventoryTransferHeader", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -122,9 +123,9 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        InventoryTransferHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_DeliveryOrder_Header_Detail_By_DocNum")).Data ?? new();
-        InventoryTransferLineByDocNums = (await apiService.GetLineByDocNum("GetDeliveryOrderLineDetailByDocEntry", docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialDeliveryOrder")).Data ?? new();
+        InventoryTransferHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_InventoryTransfer_Header_Detail_By_DocNum")).Data ?? new();
+        InventoryTransferLineByDocNums = (await apiService.GetLineByDocNum("GetInventoryTransferLineDetailByDocEntry", docEntry)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryTransfer")).Data ?? new();
     }
 
     [RelayCommand]

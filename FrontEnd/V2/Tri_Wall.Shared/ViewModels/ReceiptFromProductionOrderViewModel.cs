@@ -51,6 +51,7 @@ public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, 
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("ReceiptFromProduction")).Data ?? new();
+        ReceiptFromProductionOrderForm.Series = Series.First().Code;
         IsView = true;
     }
 

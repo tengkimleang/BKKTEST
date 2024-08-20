@@ -52,6 +52,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction")).Data ?? new();
+        IssueProductionForm.Series = Series.First().Code;
         IsView = true;
     }
 
