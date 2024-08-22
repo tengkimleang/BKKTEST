@@ -13,9 +13,15 @@ public class LayoutController(
     IWebHostEnvironment webHostEnvironment)
     : ApiController
 {
-    [HttpPost]
-    public async Task<IActionResult> Create(LayoutCommand command)
+    [HttpGet]
+    public async Task<IActionResult> Create(string docEntry, string layoutCode)
     {
+        LayoutCommand command = new()
+        {
+            DocEntry = docEntry,
+            LayoutCode = layoutCode,
+            StoreName = "_USP_CALLTRANS_EWTRANSACTION",
+        };
         var validationResult = await validator.ValidateAsync(command).ConfigureAwait(false);
 
         if (!validationResult.IsValid)
@@ -24,12 +30,12 @@ public class LayoutController(
                 ErrorMsg: validationResult.Errors[0].ErrorMessage,
                 ErrorCode: StatusCodes.Status400BadRequest.ToString()));
         }
-        
-        command.Path= Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "Layouts");
+
+        command.Path = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "Layouts");
 
         var getData = await mediator.Send(command);
         return getData.Match<IActionResult>(
-            data => Ok(data),
+            data => File(data.Data ?? [], data.ApplicationType, data.FileName),
             err => BadRequest(new PostResponse
             {
                 ErrorCode = err[0].Code,

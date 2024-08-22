@@ -5,5 +5,5 @@ namespace Tri_Wall.Application.Common.Interfaces;
 
 public interface IReportLayout
 {
-    Task<PrintViewLayoutResponse> CallViewLayout(string Code, string docEntry, string Path);
+    Task<PrintViewLayoutResponse> CallViewLayout(string code, string docEntry, string path,string storeName);
 }

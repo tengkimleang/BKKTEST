@@ -7,32 +7,22 @@ using Tri_Wall.Domain.DataProviders;
 
 namespace Tri_Wall.Infrastructure.Common.Setting;
 
-public class ReportLayout : IReportLayout
+public class ReportLayout(IDataProviderRepository dataProviderRepository) : IReportLayout
 {
-    private readonly IDataProviderRepository dataProviderRepository;
-    public ReportLayout(IDataProviderRepository dataProviderRepository)
+    public async Task<PrintViewLayoutResponse> CallViewLayout(string code, string docEntry, string path,string storeName)
     {
-        this.dataProviderRepository = dataProviderRepository;
-    }
-    public async Task<PrintViewLayoutResponse> CallViewLayout(string Code, string docEntry, string Path)
-    {
-        var reportSetup = dataProviderRepository.Query(new DataProvider("", "CallLayout", Code)).Result;
-        if(reportSetup is null) return await Task.FromResult(new PrintViewLayoutResponse(
-            ErrorMessage: "Report not found",
-            Data: null,
-            ErrCode: ""
-            ));
-        var type = GetTypeExport(reportSetup.Rows[0]["EXPORTTYPE"].ToString()!);
+        var reportSetup = dataProviderRepository.Query(new DataProvider(storeName, "CallLayout", code)).Result;
+        var type = GetTypeExport(reportSetup.Rows[0]["EXPORTTYPE"].ToString()??"");
         LocalReport lr = new LocalReport();
-        Stream reportDefinition = File.OpenRead($"{Path}\\Report\\{reportSetup.Rows![0]["FILENAME"]}");
+        Stream reportDefinition = File.OpenRead($"{path}\\Report\\{reportSetup.Rows[0]["FILENAME"]}");
         lr.LoadReportDefinition(reportDefinition);
-        foreach (var a in JsonConvert.DeserializeObject<List<ReportBodyResponse>>(reportSetup.Rows?[0]["PROPERTIES"].ToString()!)!)
+        foreach (var a in JsonConvert.DeserializeObject<List<ReportBodyResponse>>(reportSetup.Rows[0]["PROPERTIES"].ToString()!)!)
         {
             DataTable dt =await dataProviderRepository.Query(new DataProvider(StoreName:"",DBType: a.TypeOfParameter, Par1: docEntry));
-            lr.DataSources.Add(new ReportDataSource(a.DataSetName.ToString()!, dt));
+            lr.DataSources.Add(new ReportDataSource(a.DataSetName, dt));
         }
         lr.Refresh();
-        var result = lr.Render(reportSetup.Rows?[0]["EXPORTTYPE"].ToString()!);
+        var result = lr.Render(reportSetup.Rows[0]["EXPORTTYPE"].ToString()!);
         return await Task.FromResult(new PrintViewLayoutResponse(
             ErrCode: "",
             ErrorMessage: "",

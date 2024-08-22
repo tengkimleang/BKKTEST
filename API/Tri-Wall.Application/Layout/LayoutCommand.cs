@@ -8,5 +8,6 @@ public record LayoutCommand : IRequest<ErrorOr<PrintViewLayoutResponse>>
 {
     public string? LayoutCode { get; init; }
     public string? DocEntry { get; init; }
+    public string? StoreName { get; init; }
     public string? Path { get; set; }
 }
