@@ -30,6 +30,19 @@ body {
     width: 100%;
 }
 
+.content-xs {
+    align-self: stretch !important;
+    width: 100%;
+    overflow: hidden;
+    padding:0px 10px 0px 10px;
+}
+
+.body-render {
+    overflow-y: hidden;
+    width: 100%;
+    margin: 10px 0px 10px 0px;
+}
+
 .manage {
     width: 100dvw;
 }
