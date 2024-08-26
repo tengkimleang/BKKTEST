@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 using Tri_Wall.Application.Layout;
 using Tri_Wall.Domain.Common;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tri_Wall.API.Controllers;
 
@@ -34,12 +36,6 @@ public class LayoutController(
         command.Path = Path.Combine(webHostEnvironment.ContentRootPath, "wwwroot", "Layouts");
 
         var getData = await mediator.Send(command);
-        return getData.Match<IActionResult>(
-            data => File(data.Data ?? [], data.ApplicationType, data.FileName),
-            err => BadRequest(new PostResponse
-            {
-                ErrorCode = err[0].Code,
-                ErrorMsg = err[0].Description
-            }));
+        return File(getData.Data ?? [], getData.ApplicationType, getData.FileName);
     }
-}
+}   

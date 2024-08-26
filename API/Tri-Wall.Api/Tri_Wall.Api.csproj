@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Tri-Wall.Infrastructure\Tri_Wall.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Layouts\Report\" />
+  </ItemGroup>
+
 </Project>
