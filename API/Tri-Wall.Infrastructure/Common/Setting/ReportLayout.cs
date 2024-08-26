@@ -9,7 +9,7 @@ namespace Tri_Wall.Infrastructure.Common.Setting;
 
 public class ReportLayout(IDataProviderRepository dataProviderRepository) : IReportLayout
 {
-    public async Task<PrintViewLayoutResponse> CallViewLayout(string code, string docEntry, string path,string storeName)
+    public async Task<PrintViewLayoutResponse> CallViewLayout(string code, string docEntry, string path, string storeName)
     {
         try
         {
@@ -32,8 +32,9 @@ public class ReportLayout(IDataProviderRepository dataProviderRepository) : IRep
                 ErrorMessage: "",
                 Data: result,
                 ApplicationType: type.Item2,
-                FileName: (type.Item1!="PDF")? type.Item3 : "");
-        }catch(Exception e)
+                FileName: reportSetup.Rows[0]["LAYOUTPRINTNAME"].ToString() ?? "");
+        }
+        catch (Exception e)
         {
             var a = e.Message;
             return new PrintViewLayoutResponse(

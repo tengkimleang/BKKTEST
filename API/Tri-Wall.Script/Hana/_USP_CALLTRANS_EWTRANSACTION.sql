@@ -1058,16 +1058,6 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		WHERE 
 			"WhsCode"=:par1 
 			AND "ItemCode"=:par2;
-	ELSE IF :DTYPE='Calllayout' THEN
-		/*SELECT 
-			 "Code"
-			,"U_FileName" AS 'FILENAME'
-			,"U_ExportType" As EXPORTTYPE
-			,"U_StoreProcedure" As STOREPROCEDURE
-			,"U_Properties" As PROPeRTIES 
-		FROM [@TBKOFIWEBPRINTING]
-		WHERE Code=@par1*/
-		SELECT 'Hello Wolrd From CallLayout Store' AS "NAME" FROM DUMMY;
 	ELSE IF :DTYPE='Print_Barcode' THEN
 		SELECT TOP 10 
 			 "ItemCode"
