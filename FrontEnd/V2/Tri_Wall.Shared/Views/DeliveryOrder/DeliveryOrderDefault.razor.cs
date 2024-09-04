@@ -1,31 +1,28 @@
-﻿
-
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.Collections.ObjectModel;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.ViewModels;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 
 namespace Tri_Wall.Shared.Views.DeliveryOrder;
 
-public partial class DeliveryOrderDefualt
+public partial class DeliveryOrderDefault
 {
-    [Inject]
-    public IValidator<DeliveryOrderHeader>? Validator { get; init; }
-    [Inject]
-    public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
-
+    [Parameter] public DeliveryOrderViewModel ViewModel { get; set; } = default!;
+    [Parameter] public bool Visible { get; set; }
+    [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
+    [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
     private string stringDisplay = "Delivery Order";
     private string fromWord = "From";
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
-    protected void OnCloseOverlay() => visible = true;
-
+    bool isView = false;
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
-    bool visible = false;
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
@@ -35,22 +32,27 @@ public partial class DeliveryOrderDefualt
             { "taxPurchase", ViewModel.TaxSales },
             { "warehouse", ViewModel.Warehouses },
             { "line", deliveryOrderLine },
-            { "getSerialBatch", new Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch) }
+            {
+                "getSerialBatch",
+                new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
+            }
         };
 
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodDeliveryOrder>(dictionary, new DialogParameters
-        {
-            Title = (deliveryOrderLine == null) ? "Add Line" : "Update Line",
-            PreventDismissOnOverlayClick = true,
-            PreventScroll = false,
-            Width = "80%",
-            Height = "80%"
-        }).ConfigureAwait(false);
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodDeliveryOrder>(dictionary,
+            new DialogParameters
+            {
+                Title = (String.IsNullOrEmpty(deliveryOrderLine.ItemCode)) ? "Add Line" : "Update Line",
+                PreventDismissOnOverlayClick = true,
+                PreventScroll = false,
+                Width = "80%",
+                Height = "80%"
+            }).ConfigureAwait(false);
 
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if (ViewModel.DeliveryOrderForm.Lines == null) ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+            if (ViewModel.DeliveryOrderForm.Lines == null)
+                ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
             if (data["data"] is DeliveryOrderLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
@@ -70,8 +72,8 @@ public partial class DeliveryOrderDefualt
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
         e.Items = ViewModel.Customers.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                            i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
-                            .OrderBy(i => i.VendorCode);
+                                                 i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.VendorCode);
     }
 
     void UpdateGridSize(GridItemSize size)
@@ -91,10 +93,12 @@ public partial class DeliveryOrderDefualt
             dataGrid = "width: 1600px;height:405px";
         }
     }
+
     private void DeleteLine(int index)
     {
         ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
     }
+
     async Task OnSaveTransaction(string type = "")
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
@@ -108,9 +112,11 @@ public partial class DeliveryOrderDefualt
                 {
                     ToastService!.ShowError(error.ErrorMessage);
                 }
+
                 return;
             }
-            visible = true;
+
+            Visible = true;
 
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
@@ -124,8 +130,9 @@ public partial class DeliveryOrderDefualt
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;
+        Visible = false;
     }
+
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
@@ -140,12 +147,14 @@ public partial class DeliveryOrderDefualt
         Console.WriteLine(e);
         return Task.CompletedTask;
     }
+
     Task OnView()
     {
         isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
+
     async Task OnGetBatchOrSerial()
     {
         var dictionary = new Dictionary<string, object>
@@ -161,17 +170,20 @@ public partial class DeliveryOrderDefualt
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         //OnGetPurchaseOrder
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
+
     async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
     {
         await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(e);
         return ViewModel.GetListData;
     }
+
     async Task OpenListDataAsyncAsync()
     {
         var dictionary = new Dictionary<string, object>
@@ -180,8 +192,11 @@ public partial class DeliveryOrderDefualt
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) },
             //{ "isDelete", true },
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeleted)},
-            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)},
+            { "onSelete", new Func<string, Task>(OnSeleted) },
+            {
+                "onSearch",
+                new Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)
+            },
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
@@ -233,8 +248,10 @@ public partial class DeliveryOrderDefualt
             });
             i++;
         }
+
         StateHasChanged();
     }
+
     async Task ListCopyFromPurchaseOrder()
     {
         var dictionary = new Dictionary<string, object>
@@ -244,7 +261,7 @@ public partial class DeliveryOrderDefualt
             //{ "isDelete", true },
             //{"onDelete",new Func<string,Task>(OnDelete)},
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeletedPurchaseOrder)},
+            { "onSelete", new Func<string, Task>(OnSeletedPurchaseOrder) },
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {

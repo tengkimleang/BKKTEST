@@ -1,42 +1,32 @@
 ﻿@page "/deliveryorder"
-@inherits MvvmComponentBase<DeliveryOrderViewModel>
 @rendermode InteractiveWebAssembly
-@attribute [StreamRendering]
+@inherits MvvmComponentBase<DeliveryOrderViewModel>
+@* @attribute [StreamRendering] *@
 <PageTitle>Delivery Order</PageTitle>
 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 </FluentGrid>
-@if (ViewModel.IsView is false)
+@* @if (ViewModel.IsView is false) *@
+@* { *@
+@*     <p>Loading ........</p> *@
+@* } *@
+@* else *@
+@* { *@
+@*     *@
+@* } *@
+@if (isXs)
 {
-    <p>Loading ........</p>
+    <DeliveryOrderMobile/>
 }
 else
 {
-    @if (isView == false)
-    {
-        @if (isXs == false)
-        {
-            <DeliveryOrderDefualt />
-        }
-        else
-        {
-
-        }
-    }
-    else
-    {
-        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
-                                                                  Search="OpenListDataAsyncAsync"
-                                                                  OnViewBatchOrSerial="OnGetBatchOrSerial"
-                                                                  Title="Delivery Order"
-                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-                                                                  GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums" />
-    }
-
-    <FluentOverlay @bind-Visible=@visible
-                   Opacity="0.4"
-                   FullScreen="true"
-                   OnClose="OnCloseOverlay"
-                   PreventScroll=true>
-        <FluentProgressRing />
-    </FluentOverlay>
+    <DeliveryOrderDefault ViewModel="ViewModel"
+                          Visible="visible"/>
 }
+
+<FluentOverlay @bind-Visible=@visible
+               Opacity="0.4"
+               FullScreen="true"
+               OnClose="OnCloseOverlay"
+               PreventScroll=true>
+    <FluentProgressRing/>
+</FluentOverlay>

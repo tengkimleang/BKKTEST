@@ -136,10 +136,18 @@ footer {
 code {
     color: #c02d76;
 }
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.profile-menu-container {
+    margin-left: auto;
+}
 @media (max-width: 600px) {
     .header-gutters {
-        margin: 0.5rem 3rem 0.5rem 1.5rem !important;
+        margin: 0.5rem 0.5rem 0.5rem 0.5rem !important;
     }
 
     [dir="rtl"] .header-gutters {
@@ -186,8 +194,8 @@ code {
         display: block;
         position: absolute;
         top: 15px;
-        left: unset;
-        right: 20px;
+        left: 10px;
+        right: unset;
         width: 20px;
         height: 20px;
         border: none;
@@ -197,4 +205,9 @@ code {
         left: 20px;
         right: unset;
     }
+    
+    .margin-xs{
+        margin-left: 30px;
+    }
+    
 }

@@ -46,7 +46,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView;
+    [ObservableProperty] Boolean _isView=false;
 
     #endregion
 
