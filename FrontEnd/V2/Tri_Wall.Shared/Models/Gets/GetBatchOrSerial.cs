@@ -10,5 +10,6 @@ public record GetBatchOrSerial(
         string ExpDate,
         string MrfDate,
         string Type,
-        string LineNum
+        string LineNum,
+        string InputQty=""
     );

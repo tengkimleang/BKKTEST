@@ -135,7 +135,6 @@ public partial class DeliveryOrderDefault
 
     Task OnSeleted(string e)
     {
-        Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         isView = true;
         StateHasChanged();

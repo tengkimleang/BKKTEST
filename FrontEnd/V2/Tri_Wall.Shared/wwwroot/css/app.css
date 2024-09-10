@@ -216,13 +216,6 @@ code {
     }
 }
 
-.fab-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
 .fab-button {
     background-color: #0078d4; /* Adjust as needed */
     color: white;

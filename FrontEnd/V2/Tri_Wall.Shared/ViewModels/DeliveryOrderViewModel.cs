@@ -46,7 +46,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
-    [ObservableProperty] Boolean _isView=false;
+    [ObservableProperty] Boolean _isView=true;
 
     #endregion
 
@@ -146,7 +146,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

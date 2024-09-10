@@ -13,15 +13,19 @@
 @* { *@
 @*     *@
 @* } *@
-@if (isXs)
+@if (init)
 {
-    <DeliveryOrderMobile/>
+    @if (isXs)
+    {
+        <DeliveryOrderMobile/>
+    }
+    else
+    {
+        <DeliveryOrderDefault ViewModel="ViewModel"
+                              Visible="visible"/>
+    }
 }
-else
-{
-    <DeliveryOrderDefault ViewModel="ViewModel"
-                          Visible="visible"/>
-}
+
 
 <FluentOverlay @bind-Visible=@visible
                Opacity="0.4"

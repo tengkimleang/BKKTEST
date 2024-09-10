@@ -3025,10 +3025,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."ODLN" 
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		ELSE IF :par2='condition' THEN
@@ -3041,7 +3041,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,"TaxDate" AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."ODLN" 
 			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -3168,8 +3168,8 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,B."Quantity" AS "Qty"
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
-				,B."ExpDate" AS "ExpDate"
-				,B."MnfDate" AS "MrfDate"
+				,TO_VARCHAR(B."ExpDate",'yyyy-MM-dd') AS "ExpDate"
+				,TO_VARCHAR(B."MnfDate",'yyyy-MM-dd') AS "MrfDate"
 				,'Serial' AS "Type"
 			FROM TRIWALL_TRAINKEY."OSRN" AS B
 			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=B."ItemCode" And C."SysSerial"=B."SysNumber"
@@ -3180,8 +3180,8 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,C."Quantity" AS "Qty"
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
-				,"ExpDate" AS "ExpDate"
-				,B."MnfDate" AS "MrfDate"
+				,TO_VARCHAR("ExpDate",'yyyy-MM-dd') AS "ExpDate"
+				,TO_VARCHAR(B."MnfDate",'yyyy-MM-dd') AS "MrfDate"
 				,'Batch' AS "Type"
 			FROM TRIWALL_TRAINKEY."OBTN" AS B
 			LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=B."ItemCode" and B."SysNumber"=C."SysNumber"
@@ -4448,7 +4448,6 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 	END IF;
 	END IF;		
 	END IF;		
-	END IF;
 	END IF;
 	END IF;
 	END IF;

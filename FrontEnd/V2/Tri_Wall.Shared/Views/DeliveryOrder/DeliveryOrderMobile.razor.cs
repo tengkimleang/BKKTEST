@@ -37,4 +37,9 @@ public partial class DeliveryOrderMobile
     {
         NavigationManager.NavigateTo("/listdeliveryorder");
     }
+
+    private void OnClickAddDeliveryOrderMobile()
+    {
+        NavigationManager.NavigateTo("/addDeliveryorderMobile");
+    }
 }
