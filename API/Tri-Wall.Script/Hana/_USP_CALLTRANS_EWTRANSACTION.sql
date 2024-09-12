@@ -3130,7 +3130,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,B."OpenQty" AS "Qty"
 			,B."Price" AS "Price"
 			,B."LineTotal" AS "LineTotal"
-			,B."TaxCode" AS "VatCode"
+			,IFNULL(B."VatGroup",'S00') AS "VatCode"
 			,B."WhsCode" AS "WarehouseCode"
 			,E."CodeBars" AS "BarCode"
 			,CASE WHEN E."ManBtchNum"='Y' THEN
@@ -3160,7 +3160,20 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
 		WHERE 
 			A."DocEntry"=:par1;
-	
+	ELSE IF :DTYPE='GET_SaleOrder_Header_Detail_By_DocNum' THEN
+		SELECT 
+			 F."SeriesName" AS "SeriesName"
+			,A."DocNum" AS "DocNum"
+			,TO_VARCHAR(A."DocDate",'yyyy-mm-dd') AS "DocDate"
+			,TO_VARCHAR(A."TaxDate",'yyyy-mm-dd') AS "TaxDate"
+			,A."CardCode" AS "Vendor"
+			,IFNULL(C."Name",'') AS "ContactPerson"
+			,IFNULL(A."NumAtCard",'') AS "RefInv"
+		FROM TRIWALL_TRAINKEY."ORDR" AS A
+		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
+		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
+		WHERE 
+			A."DocEntry"=:par1;
 	ELSE IF :DTYPE='OnGetBatchOrSerialAvailableByItemCode' THEN		
 		IF :par1='S' THEN
 			SELECT 
@@ -4448,6 +4461,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 	END IF;
 	END IF;		
 	END IF;		
+	END IF;
 	END IF;
 	END IF;
 	END IF;

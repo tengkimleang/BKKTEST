@@ -3,7 +3,7 @@
                   Title="Back"
                   OnClick="@(e => IsViewDetail())"
                   Class="margin-xs"/>
-    @(new MarkupString($@"&nbsp;&nbsp;Add Batch"))
+    @(new MarkupString($@"&nbsp;&nbsp;Add Serial"))
 </SectionContent>
 <FluentLayout Style="margin-top: 0;">
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
@@ -18,27 +18,17 @@
                                             Placeholder="Batch Search"
                                             OnOptionsSearch="OnSearchBatch"
                                             MaximumOptionsSearch="1"
-                                            Label="Batch Code"
+                                            Label="Serial Code"
                                             Virtualize="true"
                                             Items="SerialBatchDeliveryOrders"
                                             MaximumSelectedOptions="1"
                                             OptionText="@(item => $"{item.SerialBatch}")"
-                                            @bind-SelectedOptions="@SelectedBatch"
+                                            @bind-SelectedOptions="@SelectedSerial"
                                             ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentNumberField Label="Qty" @bind-Value="@BatchDeliveryOrder.Qty" style="width: 100%;">
+                        <FluentNumberField ReadOnly="true" Label="Qty" @bind-Value="@BatchDeliveryOrder.Qty" style="width: 100%;">
                         </FluentNumberField>
-                    </FluentGridItem>
-                    <FluentGridItem xs="12">
-                        @* <FluentTextField Value="@($"{(!string.IsNullOrEmpty(SelectedBatch.FirstOrDefault()?.SerialBatch) ? SerialBatchDeliveryOrders.FirstOrDefault(x => x.SerialBatch == SelectedBatch.FirstOrDefault()?.SerialBatch)?.Qty : "0")}")" *@
-                        @*                  ReadOnly="true" *@
-                        @*                  Label="Qty Available" *@
-                        @*                  style="width: 100%;"/> *@
-                        <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
-                                         ReadOnly="true"
-                                         Label="Qty Available"
-                                         style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentTextField Value="@($"{(BatchDeliveryOrder.ExpDate.HasValue ? BatchDeliveryOrder.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
@@ -47,13 +37,13 @@
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(BatchDeliveryOrder.ManfectureDate.HasValue ? BatchDeliveryOrder.ManfectureDate.Value.ToShortDateString() : "")}")"
+                        <FluentTextField Value="@($"{(BatchDeliveryOrder.MfrDate.HasValue ? BatchDeliveryOrder.MfrDate.Value.ToShortDateString() : "")}")"
                                          ReadOnly="true"
                                          Label="Manufacturer Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(BatchDeliveryOrder.AdmissionDate.HasValue ? BatchDeliveryOrder.AdmissionDate.Value.ToString("dd/MM/yyyy") : "")}")"
+                        <FluentTextField Value="@($"{(BatchDeliveryOrder.ExpDate.HasValue ? BatchDeliveryOrder.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
                                          ReadOnly="true"
                                          Label="Admission Date"
                                          style="width: 100%;"/>
@@ -64,12 +54,12 @@
     </FluentStack>
     <FloatActionButton Icon="@(new Icons.Regular.Size20.Add())"
                        Title="@(IsUpdate ? "Update" : "Add")"
-                       Callback="@(e => SaveBatch(BatchDeliveryOrder))"/>
+                       Callback="@(e => SaveSerial(BatchDeliveryOrder))"/>
     @if (IsUpdate)
     {
         <FloatActionButton Icon="@(new Icons.Regular.Size20.Delete())"
                            Title="Delete"
-                           Callback="@(e => DeleteBatch(Index))"
+                           Callback="@(e => DeleteSerial(Index))"
                            Position="FloatActionButton.PositionEnum.Left"
                            ColorButton="Color.Error"/>
     }

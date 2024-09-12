@@ -9,7 +9,7 @@
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <FluentBodyContent Class="body-content" Style="height:90% !important;">
             <div class="content-xs" id="top-nav-1">
-                <FluentGrid Spacing="2" AdaptiveRendering="true">
+                <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentTextField Value="@(ItemDetail.ItemCode ?? "")"
                                          Label="ItemCode"

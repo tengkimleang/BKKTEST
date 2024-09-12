@@ -137,6 +137,9 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
+        GoodReceiptPoHeaderDeatialByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_SaleOrder_Header_Detail_By_DocNum"))
+            .Data ?? new();
         GetPurchaseOrderLineByDocNums =
             (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry)).Data ?? new();
     }

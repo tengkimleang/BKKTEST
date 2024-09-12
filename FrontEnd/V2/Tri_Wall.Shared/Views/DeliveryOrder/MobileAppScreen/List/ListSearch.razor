@@ -23,7 +23,7 @@ else
             <FluentBodyContent Class="body-content" Style="height:90% !important;">
                 <div class="content-xs" id="top-nav">
                     <div class="search-container">
-                        <FluentGrid Spacing="2" AdaptiveRendering="true">
+                        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                             <FluentGridItem xs="12" sm="12" md="6" lg="4" xl="4">
                                 <FluentSearch @bind-Value="_searchValue"
                                               @bind-Value:after="OnSearch"
@@ -38,7 +38,12 @@ else
                     <!-- #endregion -->
                     <!-- #region For Each CardBox -->
                     <div class="pull-up-demo">
-                        <FluentPullToRefresh Id="main-menu" Direction="@PullDirection.Up" OnRefreshAsync="OnRefreshAsync" TipHeight="30" DragDistance="75">
+                        <FluentPullToRefresh Id="main-menu" 
+                                             Direction="@PullDirection.Up" 
+                                             OnRefreshAsync="OnRefreshAsync" 
+                                             TipHeight="30" 
+                                             DragDistance="75"
+                                             ShowStaticTip="false">
                             <ChildContent>
                                 <div class="pull-content">
                                     @foreach (var obj in scrollingData)
@@ -62,9 +67,6 @@ else
                                     }
                                 </div>
                             </ChildContent>
-                            <LoadingTemplate>
-                                <FluentProgress Width="150px;"/>
-                            </LoadingTemplate>
                         </FluentPullToRefresh>
                     </div>
                     <!-- #endregion -->

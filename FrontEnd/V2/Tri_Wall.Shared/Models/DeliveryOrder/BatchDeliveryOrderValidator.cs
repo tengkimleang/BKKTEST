@@ -2,7 +2,7 @@
 
 namespace Tri_Wall.Shared.Models.DeliveryOrder;
 
-public class BatchDeliveryOrderValidator: AbstractValidator<BatchDeliveryOrder>
+public class BatchDeliveryOrderValidator : AbstractValidator<BatchDeliveryOrder>
 {
     public BatchDeliveryOrderValidator()
     {

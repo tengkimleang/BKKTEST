@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
 
@@ -20,7 +21,13 @@ public partial class ListSearch
         await OnRefreshAsync();
         _isViewDetail = false;
     }
-    
+    private void UpdateGridSize(GridItemSize size)
+    {
+        if (size != GridItemSize.Xs)
+        {
+            NavigationManager.NavigateTo("deliveryorder");
+        }
+    }
     private async Task OnSearch()
     {
         if (!string.IsNullOrWhiteSpace(_searchValue))

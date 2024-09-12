@@ -15,8 +15,8 @@ Content-Type: application/json
 
 {
     "storeName": "_USP_CALLTRANS_EWTRANSACTION",
-    "dbType": "GET_InventoryCounting_Header_Detail_By_DocNum",
-    "par1": "231",
+    "dbType": "GET_SaleOrder_Header_Detail_By_DocNum",
+    "par1": "315",
     "par2": "",
     "par3": "",
     "par4": "",

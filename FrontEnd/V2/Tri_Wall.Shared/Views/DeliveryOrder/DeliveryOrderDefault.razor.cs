@@ -16,12 +16,12 @@ public partial class DeliveryOrderDefault
     [Parameter] public bool Visible { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
-    private string stringDisplay = "Delivery Order";
-    private string fromWord = "From";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
-    IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
+    private string _stringDisplay = "Delivery Order";
+    private string _fromWord = "From";
+    private string _saveWord = "Save";
+    private string? _dataGrid = "width: 1600px;height:405px";
+    private bool _isView = false;
+    IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
@@ -80,17 +80,17 @@ public partial class DeliveryOrderDefault
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            fromWord = "";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _fromWord = "";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "Delivery Order";
-            fromWord = "From";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "Delivery Order";
+            _fromWord = "From";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
 
@@ -103,7 +103,7 @@ public partial class DeliveryOrderDefault
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            ViewModel.DeliveryOrderForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.DeliveryOrderForm.CustomerCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
             if (!result.IsValid)
@@ -122,7 +122,7 @@ public partial class DeliveryOrderDefault
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor = new List<Vendors>();
+                _selectedVendor = new List<Vendors>();
                 ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
@@ -136,7 +136,7 @@ public partial class DeliveryOrderDefault
     Task OnSeleted(string e)
     {
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -149,7 +149,7 @@ public partial class DeliveryOrderDefault
 
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -226,7 +226,7 @@ public partial class DeliveryOrderDefault
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
         ViewModel.DeliveryOrderForm.DocDate = Convert.ToDateTime(objData?.DocDate);
         ViewModel.DeliveryOrderForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
-        selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
+        _selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
         await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
         var i = 1;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -17,6 +18,7 @@ public partial class AddItemLineComponent
 
     [Inject] public IValidator<DeliveryOrderLine>? Validator { get; init; }
     [Inject] public IValidator<BatchDeliveryOrder>? ValidatorBatch { get; init; }
+    [Inject] public IValidator<SerialDeliveryOrder>? ValidatorSerial { get; init; }
     private bool _isBackFromBatch = false;
 
 
@@ -31,9 +33,10 @@ public partial class AddItemLineComponent
     private IEnumerable<GetBatchOrSerial> _selectedSerialDeliveryOrders = Array.Empty<GetBatchOrSerial>();
     private bool _isUpdate = false;
     private int _indexOfLineBatch = 0;
+    private int _indexOfLineSerial = 0;
     private IEnumerable<GetBatchOrSerial> _getBatchOrSerials = Array.Empty<GetBatchOrSerial>();
     private IEnumerable<Items> Item => Content["item"] as IEnumerable<Items> ?? new List<Items>();
-    private Func<int,Task> OnDeleteLineItem => Content["OnDeleteLineItem"] as Func<int, Task> ?? default!;
+    private Func<int, Task> OnDeleteLineItem => Content["OnDeleteLineItem"] as Func<int, Task> ?? default!;
     private Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch =>
         Content["getSerialBatch"] as Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> ??
         default!;
@@ -50,7 +53,7 @@ public partial class AddItemLineComponent
             _batchReceiptPo = DataResult.Batches ?? new List<BatchDeliveryOrder>();
             _serialReceiptPo = DataResult.Serials ?? new List<SerialDeliveryOrder>();
             _selectedItem = Item.Where(i => i.ItemCode == DataResult.ItemCode);
-            _selectedWarehouses= Warehouses?.Where(i => i.Code == DataResult.WarehouseCode);
+            _selectedWarehouses = Warehouses?.Where(i => i.Code == DataResult.WarehouseCode);
             await UpdateItemDetails(DataResult.ItemCode);
         }
     }
@@ -156,7 +159,7 @@ public partial class AddItemLineComponent
         }
     }
 
-    private void AddLineToBatchOrSerial(BatchDeliveryOrder? batchDeliveryOrder)
+    private void AddLineToBatch(BatchDeliveryOrder? batchDeliveryOrder)
     {
         if (batchDeliveryOrder != null)
         {
@@ -176,14 +179,28 @@ public partial class AddItemLineComponent
 
         _isBackFromBatch = true;
         StateHasChanged();
-        // if (_isItemBatch)
-        // {
-        //     
-        // }
-        // else if (_isItemSerial && _serialReceiptPo.Count() < DataResult.Qty)
-        // {
-        //     _serialReceiptPo.Add(new SerialDeliveryOrder { SerialCode = "", });
-        // }
+    }
+
+    private void AddLineToSerial(SerialDeliveryOrder? serialDeliveryOrder)
+    {
+        if (serialDeliveryOrder != null)
+        {
+            _getBatchOrSerials = new List<GetBatchOrSerial>
+            {
+                new GetBatchOrSerial(DataResult.ItemCode,
+                    serialDeliveryOrder.Qty.ToString(CultureInfo.InvariantCulture),
+                    serialDeliveryOrder.SerialCode, "",
+                    serialDeliveryOrder.ExpDate.ToString() ?? "",
+                    serialDeliveryOrder.MfrDate.ToString() ?? "",
+                    "B", "",
+                    serialDeliveryOrder.Qty.ToString(CultureInfo.InvariantCulture))
+            };
+            _indexOfLineSerial = _serialReceiptPo.IndexOf(serialDeliveryOrder);
+            _isUpdate = true;
+        }
+
+        _isBackFromBatch = true;
+        StateHasChanged();
     }
 
     private void DeleteLineFromBatchOrSerial(int index)
@@ -248,6 +265,32 @@ public partial class AddItemLineComponent
         StateHasChanged();
     }
 
+    private async Task OnAddSerialLine(SerialDeliveryOrder serialDeliveryOrder)
+    {
+        var result = await ValidatorSerial!.ValidateAsync(serialDeliveryOrder).ConfigureAwait(false);
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                ToastService!.ShowError(error.ErrorMessage);
+            }
+
+            return;
+        }
+
+        if (_isUpdate == false)
+        {
+            _serialReceiptPo.Add(serialDeliveryOrder);
+        }
+        else
+        {
+            _serialReceiptPo[_indexOfLineSerial] = serialDeliveryOrder;
+        }
+
+        _isBackFromBatch = false;
+        StateHasChanged();
+    }
+
     private Task OnDeleteBatchLine(int index)
     {
         ToastService.ShowToast<ToastCustom, Dictionary<string, object>>(
@@ -266,10 +309,16 @@ public partial class AddItemLineComponent
                         "Index", index
                     },
                     {
-                         "OnClickPrimaryButton", new Func<Dictionary<string,object>, Task>(OnDeleteBatch)
+                        "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteBatch)
                     },
                     {
-                        "PrimaryButtonText" , "Delete"
+                        "PrimaryButtonText" , "Confirm"
+                    },
+                    {
+                        "ButtonPrimaryColor","var(--bs-green)"
+                    },
+                    {
+                        "ButtonSecondaryColor","var(--bs-red)"
                     }
                 }
             });
@@ -278,6 +327,41 @@ public partial class AddItemLineComponent
         // StateHasChanged();
         return Task.CompletedTask;
     }
+
+    private Task OnDeleteSerialLine(int index)
+    {
+        ToastService.ShowToast<ToastCustom, Dictionary<string, object>>(
+            new ToastParameters<Dictionary<string, object>>()
+            {
+                Intent = ToastIntent.Custom,
+                Title = "Delete Serial",
+                Timeout = 6000,
+                Icon = (new Icons.Regular.Size20.Delete(), Color.Accent),
+                Content = new Dictionary<string, object>
+                {
+                    {
+                        "Body", "Are you sure to Delete Serial?"
+                    },
+                    {
+                        "Index", index
+                    },
+                    {
+                        "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteSerial)
+                    },
+                    {
+                        "PrimaryButtonText", "Delete"
+                    },
+                    {
+                        "ButtonPrimaryColor", "var(--bs-green)"
+                    },
+                    {
+                        "ButtonSecondaryColor", "var(--bs-red)"
+                    }
+                }
+            });
+        return Task.CompletedTask;
+    }
+
     private Task OnDeleteBatch(Dictionary<string, object> dictionary)
     {
         _batchReceiptPo.RemoveAt(Convert.ToInt32(dictionary["Index"]));
@@ -287,6 +371,17 @@ public partial class AddItemLineComponent
         OnAddItemLineBack();
         return Task.CompletedTask;
     }
+
+    private Task OnDeleteSerial(Dictionary<string, object> dictionary)
+    {
+        _serialReceiptPo.RemoveAt(Convert.ToInt32(dictionary["Index"]));
+        _isBackFromBatch = false;
+        FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
+        fluentToast.Close();
+        OnAddItemLineBack();
+        return Task.CompletedTask;
+    }
+
     private async Task OnConfirmLine()
     {
         DataResult.Batches = _batchReceiptPo;
@@ -301,6 +396,7 @@ public partial class AddItemLineComponent
 
             return;
         }
+
         await SaveItem(DataResult);
     }
 }

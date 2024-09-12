@@ -24,15 +24,22 @@ public partial class ViewDetailDeliveryOrderMobileForm
         StateHasChanged();
         return Task.CompletedTask;
     }
-    void UpdateGridSize(GridItemSize size)
+    private void UpdateGridSize(GridItemSize size)
     {
+        if (size != GridItemSize.Xs)
+        {
+            NavigationManager.NavigateTo("deliveryorder");
+        }
     }
-
     void ShowItemDetail(string itemCode, string lineNum)
     {
         this._itemCode = itemCode;
         this._lineNum = lineNum;
         _isShowBatchSerial = true;
         StateHasChanged();
+    }
+    private async Task HandleOnMenuChanged(MenuChangeEventArgs args)
+    {
+        
     }
 }

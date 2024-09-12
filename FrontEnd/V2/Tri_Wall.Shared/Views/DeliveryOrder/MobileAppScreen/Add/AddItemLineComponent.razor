@@ -1,4 +1,4 @@
-﻿@using System.Text.Json
+﻿
 @if (_isBackFromBatch is false)
 {
     <SectionContent SectionName="Is-BackButton">
@@ -67,7 +67,7 @@
     </FluentGrid>
     @if (_isItemBatch)
     {
-        <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToBatchOrSerial(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+        <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToBatch(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
             Add Batch
         </FluentButton>
         <div class="grid" style="width: 100%;height: 450px; overflow-x:auto;">
@@ -93,7 +93,7 @@
                             {
                                 <FluentCard MinimalStyle="true"
                                             Style="width: 100%; margin-bottom: 10px;"
-                                            @onclick="@(e => AddLineToBatchOrSerial(obj))">
+                                            @onclick="@(e => AddLineToBatch(obj))">
                                     <FluentGrid Spacing="1" AdaptiveRendering="true">
                                         <FluentGridItem xs="6" sm="6">
                                             <FluentLabel Typo="Typography.Subject">Batch Code</FluentLabel>
@@ -138,7 +138,7 @@
     }
     @if (_isItemSerial)
     {
-        <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToBatchOrSerial(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
+        <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToSerial(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
             Add Serial
         </FluentButton>
         <div class="grid" style="width: 100%; overflow-x:auto;">
@@ -163,10 +163,11 @@
                             @foreach (var obj in _serialReceiptPo)
                             {
                                 <FluentCard MinimalStyle="true"
-                                            Style="width: 100%; margin-bottom: 10px;">
+                                            Style="width: 100%; margin-bottom: 10px;"
+                                            @onclick="@(e => AddLineToSerial(obj))">
                                     <FluentGrid Spacing="1" AdaptiveRendering="true">
                                         <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel Typo="Typography.Subject">Batch Code</FluentLabel>
+                                            <FluentLabel Typo="Typography.Subject">Serial Code</FluentLabel>
                                         </FluentGridItem>
                                         <FluentGridItem xs="6" sm="6">
                                             <FluentLabel Typo="Typography.Subject">Qty</FluentLabel>
@@ -245,11 +246,25 @@
 }
 else
 {
-    <AddBatchLine IsViewDetail="OnAddItemLineBack"
-                  SaveBatch="OnAddBatchLine"
-                  SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
-                  IsUpdate="_isUpdate"
-                  Index="_indexOfLineBatch"
-                  SelectedBatch="_getBatchOrSerials"
-                  DeleteBatch="OnDeleteBatchLine"/>
+    @if (_isItemBatch)
+    {
+        <AddBatchLine IsViewDetail="OnAddItemLineBack"
+                      SaveBatch="OnAddBatchLine"
+                      SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
+                      IsUpdate="_isUpdate"
+                      Index="_indexOfLineBatch"
+                      SelectedBatch="_getBatchOrSerials"
+                      DeleteBatch="OnDeleteBatchLine"/>
+    }
+
+    @if (_isItemSerial)
+    {
+        <AddSerialLine IsViewDetail="OnAddItemLineBack"
+                       SaveSerial="OnAddSerialLine"
+                       SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
+                       IsUpdate="_isUpdate"
+                       Index="_indexOfLineSerial"
+                       SelectedSerial="_getBatchOrSerials"
+                       DeleteSerial="OnDeleteSerialLine"/>
+    }
 }

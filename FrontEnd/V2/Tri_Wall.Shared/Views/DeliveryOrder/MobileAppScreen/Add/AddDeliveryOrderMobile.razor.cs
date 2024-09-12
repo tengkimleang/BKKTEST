@@ -12,17 +12,58 @@ namespace Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen.Add;
 
 public partial class AddDeliveryOrderMobile
 {
+    [Parameter] public int DocEntry { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
     Dictionary<string, object> _lineItemContent = new();
     bool _isItemLineClickAdd;
     private bool Visible { get; set; }
 
+    private void UpdateGridSize(GridItemSize size)
+    {
+        if (size != GridItemSize.Xs)
+        {
+            NavigationManager.NavigateTo("deliveryorder");
+        }
+    }
+
     protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/deliveryorder";
         ComponentAttribute.IsBackButton = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            if (DocEntry != 0)
+            {
+                await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(DocEntry.ToString())
+                    .ConfigureAwait(false);
+                ViewModel.DeliveryOrderForm = new()
+                {
+                    CustomerCode = ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()?.Vendor ?? "",
+                    DocDate = DateTime.Now,
+                    TaxDate = DateTime.Now,
+                    NumAtCard = ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()?.RefInv ?? "",
+                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select(x => new DeliveryOrderLine
+                    {
+                        ItemCode = x.ItemCode,
+                        ItemName = x.ItemName,
+                        LineNum = ViewModel.DeliveryOrderForm.Lines?.MaxBy(l => l.LineNum)?.LineNum + 1 ?? 1,
+                        Qty = Convert.ToDouble(x.Qty),
+                        Price = Convert.ToDouble(x.Price),
+                        VatCode = x.VatCode,
+                        WarehouseCode = x.WarehouseCode,
+                        BaseLine = Convert.ToInt32(x.BaseLineNumber),
+                        BaseEntry = Convert.ToInt32(x.DocEntry),
+                    }).ToList()
+                };
+                _selectedVendor =
+                    ViewModel.Customers.Where(x => x.VendorCode == ViewModel.DeliveryOrderForm.CustomerCode);
+                StateHasChanged();
+            }
     }
 
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
@@ -40,6 +81,7 @@ public partial class AddDeliveryOrderMobile
 
     private Task OnAddLineItem(DeliveryOrderLine deliveryOrderLine)
     {
+        Console.WriteLine(JsonSerializer.Serialize(deliveryOrderLine));
         _lineItemContent = new Dictionary<string, object>
         {
             { "item", ViewModel.Items },
@@ -82,7 +124,7 @@ public partial class AddDeliveryOrderMobile
                         "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteItemByLineNum)
                     },
                     {
-                        "PrimaryButtonText" , "Delete"
+                        "PrimaryButtonText", "Delete"
                     }
                 }
             });
@@ -147,25 +189,25 @@ public partial class AddDeliveryOrderMobile
                         "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnConfirmTransaction)
                     },
                     {
-                        "PrimaryButtonText" , "Confirm"
+                        "PrimaryButtonText", "Confirm"
                     },
                     {
-                        "ButtonPrimaryColor","var(--bs-green)"
+                        "ButtonPrimaryColor", "var(--bs-green)"
                     },
                     {
-                        "ButtonSecondaryColor","var(--bs-red)"
+                        "ButtonSecondaryColor", "var(--bs-red)"
                     }
                 }
             });
         return Task.CompletedTask;
     }
 
-    async Task OnConfirmTransaction(Dictionary<string,object> dictionary)
+    async Task OnConfirmTransaction(Dictionary<string, object> dictionary)
     {
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
-        {   
+        {
             ViewModel.DeliveryOrderForm.CustomerCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
@@ -196,5 +238,6 @@ public partial class AddDeliveryOrderMobile
         Visible = false;
         StateHasChanged();
     }
+
     protected void OnCloseOverlay() => Visible = true;
 }
