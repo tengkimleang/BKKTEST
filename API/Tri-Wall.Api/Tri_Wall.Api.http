@@ -25,6 +25,14 @@ Content-Type: application/json
 
 ###
 
+GET {{API_HostAddress}}/api/user
+Content-Type: application/json
+
+{
+}
+
+###
+
 POST {{API_HostAddress}}/goodReceiptPo
 Content-Type: application/json
 

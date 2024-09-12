@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddAuthentication().AddCookie("cookies");
+
 builder.Services.AddCors(options =>
 {
     // options.AddPolicy("CorsPolicy", policy =>
