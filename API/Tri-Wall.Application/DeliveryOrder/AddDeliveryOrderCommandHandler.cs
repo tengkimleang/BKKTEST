@@ -53,6 +53,7 @@ public class AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork)
                     foreach (var batch in l.Batches!)
                     {
                         oDeliveryOrder.Lines.BatchNumbers.BatchNumber = batch.BatchCode;
+                        //oDeliveryOrder.Lines.BatchNumbers.InternalSerialNumber = batch.BatchCode;
                         oDeliveryOrder.Lines.BatchNumbers.Quantity = batch.Qty;
                         oDeliveryOrder.Lines.BatchNumbers.Add();
                     }
