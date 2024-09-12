@@ -13,9 +13,10 @@
 
 @code {
     private int currentCount = 0;
-
+    [Inject] private IApiService ApiService { get; set; }
     private void IncrementCount()
     {
         currentCount++;
+        var rs = ApiService.GetUser(new { });
     }
 }

@@ -3122,6 +3122,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		WHERE A."DocEntry"=:par1;
 	ELSE IF :DTYPE='GetSaleOrderLineDetailByDocEntry' THEN
 	
+	
 		SELECT 
 			 B."LineNum" AS "BaseLineNumber"
 			,B."DocEntry" AS "DocEntry"
