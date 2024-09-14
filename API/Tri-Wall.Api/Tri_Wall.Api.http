@@ -1,4 +1,4 @@
-﻿@API_HostAddress = http://localhost:5253
+﻿@API_HostAddress = http://192.168.20.2:8082
 # @API_HostAddress = http://192.168.10.107:8429/ApiTriWall/
 
 
@@ -468,6 +468,129 @@ Content-Type: application/json
             "serials": []
         }
     ]
+}
+
+###
+
+POST {{API_HostAddress}}/receiptFromProduction
+Content-Type: application/json
+
+{
+  "Series":"327",
+  "Remarks":"",
+  "DocDate":"2024-09-15T00:00:00",
+  "Lines":[
+    {
+      "DocNum":"812",
+      "LineNum":0,
+      "BaseLineNum":0,
+      "ItemCode":"BATCH-TEST",
+      "ItemName":"123",
+      "Qty":0.181818,
+      "QtyRequire":11,
+      "QtyPlan":1,
+      "QtyManual":1,
+      "QtyLost":1,
+      "Price":0,
+      "WhsCode":"RS02",
+      "UomName":"Manual Batch",
+      "ManageItem":null,
+      "Type":2,
+      "Batches":[
+        {
+          "BatchCode":"BATCH-3",
+          "Qty":0.181818,
+          "QtyManual":0,
+          "QtyLost":0,
+          "ExpDate":"1899-12-30T00:00:00",
+          "ManfectureDate":"1899-12-30T00:00:00",
+          "AdmissionDate":"2024-09-15T00:00:00+07:00",
+          "LotNo":"",
+          "QtyAvailable":0,
+          "OnSelectedBatchOrSerial":[],
+          "OnSelectedProductionOrder":[],
+          "OnSelectedType":[
+            {"Id":1,"Name":"Auto"}]
+        }
+      ],
+      "Serials":null,
+      "ItemNones":null
+    },
+    {
+      "DocNum":"810",
+      "LineNum":0,
+      "BaseLineNum":0,
+      "ItemCode":"BATCH-TEST",
+      "ItemName":"123",
+      "Qty":0.727273,
+      "QtyRequire":11,
+      "QtyPlan":6,
+      "QtyManual":0,
+      "QtyLost":0.8,
+      "Price":0,
+      "WhsCode":"RS02",
+      "UomName":"Auto Batch",
+      "ManageItem":null,
+      "Type":2,
+      "Batches":[
+        {
+          "BatchCode":"BATCH-3",
+          "Qty":0.727273,
+          "QtyManual":0,
+          "QtyLost":0,
+          "ExpDate":"1899-12-30T00:00:00",
+          "ManfectureDate":"1899-12-30T00:00:00",
+          "AdmissionDate":"2024-09-15T00:00:00+07:00",
+          "LotNo":"",
+          "QtyAvailable":0,
+          "OnSelectedBatchOrSerial":[],
+          "OnSelectedProductionOrder":[],
+          "OnSelectedType":[
+            {"Id":1,"Name":"Auto"}
+          ]
+        }
+      ],
+      "Serials":null,
+      "ItemNones":null
+    },
+    {
+      "DocNum":"811",
+      "LineNum":0,
+      "BaseLineNum":0,
+      "ItemCode":"BATCH-TEST",
+      "ItemName":"123",
+      "Qty":1.090909,
+      "QtyRequire":11,
+      "QtyPlan":6,
+      "QtyManual":0,
+      "QtyLost":1.2,
+      "Price":0,
+      "WhsCode":"RS02",
+      "UomName":"Auto Batch",
+      "ManageItem":null,
+      "Type":2,
+      "Batches":[
+        {
+          "BatchCode":"BATCH-3",
+          "Qty":1.090909,
+          "QtyManual":0,
+          "QtyLost":0,
+          "ExpDate":"1899-12-30T00:00:00",
+          "ManfectureDate":"1899-12-30T00:00:00",
+          "AdmissionDate":"2024-09-15T00:00:00+07:00",
+          "LotNo":"",
+          "QtyAvailable":0,
+          "OnSelectedBatchOrSerial":[],
+          "OnSelectedProductionOrder":[],
+          "OnSelectedType":[
+            {"Id":1,"Name":"Auto"}
+          ]
+        }
+      ],
+      "Serials":null,
+      "ItemNones":null
+    }
+  ]
 }
 
 ###
