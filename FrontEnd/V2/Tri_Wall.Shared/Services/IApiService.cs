@@ -98,6 +98,8 @@ public interface IApiService
     public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(
         [Body] GetRequest request);
     [Post("/api/login")]
-    public Task<Dictionary<string, string>> GetUser(object request);
+    public Task<Dictionary<string, string>> PostUser(object request);
+    [Get("/api/user")]
+    public Task<GetAuthTest> GetUser();
     
 }

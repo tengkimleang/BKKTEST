@@ -98,6 +98,8 @@ public class ApiService(IApiService apiService)
     public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(string docEntry)
         => apiService.GetDetailInventoryCountingLineByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLineDetailByDocEntry", docEntry));
-    public Task<Dictionary<string, string>> GetUser(object request)
-        => apiService.GetUser(request);
+    public Task<Dictionary<string, string>> PostUser(object request)
+        => apiService.PostUser(request);
+    public Task<GetAuthTest> GetUser()
+        => apiService.GetUser();
 }

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using System.Reflection;
@@ -15,9 +16,9 @@ public static class Dependencies
             .ConfigureHttpClient(static client =>
             {
                 client.Timeout = TimeSpan.FromMinutes(10);
-                // client.BaseAddress = new Uri("http://localhost:5253");
+                 client.BaseAddress = new Uri("http://localhost:5253");
                 //client.BaseAddress = new Uri("http://localhost:8082");
-                client.BaseAddress = new Uri("http://192.168.20.2:8082");
+                //client.BaseAddress = new Uri("http://192.168.20.2:8082");
             })
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
         #endregion
@@ -46,6 +47,11 @@ public static class Dependencies
             services.AddScoped(interfaceType, validatorType);
         }
         #endregion
+        services.AddCascadingAuthenticationState();
+        services.AddAuthorizationCore();
+        services.AddScoped<CookieAuthenticationSateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(sp
+            =>sp.GetRequiredService<CookieAuthenticationSateProvider>());
         return services;
     }
 }
