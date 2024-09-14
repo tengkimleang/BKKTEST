@@ -6,6 +6,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.VisualBasic;
+using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
 using Tri_Wall.Shared.Services;
@@ -162,13 +163,13 @@ public partial class ReceiptFromProductionForm
 
     async Task OnSaveTransaction(string type = "")
     {
-        await ErrorHandlingHelper.ExecuteWithHandlingAsync(() =>
+        _tmpGetProductionOrderLinesList = ViewModel.GetProductionOrderLines;
+        var productionOrder = ViewModel.IssueProductionLine.ToList();
+        ViewModel.ReceiptFromProductionOrderForm.Lines = new();
+        var strMp = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
+        var strGetProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
+        await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            _tmpGetProductionOrderLinesList = ViewModel.GetProductionOrderLines;
-            var productionOrder = ViewModel.IssueProductionLine.ToList();
-            ViewModel.ReceiptFromProductionOrderForm.Lines = new();
-            var strMp = JsonSerializer.Serialize(ViewModel.IssueProductionLine.AsQueryable());
-            var strGetProductionOrderLines = JsonSerializer.Serialize(ViewModel.GetProductionOrderLines.AsQueryable());
             foreach (var line in productionOrder.ToList())
             {
                 if (line.ManageItem == "N")
@@ -185,14 +186,44 @@ public partial class ReceiptFromProductionForm
                 }
             }
 
-            Console.WriteLine(JsonSerializer.Serialize(ViewModel.ReceiptFromProductionOrderForm));
-            ViewModel.IssueProductionLine =
-                JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMp) ?? new();
-            ViewModel.GetProductionOrderLines =
-                JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(strGetProductionOrderLines) ??
-                new();
-            return Task.CompletedTask;
+            var result = await Validator!.ValidateAsync(ViewModel.ReceiptFromProductionOrderForm).ConfigureAwait(false);
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ToastService!.ShowError(error.ErrorMessage);
+                }
+
+                return;
+            }
+
+            _visible = true;
+            await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
+
+            if (ViewModel.PostResponses.ErrorCode == "")
+            {
+                SelectedProductionOrder = new List<GetProductionOrder>();
+                ViewModel.ReceiptFromProductionOrderForm = new ReturnComponentProductionHeader();
+                ToastService.ShowSuccess("Success");
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                _visible= false;
+                ViewModel.IssueProductionLine = new();
+                ViewModel.GetProductionOrderLines = new();
+                ViewModel.ReceiptFromProductionOrderForm = new();
+            }
+            else
+                ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        if (ViewModel.PostResponses.ErrorCode == "")
+        {
+            return;
+        }
+        Console.WriteLine(JsonSerializer.Serialize(ViewModel.ReceiptFromProductionOrderForm));
+        ViewModel.IssueProductionLine =
+            JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMp) ?? new();
+        ViewModel.GetProductionOrderLines =
+            JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(strGetProductionOrderLines) ??
+            new();
         _visible = false;
     }
 
@@ -391,6 +422,7 @@ public partial class ReceiptFromProductionForm
                         Price = line.Price,
                         WhsCode = line.WhsCode,
                         UomName = "Manual Batch",
+                        ManageItem = "B",
                         Type = 2,
                         Batches = batch
                     };
@@ -443,6 +475,7 @@ public partial class ReceiptFromProductionForm
                             (Convert.ToDouble(addLineAuto.Qty) / totalAutoLostQty) * line.QtyLost, 6),
                         Price = line.Price,
                         WhsCode = line.WhsCode,
+                        ManageItem = "B",
                         UomName = "Auto Batch",
                         Type = 2,
                         Batches = batch
@@ -452,7 +485,8 @@ public partial class ReceiptFromProductionForm
                         {
                             x.Qty = Math.Round((Convert.ToDouble(x.QtyPlan) / totalAutoQty) * lineAuto.Qty,
                                 6);
-                            x.Batches?.ForEach(y=>y.Qty = Math.Round((Convert.ToDouble(x.QtyPlan) / totalAutoQty) * lineAuto.Qty,6));
+                            x.Batches?.ForEach(y =>
+                                y.Qty = Math.Round((Convert.ToDouble(x.QtyPlan) / totalAutoQty) * lineAuto.Qty, 6));
                         });
                     tmpManual.Where(z => z is { QtyLost: 0, UomName: "Manual Batch" })
                         .ToList().ForEach(x =>
