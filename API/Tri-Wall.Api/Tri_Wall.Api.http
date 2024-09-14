@@ -472,7 +472,7 @@ Content-Type: application/json
 
 ###
 
-POST {{API_HostAddress}}/receiptFromProduction
+POST {{API_HostAddress}}/receiptFromProduction/returnComponent
 Content-Type: application/json
 
 {
@@ -494,7 +494,7 @@ Content-Type: application/json
       "Price":0,
       "WhsCode":"RS02",
       "UomName":"Manual Batch",
-      "ManageItem":null,
+      "ManageItem":"B",
       "Type":2,
       "Batches":[
         {
@@ -530,7 +530,7 @@ Content-Type: application/json
       "Price":0,
       "WhsCode":"RS02",
       "UomName":"Auto Batch",
-      "ManageItem":null,
+      "ManageItem":"B",
       "Type":2,
       "Batches":[
         {
@@ -567,7 +567,7 @@ Content-Type: application/json
       "Price":0,
       "WhsCode":"RS02",
       "UomName":"Auto Batch",
-      "ManageItem":null,
+      "ManageItem":"B",
       "Type":2,
       "Batches":[
         {
