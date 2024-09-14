@@ -7,20 +7,26 @@
         <FluentBreadcrumb>
             <FluentBreadcrumbItem>
                 @Title
-                <FluentIcon Value="@(new Icons.Regular.Size16.Cart())" Color="@Color.Neutral" Slot="start" />
+                <FluentIcon Value="@(new Icons.Regular.Size16.Cart())" Color="@Color.Neutral" Slot="start"/>
             </FluentBreadcrumbItem>
         </FluentBreadcrumb>
-        <FluentSpacer />
+        <FluentSpacer/>
+        <FluentButton IconEnd="@(new Icons.Regular.Size24.Print())"
+                      OnClick="(e) => PrintLayout()">
+            Print
+        </FluentButton>
+        &nbsp;&nbsp;
         <FluentButton IconEnd="@(new Icons.Filled.Size24.Search())"
-                      OnClick="(e)=>Search()">
+                      OnClick="(e) => Search()">
             Search
         </FluentButton>
         &nbsp;&nbsp;
         <FluentButton IconEnd="@(new Icons.Filled.Size24.Save())"
-                      OnClick="(e)=>AddNew()">
+                      OnClick="(e) => AddNew()">
             Add New
         </FluentButton>
     </FluentHeader>
+
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <FluentBodyContent Class="body-content" Style="height:90% !important;">
             <div class="content">
@@ -32,10 +38,11 @@
                         <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.DocNum ?? "")" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.DocDate ?? "") : null)" ReadOnly Label="DocDate" style="width: 100%;" />
+                        @* <FluentTextField Value="@(GetGoodReceiptPoHeaderDetailByDocNum?.DocNum ?? "")" Label="Document Number" style="width: 100%;" ReadOnly></FluentTextField> *@
+                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.DocDate ?? "") : null)" ReadOnly Label="DocDate" style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.TaxDate ?? "") : null)" ReadOnly Label="TaxDate" style="width: 100%;" />
+                        <FluentDatePicker Value="@(GetGoodReceiptPoHeaderDetailByDocNum != null ? DateTime.Parse(GetGoodReceiptPoHeaderDetailByDocNum?.TaxDate ?? "") : null)" ReadOnly Label="TaxDate" style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
@@ -52,7 +59,7 @@
                     </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                         <FluentButton IconEnd="@(new Icons.Filled.Size24.ViewDesktop())"
-                                      OnClick="(e)=>OnViewBatchOrSerial()">
+                                      OnClick="(e) => OnViewBatchOrSerial()">
                             View Batch Or Serail
                         </FluentButton>
                     </FluentGridItem>
@@ -63,14 +70,14 @@
                                             Items="@(GoodReceiptPoLineByDocNums?.AsQueryable() ?? new List<GoodReceiptPoLineByDocNum>().AsQueryable())"
                                             GridTemplateColumns="0.25fr 1fr 0.5fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
                                             Style=@dataGrid>
-                                <PropertyColumn Title="No ." Property="@(c => c.BaseLineNumber)" Sortable="true" Tooltip="true" />
-                                <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true" />
-                                <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true" />
-                                <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true" />
-                                <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true" />
-                                <PropertyColumn Title="VatCode" Property="@(c => c.VatCode)" Tooltip="true" />
-                                <PropertyColumn Title="Warehouse" Property="@(c => c.WarehouseCode)" Tooltip="true" />
-                                <PropertyColumn Title="Manage Item" Property="@(c => c.ManageItem)" Tooltip="true" />
+                                <PropertyColumn Title="No ." Property="@(c => c.BaseLineNumber)" Sortable="true" Tooltip="true"/>
+                                <PropertyColumn Title="Item Code" Property="@(c => c.ItemCode)" Tooltip="true"/>
+                                <PropertyColumn Title="Item Name" Property="@(c => c.ItemName)" Tooltip="true"/>
+                                <PropertyColumn Title="Qty" Property="@(c => c.Qty)" Tooltip="true"/>
+                                <PropertyColumn Title="Price" Property="@(c => c.Price)" Tooltip="true"/>
+                                <PropertyColumn Title="VatCode" Property="@(c => c.VatCode)" Tooltip="true"/>
+                                <PropertyColumn Title="Warehouse" Property="@(c => c.WarehouseCode)" Tooltip="true"/>
+                                <PropertyColumn Title="Manage Item" Property="@(c => c.ManageItem)" Tooltip="true"/>
                             </FluentDataGrid>
                         </div>
                     </FluentGridItem>

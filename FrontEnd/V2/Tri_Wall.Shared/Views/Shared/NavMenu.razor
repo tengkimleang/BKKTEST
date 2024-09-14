@@ -1,9 +1,9 @@
 ﻿@rendermode InteractiveAuto
 
 <div class="navmenu">
-    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
+    <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon"/>
     <label for="navmenu-toggle" class="navmenu-icon">
-        <FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" />
+        <FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill"/>
     </label>
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu" @bind-Expanded="expanded">
@@ -63,6 +63,12 @@
                 </FluentNavGroup>
                 <FluentNavGroup Title="Production"
                                 Icon="@(new Icons.Regular.Size20.Production())">
+                    <FluentNavLink title="Receipt From Production"
+                                   Href="receiptfromproductionform"
+                                   Icon="@(new Icons.Filled.Size20.GroupReturn())"
+                                   IconColor="Color.Accent">
+                        Receipt From Production
+                    </FluentNavLink>
                     <FluentNavLink title="Issue For Production"
                                    Href="issueforproduction"
                                    Icon="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())"
@@ -115,6 +121,12 @@
                                IconColor="Color.Accent">
                     Inventory Counting
                 </FluentNavLink>
+                <FluentNavLink title="Receipt From Production"
+                               Href="receiptfromproductionform"
+                               Icon="@(new Icons.Filled.Size20.GroupReturn())"
+                               IconColor="Color.Accent">
+                    Receipt From Production
+                </FluentNavLink>
                 <FluentNavLink title="Issue For Production"
                                Href="issueforproduction"
                                Icon="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())"
@@ -122,8 +134,6 @@
                     Issue For Production
                 </FluentNavLink>
             }
-            @* <FluentNavLink title="Receipt From Production" Href="receiptfromproductionform" Icon="@(new Icons.Filled.Size20.GroupReturn())" IconColor="Color.Accent">Receipt From Production</FluentNavLink> *@
-
             @*<FluentNavLink title="Return Component" Href="returncomponent" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Return Component</FluentNavLink>
             <FluentNavLink title="Production Process" Href="productionprocess" Icon="@(new Icons.Regular.Size20.Cart())" IconColor="Color.Accent">Production Process</FluentNavLink>*@
         </FluentNavMenu>
@@ -135,6 +145,7 @@
 @code {
     private bool expanded = true;
     private bool isXs = false;
+
     private void UpdateGridSize(GridItemSize size)
     {
         // dataGrid = size == GridItemSize.Xs ? "width: 1200px;height:205px" : "width: 100%;height:405px";
@@ -147,4 +158,5 @@
             isXs = false;
         }
     }
+
 }

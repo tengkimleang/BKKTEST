@@ -17,6 +17,7 @@ public record ReturnComponentLine(
     int BaseLineNum,
     double Qty,
     string WhsCode,
+    double QtyLost,
     string ManageItem,
     List<Batch>? Batches,
     List<Serial>? Serials

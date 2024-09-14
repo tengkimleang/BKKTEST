@@ -123,10 +123,13 @@
 }
 else
 {
-    <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
-                                                              Search="OpenListDataAsyncAsync"
-                                                              OnViewBatchOrSerial="OnGetBatchOrSerial"
-                                                              Title="Delivery Order"
-                                                              GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
-                                                              GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
+    <div style="margin-top: 15px">
+        <Tri_Wall.Shared.Views.GoodReceptPo.ViewGoodReceiptPoForm AddNew="OnView"
+                                                                  Search="OpenListDataAsyncAsync"
+                                                                  PrintLayout="OnPrintLayout"
+                                                                  OnViewBatchOrSerial="OnGetBatchOrSerial"
+                                                                  Title="Delivery Order"
+                                                                  GetGoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()"
+                                                                  GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
+    </div>
 }

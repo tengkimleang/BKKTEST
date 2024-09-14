@@ -47,16 +47,6 @@ public partial class DialogAddLineReceiptFromProductionOrder
 
     protected override async void OnInitialized()
     {
-        if (Content.TryGetValue("line", out var value))
-        {
-            Console.WriteLine(JsonSerializer.Serialize(value));
-            DataResult = value as ReturnComponentProductionLine ?? new ReturnComponentProductionLine();
-            _batchReceiptPo = DataResult.Batches ?? new List<BatchReturnComponentProduction>();
-            _serialReceiptPo = DataResult.Serials ?? new List<SerialReturnComponentProduction>();
-            _productionOrderNumber = DataResult.ItemNones ?? new List<ItemNoneReturnComponentProduction>();
-            _selectedItem = ListGetProductionOrderLines.Where(i => i.ItemCode == DataResult.ItemCode);
-            await UpdateItemDetails(DataResult.ItemCode);
-        }
         _type = new List<ItemType>
         {
             new ItemType
@@ -70,6 +60,21 @@ public partial class DialogAddLineReceiptFromProductionOrder
                 Name="Manual"
             }
         };
+        if (Content.TryGetValue("line", out var value))
+        {
+            Console.WriteLine(JsonSerializer.Serialize(value));
+            DataResult = value as ReturnComponentProductionLine ?? new ReturnComponentProductionLine();
+            _batchReceiptPo = DataResult.Batches ?? new List<BatchReturnComponentProduction>();
+            Console.WriteLine(JsonSerializer.Serialize(_batchReceiptPo.FirstOrDefault()?.OnSelectedType));
+            _serialReceiptPo = DataResult.Serials ?? new List<SerialReturnComponentProduction>();
+            _productionOrderNumber = DataResult.ItemNones ?? new List<ItemNoneReturnComponentProduction>();
+            _selectedItem = ListGetProductionOrderLines.Where(i => i.ItemCode == DataResult.ItemCode);
+            if(_batchReceiptPo.Any(x => x.OnSelectedType.Count() != 0))
+            {
+                displayNoneOrShow = true;
+            }
+            await UpdateItemDetails(DataResult.ItemCode);
+        }
     }
 
     private void OnSearch(OptionsSearchEventArgs<GetProductionOrderLines> e)
@@ -178,6 +183,7 @@ public partial class DialogAddLineReceiptFromProductionOrder
     }
     private void OnSelectedType(string newValue)
     {
+        Console.WriteLine("OnSelectedType");
         if (_batchReceiptPo.Where(x => x.OnSelectedType.Where(z => z.Name == "Manual").Count() != 0).Count() == 0)
         {
             displayNoneOrShow = false;
@@ -185,8 +191,8 @@ public partial class DialogAddLineReceiptFromProductionOrder
         else
         {
             displayNoneOrShow = true;
-
         }
+        StateHasChanged();
     }
     private void OnSelectedSerialOrBatch(string newValue, int index, string type)
     {

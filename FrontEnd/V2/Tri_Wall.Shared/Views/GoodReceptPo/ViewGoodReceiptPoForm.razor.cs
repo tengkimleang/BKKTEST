@@ -13,6 +13,8 @@ public partial class ViewGoodReceiptPoForm
     [Parameter]
     public Func<Task> Search { get; set; } = default!;
     [Parameter]
+    public Func<Task> PrintLayout { get; set; } = default!;
+    [Parameter]
     public Func<Task> OnViewBatchOrSerial { get; set; } = default!;
     [Parameter]
     public GoodReceiptPoHeaderDeatialByDocNum? GetGoodReceiptPoHeaderDetailByDocNum { get; set; }

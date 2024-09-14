@@ -32,7 +32,7 @@ public class AddReturnComponentCommandHandler(IUnitOfWork unitOfWork)
                 oInventoryGenEntry.Lines.BaseLine = l.BaseLineNum;
                 oInventoryGenEntry.Lines.BaseType = 202;
                 oInventoryGenEntry.Lines.WarehouseCode = l.WhsCode;
-
+                oInventoryGenEntry.Lines.UserFields.Fields.Item("U_QtyLost").Value = l.QtyLost;
                 switch (l)
                 {
                     case { ManageItem: "S", Serials: not null }:
