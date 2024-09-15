@@ -599,9 +599,9 @@ POST {{API_HostAddress}}/receiptFromProduction/updateProcessProduction
 Content-Type: application/json
 
 {
-  Data : [
+  "data": [
     {
-      "productionNo": 224090001,
+      "productionNo": 808,
       "processStage": "PR1",
       "status": "Yes"
     }

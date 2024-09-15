@@ -22,11 +22,10 @@ public class ProcessProductionCommandHandler(IUnitOfWork unitOfWork)
             foreach (var obj in request.Data)
             {
                 var oProductionOrders = (ProductionOrders)oCompany.GetBusinessObject(BoObjectTypes.oProductionOrders);
-                var test = oProductionOrders.GetByKey(obj.ProductionNo);
                 if (oProductionOrders.GetByKey(obj.ProductionNo))
                 {
-                    oProductionOrders.UserFields.Fields.Item("U_Status").Value = Guid.NewGuid().ToString();
-                    oProductionOrders.UserFields.Fields.Item("U_ProcessStage").Value = Guid.NewGuid().ToString();
+                    oProductionOrders.UserFields.Fields.Item("U_Status").Value = obj.Status;
+                    oProductionOrders.UserFields.Fields.Item("U_ProcessStage").Value = obj.ProcessStage;
                     if (oProductionOrders.Update() != 0)
                     {
                         unitOfWork.Rollback(oCompany);
