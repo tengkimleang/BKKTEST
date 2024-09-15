@@ -8,7 +8,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class ReceiptFromProductionOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class ReturnFromComponentViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     #region Data Member
 

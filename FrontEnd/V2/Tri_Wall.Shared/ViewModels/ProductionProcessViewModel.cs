@@ -16,12 +16,32 @@ public partial class ProductionProcessViewModel(ApiService apiService) : ViewMod
     [ObservableProperty] Boolean _isView;
     [ObservableProperty] PostResponse _postResponses = new();
     [ObservableProperty] ProcessProductionLine _processProductionLine = new();
+    [ObservableProperty] List<string> _processType = new()
+    {
+        "PR1",
+        "PR2",
+        "PR3",
+        "AGM",
+        "SLT",
+        "AFD",
+        "FDC",
+        "MSP",
+        "FCM",
+        "SST",
+        "HST",
+        "VST",
+        "RGL",
+        "AGL",
+        "SGL",
+        "Q-BOX",
+        "ASY",
+        "PAC",
+    };
     #endregion
     
     public override async Task Loaded()
     {
-        GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
-            (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new());
+        GetProductionOrder = (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new();
         IsView = true;
     }
     [RelayCommand]

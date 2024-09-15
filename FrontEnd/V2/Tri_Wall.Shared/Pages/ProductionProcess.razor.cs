@@ -10,12 +10,15 @@ namespace Tri_Wall.Shared.Pages;
 public partial class ProductionProcess
 {
     [Inject] public IValidator<ProductionProcessHeader>? Validator { get; init; }
+    [Inject] public IValidator<ProcessProductionLine>? ValidatorLine { get; init; }
+    //ProductionProcessHeaderValidator
 
     private string _stringDisplay = "Production Process";
     string? _dataGrid = "width: 1600px;height:405px";
     protected void OnCloseOverlay() => _visible = true;
 
     IEnumerable<GetProductionOrder> _selectedProductionOrders = Array.Empty<GetProductionOrder>();
+    IEnumerable<string> _selectProcessType = Array.Empty<string>();
 
     bool _visible;
 
@@ -24,6 +27,12 @@ public partial class ProductionProcess
     {
         e.Items = ViewModel.GetProductionOrder.Where(i => i.DocNum.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.DocNum);
+    }
+
+    private void OnSearchProductionNo(OptionsSearchEventArgs<string> e)
+    {
+        e.Items = ViewModel.ProcessType.Where(i => i.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i);
     }
 
     void UpdateGridSize(GridItemSize size)
@@ -45,9 +54,21 @@ public partial class ProductionProcess
         ViewModel.ProductionProcessHeader.Data.RemoveAt(index);
     }
 
-    private void OnAddLine()
+    private async Task OnAddLine()
     {
+        var result = await ValidatorLine!.ValidateAsync(ViewModel.ProcessProductionLine).ConfigureAwait(false);
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                ToastService!.ShowError(error.ErrorMessage);
+            }
+            return;
+        }
         ViewModel.ProductionProcessHeader.Data.Add(ViewModel.ProcessProductionLine);
+        ViewModel.ProcessProductionLine = new();
+        _selectedProductionOrders = Array.Empty<GetProductionOrder>();
+        _selectProcessType = Array.Empty<string>();
     }
 
     private void OpenEdit(ProcessProductionLine productionProcess)

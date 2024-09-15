@@ -15,12 +15,12 @@ using Tri_Wall.Shared.Views.ReceiptFromProduction;
 
 namespace Tri_Wall.Shared.Pages;
 
-public partial class ReceiptFromProductionForm
+public partial class ReturnFromComponentForm
 {
     [Inject] public IValidator<ReturnComponentProductionHeader>? Validator { get; init; }
     [Inject] public IValidator<ReturnComponentProductionLine>? ValidatorLine { get; init; }
 
-    private string _stringDisplay = "Receipt From Production";
+    private string _stringDisplay = "Return From Component";
     private string _saveWord = "Save";
     private string? _dataGrid = "width: 1600px;height:405px";
     private bool _isView;
@@ -150,7 +150,7 @@ public partial class ReceiptFromProductionForm
         }
         else
         {
-            _stringDisplay = "Receipt For Production";
+            _stringDisplay = "Return From Component";
             _saveWord = "Save";
             _dataGrid = "width: 1600px;height:405px";
         }
@@ -206,7 +206,7 @@ public partial class ReceiptFromProductionForm
                 ViewModel.ReceiptFromProductionOrderForm = new ReturnComponentProductionHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
-                _visible= false;
+                _visible = false;
                 ViewModel.IssueProductionLine = new();
                 ViewModel.GetProductionOrderLines = new();
                 ViewModel.ReceiptFromProductionOrderForm = new();
@@ -218,6 +218,7 @@ public partial class ReceiptFromProductionForm
         {
             return;
         }
+
         Console.WriteLine(JsonSerializer.Serialize(ViewModel.ReceiptFromProductionOrderForm));
         ViewModel.IssueProductionLine =
             JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMp) ?? new();

@@ -39,33 +39,22 @@ else
                                                 MaximumSelectedOptions="1"
                                                 OptionText="@(item => $"{item.DocNum}")"
                                                 @bind-SelectedOptions="@_selectedProductionOrders"
-                                                ValueChanged="() => { ViewModel.ProcessProductionLine.ProductionNo = Convert.ToInt32(_selectedProductionOrders.FirstOrDefault()?.DocNum); }"/>
+                                                ValueChanged="@(() => { ViewModel.ProcessProductionLine.ProductionNo = Convert.ToInt32(_selectedProductionOrders.FirstOrDefault()?.DocEntry); ViewModel.ProcessProductionLine.DocNum = _selectedProductionOrders.FirstOrDefault()?.DocNum ?? ""; })"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentSelect Width="100%"
-                                          TOption="string"
-                                          @bind-Value="@ViewModel.ProcessProductionLine.ProcessStage"
-                                          Required
-                                          Label="Process Type">
-                                <FluentOption Value="PR1">PR1</FluentOption>
-                                <FluentOption Value="PR2">PR2</FluentOption>
-                                <FluentOption Value="PR3">PR3</FluentOption>
-                                <FluentOption Value="AGM">AGM</FluentOption>
-                                <FluentOption Value="SLT">SLT</FluentOption>
-                                <FluentOption Value="AFD">AFD</FluentOption>
-                                <FluentOption Value="FDC">FDC</FluentOption>
-                                <FluentOption Value="MSP">MSP</FluentOption>
-                                <FluentOption Value="FCM">FCM</FluentOption>
-                                <FluentOption Value="SST">SST</FluentOption>
-                                <FluentOption Value="HST">HST</FluentOption>
-                                <FluentOption Value="VST">VST</FluentOption>
-                                <FluentOption Value="RGL">RGL</FluentOption>
-                                <FluentOption Value="AGL">AGL</FluentOption>
-                                <FluentOption Value="SGL">SGL</FluentOption>
-                                <FluentOption Value="Q-BOX">Q-BOX</FluentOption>
-                                <FluentOption Value="ASY">ASY</FluentOption>
-                                <FluentOption Value="PAC">PAC</FluentOption>
-                            </FluentSelect>
+                            <FluentAutocomplete Required
+                                                TOption="string"
+                                                Width="100%"
+                                                Placeholder="Process Type"
+                                                OnOptionsSearch="OnSearchProductionNo"
+                                                MaximumOptionsSearch="1"
+                                                Label="Process Type"
+                                                Virtualize="true"
+                                                Items="ViewModel.ProcessType"
+                                                MaximumSelectedOptions="1"
+                                                OptionText="@(item => $"{item}")"
+                                                @bind-SelectedOptions="@_selectProcessType"
+                                                ValueChanged="@(() => { ViewModel.ProcessProductionLine.ProcessStage = _selectProcessType.FirstOrDefault() ?? ""; })"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect Width="100%"
@@ -73,6 +62,7 @@ else
                                           @bind-Value="@ViewModel.ProcessProductionLine.Status"
                                           Required
                                           Label="Status">
+                                <FluentOption Value="" Selected></FluentOption>
                                 <FluentOption Value="Yes">Yes</FluentOption>
                                 <FluentOption Value="No">No</FluentOption>
                             </FluentSelect>
@@ -86,7 +76,7 @@ else
                             <div class="grid" style="width: 100%; overflow:auto;">
                                 <FluentDataGrid TGridItem=@ProcessProductionLine
                                                 ResizableColumns="true"
-                                                GridTemplateColumns="0.25fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
+                                                GridTemplateColumns="1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
                                                 Style=@_dataGrid
                                                 Items="ViewModel.ProductionProcessHeader.Data.AsQueryable()">
                                     <TemplateColumn Tooltip="true" Title="Action">
@@ -98,7 +88,7 @@ else
                                             Edit
                                         </FluentButton>
                                     </TemplateColumn>
-                                    <PropertyColumn Title="Production No" Property="@(c => c.ProductionNo)" Tooltip="true"/>
+                                    <PropertyColumn Title="Production No" Property="@(c => c.DocNum)" Tooltip="true"/>
                                     <PropertyColumn Title="Process Type" Property="@(c => c.ProcessStage)" Tooltip="true"/>
                                     <PropertyColumn Title="Status" Property="@(c => c.Status)" Tooltip="true"/>
                                 </FluentDataGrid>
