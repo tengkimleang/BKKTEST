@@ -21,7 +21,8 @@ public class ProcessProductionCommandHandler(IUnitOfWork unitOfWork)
             unitOfWork.BeginTransaction(oCompany);
             foreach (var obj in request.Data)
             {
-                var oProductionOrders = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oProductionOrders);
+                var oProductionOrders = (ProductionOrders)oCompany.GetBusinessObject(BoObjectTypes.oProductionOrders);
+                var test = oProductionOrders.GetByKey(obj.ProductionNo);
                 if (oProductionOrders.GetByKey(obj.ProductionNo))
                 {
                     oProductionOrders.UserFields.Fields.Item("U_Status").Value = Guid.NewGuid().ToString();
