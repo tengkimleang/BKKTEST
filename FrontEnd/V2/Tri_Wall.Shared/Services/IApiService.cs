@@ -7,6 +7,7 @@ using Tri_Wall.Shared.Models.GoodReceiptPo;
 using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.InventoryTransfer;
 using Tri_Wall.Shared.Models.IssueForProduction;
+using Tri_Wall.Shared.Models.ProductionProcess;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 namespace Tri_Wall.Shared.Services;
@@ -101,5 +102,8 @@ public interface IApiService
     public Task<Dictionary<string, string>> PostUser(object request);
     [Get("/api/user")]
     public Task<GetAuthTest> GetUser();
+    [Post("/receiptFromProduction/updateProcessProduction")]
+    public Task<PostResponse> UpdateProcessProduction(
+        [Body] ProductionProcessHeader request);
     
 }

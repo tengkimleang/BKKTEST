@@ -21,16 +21,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 // app.UseCors("CorsPolicy");
-var api = app.MapGroup("api");
-api.MapGet("/user", (ClaimsPrincipal user)
-    => user.Claims.ToDictionary(x => x.Type, x => x.Value));
-api.MapPost("/login", () => Results.SignIn(new ClaimsPrincipal(
-        new ClaimsIdentity(
-            new[] { new Claim("id", Guid.NewGuid().ToString()) },
-            "cookies"
-        )),
-    authenticationScheme: "cookies"
-));
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.MapControllers();

@@ -1,7 +1,119 @@
 ﻿@page "/ProductionProcess"
+@inherits MvvmComponentBase<ProductionProcessViewModel>
+@rendermode InteractiveWebAssembly
+@attribute [StreamRendering]
 <PageTitle>Production Process</PageTitle>
-<h3>ProductionProcess</h3>
-
-@code {
-    
+@if (ViewModel.IsView is false)
+{
+    <p>Loading ........</p>
+}
+else
+{
+    <FluentLayout Style="margin-top: 0;">
+        <FluentHeader Style="background-color: transparent;padding: 0;z-index: 0;">
+            <FluentBreadcrumb>
+                <FluentBreadcrumbItem>
+                    @_stringDisplay
+                    <FluentIcon Value="@(new Icons.Regular.Size16.Archive())" Color="@Color.Neutral" Slot="start"/>
+                </FluentBreadcrumbItem>
+            </FluentBreadcrumb>
+            <FluentSpacer/>
+            <FluentButton OnClick="(e) => OnSaveTransaction()" IconEnd="@(new Icons.Filled.Size24.Save())">
+                Save
+            </FluentButton>
+        </FluentHeader>
+        <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+            <FluentBodyContent Class="body-content" Style="height:90% !important;">
+                <div class="content">
+                    <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+                        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+                            <FluentAutocomplete Required
+                                                TOption="GetProductionOrder"
+                                                Width="100%"
+                                                Placeholder="Production No"
+                                                OnOptionsSearch="OnSearch"
+                                                MaximumOptionsSearch="1"
+                                                Label="Production No"
+                                                Virtualize="true"
+                                                Items="ViewModel.GetProductionOrder"
+                                                MaximumSelectedOptions="1"
+                                                OptionText="@(item => $"{item.DocNum}")"
+                                                @bind-SelectedOptions="@_selectedProductionOrders"
+                                                ValueChanged="() => { ViewModel.ProcessProductionLine.ProductionNo = Convert.ToInt32(_selectedProductionOrders.FirstOrDefault()?.DocNum); }"/>
+                        </FluentGridItem>
+                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                            <FluentSelect Width="100%"
+                                          TOption="string"
+                                          @bind-Value="@ViewModel.ProcessProductionLine.ProcessStage"
+                                          Required
+                                          Label="Process Type">
+                                <FluentOption Value="PR1">PR1</FluentOption>
+                                <FluentOption Value="PR2">PR2</FluentOption>
+                                <FluentOption Value="PR3">PR3</FluentOption>
+                                <FluentOption Value="AGM">AGM</FluentOption>
+                                <FluentOption Value="SLT">SLT</FluentOption>
+                                <FluentOption Value="AFD">AFD</FluentOption>
+                                <FluentOption Value="FDC">FDC</FluentOption>
+                                <FluentOption Value="MSP">MSP</FluentOption>
+                                <FluentOption Value="FCM">FCM</FluentOption>
+                                <FluentOption Value="SST">SST</FluentOption>
+                                <FluentOption Value="HST">HST</FluentOption>
+                                <FluentOption Value="VST">VST</FluentOption>
+                                <FluentOption Value="RGL">RGL</FluentOption>
+                                <FluentOption Value="AGL">AGL</FluentOption>
+                                <FluentOption Value="SGL">SGL</FluentOption>
+                                <FluentOption Value="Q-BOX">Q-BOX</FluentOption>
+                                <FluentOption Value="ASY">ASY</FluentOption>
+                                <FluentOption Value="PAC">PAC</FluentOption>
+                            </FluentSelect>
+                        </FluentGridItem>
+                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                            <FluentSelect Width="100%"
+                                          TOption="string"
+                                          @bind-Value="@ViewModel.ProcessProductionLine.Status"
+                                          Required
+                                          Label="Status">
+                                <FluentOption Value="Yes">Yes</FluentOption>
+                                <FluentOption Value="No">No</FluentOption>
+                            </FluentSelect>
+                        </FluentGridItem>
+                        <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
+                            <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="(e) => OnAddLine()">
+                                Add Line
+                            </FluentButton>
+                        </FluentGridItem>
+                        <FluentGridItem xs="12">
+                            <div class="grid" style="width: 100%; overflow:auto;">
+                                <FluentDataGrid TGridItem=@ProcessProductionLine
+                                                ResizableColumns="true"
+                                                GridTemplateColumns="0.25fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr"
+                                                Style=@_dataGrid
+                                                Items="ViewModel.ProductionProcessHeader.Data.AsQueryable()">
+                                    <TemplateColumn Tooltip="true" Title="Action">
+                                        <FluentButton Style="color:#BC2F32" OnClick="(e) => OnDeleteLine(ViewModel.ProductionProcessHeader.Data!.IndexOf(context))"
+                                                      IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                            Delete
+                                        </FluentButton>
+                                        <FluentButton OnClick="(e) => OpenEdit(context)" IconEnd="@(new Icons.Regular.Size24.Edit().WithColor(Color.Info))">
+                                            Edit
+                                        </FluentButton>
+                                    </TemplateColumn>
+                                    <PropertyColumn Title="Production No" Property="@(c => c.ProductionNo)" Tooltip="true"/>
+                                    <PropertyColumn Title="Process Type" Property="@(c => c.ProcessStage)" Tooltip="true"/>
+                                    <PropertyColumn Title="Status" Property="@(c => c.Status)" Tooltip="true"/>
+                                </FluentDataGrid>
+                            </div>
+                        </FluentGridItem>
+                    </FluentGrid>
+                </div>
+            </FluentBodyContent>
+        </FluentStack>
+    </FluentLayout>
+    <FluentOverlay @bind-Visible=@_visible
+                   Opacity="0.4"
+                   FullScreen="true"
+                   OnClose="OnCloseOverlay"
+                   PreventScroll=true>
+        <FluentProgressRing/>
+    </FluentOverlay>
 }
