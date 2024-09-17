@@ -66,12 +66,23 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
                     (await apiService.GetWarehouses()).Data ?? new());
         WarehousesTo = await CheckingValueT(WarehousesTo, async () =>
                            (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest")).Data ?? new();
+        await TotalCountInventoryTransfer();
+        await TotalCountInventoryTransferRequest();
         InventoryTransferForm.FromWarehouse = Warehouses.First().Code ?? "";
         InventoryTransferForm.ToWarehouse = WarehousesTo.First().Code ?? "";
         InventoryTransferForm.Series= Series.First().Code ?? "";
         IsView = true;
+    }
+    [RelayCommand]
+    async Task TotalCountInventoryTransferRequest()
+    {
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest")).Data ?? new();
+    }
+    
+    [RelayCommand]
+    async Task TotalCountInventoryTransfer()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer")).Data ?? new();
     }
 
     [RelayCommand]

@@ -50,11 +50,16 @@ public partial class ReturnFromComponentViewModel(ApiService apiService, ILoadMa
             (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("ReceiptFromProduction")).Data ?? new();
         ReceiptFromProductionOrderForm.Series = Series.First().Code;
+        await TotalCountReceiptFromProduction();
         IsView = true;
     }
 
+    [RelayCommand]
+    async Task TotalCountReceiptFromProduction()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("ReceiptFromProduction")).Data ?? new();
+    }
     [RelayCommand]
     async Task Submit()
     {

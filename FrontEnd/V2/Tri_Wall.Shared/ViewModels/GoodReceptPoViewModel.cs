@@ -65,16 +65,30 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
             (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("GoodReceiptPo")).Data ?? new();
-        TotalItemCountPurchaseOrder = (await apiService.GetTotalItemCount("PurchaseOrder")).Data ?? new();
+        await TotalCountGoodReceiptPo();
+        await TotalCountPurchaseOrder();
         GoodReceiptPoForm.Series = Series.First().Code;
         IsView = true;
     }
 
     [RelayCommand]
+    async Task TotalCountPurchaseOrder()
+    {
+        TotalItemCountPurchaseOrder = (await apiService.GetTotalItemCount("PurchaseOrder")).Data ?? new();
+    }
+
+    [RelayCommand]
+    async Task TotalCountGoodReceiptPo()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("GoodReceiptPo")).Data ?? new();
+    }
+
+    [RelayCommand]
     async Task Submit()
     {
-        GoodReceiptPoForm.ContactPersonCode = string.IsNullOrEmpty(GoodReceiptPoForm.ContactPersonCode) ? "0" : GoodReceiptPoForm.ContactPersonCode;
+        GoodReceiptPoForm.ContactPersonCode = string.IsNullOrEmpty(GoodReceiptPoForm.ContactPersonCode)
+            ? "0"
+            : GoodReceiptPoForm.ContactPersonCode;
         PostResponses = await apiService.PostGoodReceptPo(GoodReceiptPoForm);
     }
 

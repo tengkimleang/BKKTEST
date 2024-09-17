@@ -66,11 +66,23 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
         TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
-        TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
+        await OnTotalItemCountARCreditMemo();
+        await OnTotalItemCountARInvoiceOpenStatus();
         ARCreditMemoForm.Series = Series.First().Code;
         IsView = true;
     }
-
+    
+    [RelayCommand]
+    async Task OnTotalItemCountARInvoiceOpenStatus()
+    {
+        TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
+    }
+    [RelayCommand]
+    async Task OnTotalItemCountARCreditMemo()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
+    }
+    
     [RelayCommand]
     async Task Submit()
     {

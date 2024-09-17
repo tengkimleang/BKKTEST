@@ -47,10 +47,14 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
             (await apiService.GetInventoryCountingLists("GetInventoryCountingList")).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("InventoryCounting")).Data ?? new();
+        await TotalCountInventoryCounting();
         IsView = true;
     }
-
+    [RelayCommand]
+    async Task TotalCountInventoryCounting()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("InventoryCounting")).Data ?? new();
+    }
     [RelayCommand]
     async Task Submit()
     {

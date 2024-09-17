@@ -200,6 +200,7 @@ public partial class ReceiptsFinishedGoodsForm
 
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountReceiptFromProductionCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },

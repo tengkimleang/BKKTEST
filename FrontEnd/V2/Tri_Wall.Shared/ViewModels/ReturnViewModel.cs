@@ -62,10 +62,22 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("Return")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
+        await TotalCountReturn();
+        await TotalCountDeliveryOrderReturn();
         DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
+    }
+    
+    [RelayCommand]
+    async Task TotalCountDeliveryOrderReturn()
+    {
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
+    }
+    
+    [RelayCommand]
+    async Task TotalCountReturn()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("Return")).Data ?? new();
     }
 
     [RelayCommand]

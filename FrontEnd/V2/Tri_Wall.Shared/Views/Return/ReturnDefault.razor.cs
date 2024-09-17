@@ -1,32 +1,33 @@
-﻿using System.Collections.ObjectModel;
+﻿
+using System.Collections.ObjectModel;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Refit;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
-using Tri_Wall.Shared.Views.Return;
-using Tri_Wall.Shared.Views.GoodReceptPo;
-using System.Text.Json;
 using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.Views.GoodReceptPo;
+using Tri_Wall.Shared.Views.GoodReturn;
 
-namespace Tri_Wall.Shared.Pages;
+namespace Tri_Wall.Shared.Views.Return;
 
-public partial class Return
+public partial class ReturnDefault 
 {
+    [Parameter] public bool Visible { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
-    private string stringDisplay = "Return";
-    private string fromWord = "From";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView;
-    protected void OnCloseOverlay() => visible = true;
+    private string _stringDisplay = "Good Return";
+    private string _fromWord = "From";
+    private string _saveWord = "Save";
+    string? _dataGrid = "width: 1600px;height:405px";
+    bool _isView;
+    protected void OnCloseOverlay() => _visible = true;
 
-    IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
+    IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
-    bool visible;
+    bool _visible;
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
@@ -34,16 +35,16 @@ public partial class Return
         var dictionary = new Dictionary<string, object>
         {
             { "item", ViewModel.Items },
-            { "taxPurchase", ViewModel.TaxSales },
+            { "taxPurchase", ViewModel.TaxPurchases },
             { "warehouse", ViewModel.Warehouses },
             { "line", deliveryOrderLine },
             {
                 "getSerialBatch",
                 new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
-            }   
+            }
         };
 
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReturn>(dictionary, new DialogParameters
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineGoodReturn>(dictionary, new DialogParameters
         {
             Title = (string.IsNullOrEmpty(deliveryOrderLine.ItemCode)) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
@@ -53,20 +54,21 @@ public partial class Return
         }).ConfigureAwait(false);
 
         var result = await dialog.Result.ConfigureAwait(false);
-        if (result is { Cancelled: false, Data: Dictionary<string, object> data })
+        if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            ViewModel.DeliveryOrderForm.Lines ??= new();
+            if (ViewModel.GoodReturnForm.Lines == null)
+                ViewModel.GoodReturnForm.Lines = new List<DeliveryOrderLine>();
             if (data["data"] is DeliveryOrderLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
                 {
-                    receiptPoLine.LineNum = ViewModel.DeliveryOrderForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
-                    ViewModel.DeliveryOrderForm.Lines?.Add(receiptPoLine);
+                    receiptPoLine.LineNum = ViewModel.GoodReturnForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.GoodReturnForm.Lines?.Add(receiptPoLine);
                 }
                 else
                 {
-                    var index = ViewModel.DeliveryOrderForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
-                    ViewModel.DeliveryOrderForm.Lines[index] = receiptPoLine;
+                    var index = ViewModel.GoodReturnForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
+                    ViewModel.GoodReturnForm.Lines[index] = receiptPoLine;
                 }
             }
         }
@@ -74,7 +76,7 @@ public partial class Return
 
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
-        e.Items = ViewModel.Customers.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+        e.Items = ViewModel.Vendors.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                  i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.VendorCode);
     }
@@ -83,32 +85,33 @@ public partial class Return
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            fromWord = "";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _fromWord = "";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "Return";
-            fromWord = "From";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "Good Return";
+            _fromWord = "From";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
 
     private void DeleteLine(int index)
     {
-        ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
+        ViewModel.GoodReturnForm.Lines!.RemoveAt(index);
     }
 
     async Task OnSaveTransaction(string type = "")
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            ViewModel.DeliveryOrderForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
-            ViewModel.DeliveryOrderForm.DocDate = DateTime.Now;
-            var result = await Validator!.ValidateAsync(ViewModel.DeliveryOrderForm).ConfigureAwait(false);
+            _visible = false;
+            ViewModel.GoodReturnForm.CustomerCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.GoodReturnForm.DocDate = DateTime.Now;
+            var result = await Validator!.ValidateAsync(ViewModel.GoodReturnForm).ConfigureAwait(false);
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
@@ -117,28 +120,28 @@ public partial class Return
                 }
                 return;
             }
-            visible = true;
-            Console.WriteLine(JsonSerializer.Serialize(ViewModel.DeliveryOrderForm));
+            _visible = true;
+            Console.WriteLine(JsonSerializer.Serialize(ViewModel.GoodReturnForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor = new List<Vendors>();
-                ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
+                _selectedVendor = new List<Vendors>();
+                ViewModel.GoodReturnForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;
+        _visible = false;
     }
 
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -151,7 +154,7 @@ public partial class Return
 
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -187,7 +190,7 @@ public partial class Return
 
     async Task OpenListDataAsyncAsync()
     {
-        await ViewModel.TotalCountReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
+        await ViewModel.TotalCountGoodReceiptPoReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },
@@ -203,7 +206,7 @@ public partial class Return
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Return",
+            Title = "List Good Reutrn",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -219,7 +222,7 @@ public partial class Return
 
     async Task ListCopyFromPurchaseOrder()
     {
-        await ViewModel.TotalCountDeliveryOrderReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
+        await ViewModel.TotalCountGoodReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCountSalesOrder },
@@ -231,7 +234,7 @@ public partial class Return
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
-            Title = "List Delivery Order",
+            Title = "List Good Receipt PO",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -249,11 +252,11 @@ public partial class Return
     {
         Console.WriteLine(e);
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
-        ViewModel.DeliveryOrderForm.DocDate = Convert.ToDateTime(objData?.DocDate);
-        ViewModel.DeliveryOrderForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
-        selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
+        ViewModel.GoodReturnForm.DocDate = Convert.ToDateTime(objData?.DocDate);
+        ViewModel.GoodReturnForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
+        _selectedVendor = ViewModel.Vendors.Where(x => x.VendorCode == objData?.VendorCode);
         await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        ViewModel.DeliveryOrderForm.Lines = new List<DeliveryOrderLine>();
+        ViewModel.GoodReturnForm.Lines = new List<DeliveryOrderLine>();
         var i = 1;
         foreach (var obj in ViewModel.GetPurchaseOrderLineByDocNums)
         {
@@ -287,7 +290,7 @@ public partial class Return
                 });
             }
 
-            ViewModel.DeliveryOrderForm.Lines?.Add(new DeliveryOrderLine()
+            ViewModel.GoodReturnForm.Lines?.Add(new DeliveryOrderLine()
             {
                 ItemCode = obj.ItemCode,
                 ItemName = obj.ItemName,

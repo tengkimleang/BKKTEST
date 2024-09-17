@@ -25,4 +25,8 @@
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.7.2" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Views\Return\MobileAppScreen\" />
+	</ItemGroup>
 </Project>

@@ -384,6 +384,7 @@ public partial class IssueForProductionForm
     }
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountIssueForProductionCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },

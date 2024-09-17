@@ -272,6 +272,7 @@ public partial class ReturnFromComponentForm
 
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountReceiptFromProductionCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },

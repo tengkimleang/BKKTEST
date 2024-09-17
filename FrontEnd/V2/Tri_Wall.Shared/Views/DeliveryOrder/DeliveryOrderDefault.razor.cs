@@ -13,10 +13,11 @@ namespace Tri_Wall.Shared.Views.DeliveryOrder;
 
 public partial class DeliveryOrderDefault
 {
+    
     [Parameter] public DeliveryOrderViewModel ViewModel { get; set; } = default!;
     [Parameter] public bool Visible { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
-    [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
+    // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
     private string _stringDisplay = "Delivery Order";
     private string _fromWord = "From";
     private string _saveWord = "Save";
@@ -126,7 +127,7 @@ public partial class DeliveryOrderDefault
                 _selectedVendor = new List<Vendors>();
                 ViewModel.DeliveryOrderForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
@@ -170,6 +171,7 @@ public partial class DeliveryOrderDefault
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task OnPrintLayout()
     {
         var dictionary = new Dictionary<string, object>
@@ -201,6 +203,7 @@ public partial class DeliveryOrderDefault
 
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalItemCountDeliveryOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },
@@ -269,6 +272,7 @@ public partial class DeliveryOrderDefault
 
     async Task ListCopyFromPurchaseOrder()
     {
+        await ViewModel.TotalItemCountSaleOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCountSalesOrder },

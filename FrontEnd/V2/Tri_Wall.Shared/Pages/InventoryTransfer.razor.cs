@@ -165,6 +165,7 @@ public partial class InventoryTransfer
     }
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountInventoryTransferCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },

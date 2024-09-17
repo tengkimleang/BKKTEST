@@ -242,6 +242,7 @@ public partial class InventoryCountingForm
 
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountInventoryCountingCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },

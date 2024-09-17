@@ -66,12 +66,21 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("DeliveryOrder")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("SaleOrder")).Data ?? new();
+        await OnTotalItemCountDeliveryOrder();
+        await OnTotalItemCountSaleOrder();
         DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }
-
+    [RelayCommand]
+    async Task OnTotalItemCountDeliveryOrder()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("DeliveryOrder")).Data ?? new();
+    }
+    [RelayCommand]
+    async Task OnTotalItemCountSaleOrder()
+    {
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("SaleOrder")).Data ?? new();
+    }
     [RelayCommand]
     async Task Submit()
     {

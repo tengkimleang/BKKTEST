@@ -188,6 +188,7 @@ public partial class GoodReceiptPoForm
     }
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalCountGoodReceiptPoCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },
@@ -210,6 +211,7 @@ public partial class GoodReceiptPoForm
 
     async Task ListCopyFromPurchaseOrder()
     {
+        await ViewModel.TotalCountPurchaseOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCountPurchaseOrder },

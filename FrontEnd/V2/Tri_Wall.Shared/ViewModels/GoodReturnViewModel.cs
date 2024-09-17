@@ -65,12 +65,23 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
+        await TotalCountGoodReturn();
+        await TotalCountGoodReceiptPoReturn();
         GoodReturnForm.Series = Series.First().Code;
         IsView = true;
     }
-
+    
+    [RelayCommand]
+    async Task TotalCountGoodReceiptPoReturn()
+    {
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
+    }
+    
+    [RelayCommand]
+    async Task TotalCountGoodReturn()
+    {
+        TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
+    }
     [RelayCommand]
     async Task Submit()
     {

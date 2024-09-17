@@ -15,18 +15,18 @@ namespace Tri_Wall.Shared.Pages;
 public partial class ARCreditMemoForm
 {
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
-    [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
+    // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
-    private string stringDisplay = "AR Credit Memo";
-    private string fromWord = "From";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
-    protected void OnCloseOverlay() => visible = true;
+    private string _stringDisplay = "AR Credit Memo";
+    private string _fromWord = "From";
+    private string _saveWord = "Save";
+    string? _dataGrid = "width: 1600px;height:405px";
+    bool _isView;
+    protected void OnCloseOverlay() => _visible = true;
 
-    IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
+    protected IEnumerable<Vendors> SelectedVendor = Array.Empty<Vendors>();
 
-    bool visible = false;
+    bool _visible;
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
@@ -45,7 +45,7 @@ public partial class ARCreditMemoForm
 
         var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReturn>(dictionary, new DialogParameters
         {
-            Title = (deliveryOrderLine == null) ? "Add Line" : "Update Line",
+            Title = (string.IsNullOrEmpty(deliveryOrderLine.ItemCode)) ? "Add Line" : "Update Line",
             PreventDismissOnOverlayClick = true,
             PreventScroll = false,
             Width = "80%",
@@ -84,17 +84,17 @@ public partial class ARCreditMemoForm
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            fromWord = "";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _fromWord = "";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "AR Credit Memo";
-            fromWord = "From";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "AR Credit Memo";
+            _fromWord = "From";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
 
@@ -107,7 +107,7 @@ public partial class ARCreditMemoForm
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            ViewModel.ARCreditMemoForm.CustomerCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.ARCreditMemoForm.CustomerCode = SelectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.ARCreditMemoForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.ARCreditMemoForm).ConfigureAwait(false);
             if (!result.IsValid)
@@ -119,40 +119,40 @@ public partial class ARCreditMemoForm
 
                 return;
             }
-            visible = true;
+            _visible = true;
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor = new List<Vendors>();
+                SelectedVendor = new List<Vendors>();
                 ViewModel.ARCreditMemoForm = new DeliveryOrderHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;
+        _visible = false;
     }
 
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
         ViewModel.GetArCreditMemoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
 
-    Task OnDelete(string e)
-    {
-        Console.WriteLine(e);
-        return Task.CompletedTask;
-    }
+    // Task OnDelete(string e)
+    // {
+    //     Console.WriteLine(e);
+    //     return Task.CompletedTask;
+    // }
 
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -188,6 +188,7 @@ public partial class ARCreditMemoForm
 
     async Task OpenListDataAsyncAsync()
     {
+        await ViewModel.TotalItemCountARCreditMemoCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCount },
@@ -219,6 +220,7 @@ public partial class ARCreditMemoForm
 
     async Task ListCopyFromPurchaseOrder()
     {
+        await ViewModel.TotalItemCountARInvoiceOpenStatusCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "totalItemCount", ViewModel.TotalItemCountArInvoice },
@@ -250,7 +252,7 @@ public partial class ARCreditMemoForm
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
         ViewModel.ARCreditMemoForm.DocDate = Convert.ToDateTime(objData?.DocDate);
         ViewModel.ARCreditMemoForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
-        selectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
+        SelectedVendor = ViewModel.Customers.Where(x => x.VendorCode == objData?.VendorCode);
         await ViewModel.GetArInvoiceLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         ViewModel.ARCreditMemoForm.Lines = new List<DeliveryOrderLine>();
         var i = 1;
