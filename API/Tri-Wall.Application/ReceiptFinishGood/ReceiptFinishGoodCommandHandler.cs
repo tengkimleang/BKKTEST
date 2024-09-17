@@ -30,13 +30,10 @@ public class ReceiptFinishGoodCommandHandler(IUnitOfWork unitOfWork)
             oInventoryGenEntry.UserFields.Fields.Item("U_WEBID").Value = Guid.NewGuid().ToString();
             foreach (var l in request.Lines)
             {
-                oInventoryGenEntry.Lines.Quantity = l.Qty;
                 oInventoryGenEntry.Lines.BaseEntry = l.DocNum;
-                oInventoryGenEntry.Lines.ItemCode = l.ItemCode;
-                // oInventoryGenEntry.Lines.BaseLine = l.BaseLineNum;
                 oInventoryGenEntry.Lines.BaseType = 202;
-                oInventoryGenEntry.Lines.WarehouseCode = l.WhsCode;
                 oInventoryGenEntry.Lines.TransactionType = (BoTransactionTypeEnum)l.TransactionType;
+                oInventoryGenEntry.Lines.Quantity = l.Qty;
                 switch (l)
                 {
                     case { ManageItem: "S", Serials: not null }:
