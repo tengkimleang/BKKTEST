@@ -54,10 +54,11 @@
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentSelect Width="100%"
+                                          TOption="string"
                                           @bind-Value="@DataResult.TransactionType"
                                           Required
                                           Label="Status">
-                                <FluentOption Value="" Selected></FluentOption>
+                                <FluentOption Value="99" Selected></FluentOption>
                                 <FluentOption Value="0">Yes</FluentOption>
                                 <FluentOption Value="1">No</FluentOption>
                             </FluentSelect>
