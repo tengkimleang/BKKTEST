@@ -18,7 +18,7 @@ public partial class DialogAddLineGoodReceiptPo
     public Dictionary<string, object> Content { get; set; } = default!;
 
     private GoodReceiptPoLine DataResult { get; set; } = new();
-    private List<BatchReceiptPo> batchReceiptPOs = new();
+    private List<BatchReceiptPo> _batchReceiptPOs = new();
     private List<SerialReceiptPo> _serialReceiptPo = new();
     private bool _isItemBatch;
     private bool _isItemSerial;
@@ -34,7 +34,7 @@ public partial class DialogAddLineGoodReceiptPo
         if (Content.TryGetValue("line", out var value))
         {
             DataResult = value as GoodReceiptPoLine ?? new GoodReceiptPoLine();
-            batchReceiptPOs = DataResult.Batches ?? new List<BatchReceiptPo>();
+            _batchReceiptPOs = DataResult.Batches ?? new List<BatchReceiptPo>();
             _serialReceiptPo = DataResult.Serials ?? new List<SerialReceiptPo>();
             _selectedItem = Items.Where(i => i.ItemCode == DataResult.ItemCode);
             UpdateItemDetails(DataResult.ItemCode);
@@ -50,7 +50,7 @@ public partial class DialogAddLineGoodReceiptPo
 
     private async Task SaveAsync()
     {
-        DataResult.Batches = batchReceiptPOs;
+        DataResult.Batches = _batchReceiptPOs;
         DataResult.Serials = _serialReceiptPo;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
@@ -83,7 +83,7 @@ public partial class DialogAddLineGoodReceiptPo
     {
         if (_isItemBatch)
         {
-            batchReceiptPOs.Add(new BatchReceiptPo { BatchCode = "", });
+            _batchReceiptPOs.Add(new BatchReceiptPo { BatchCode = "", });
         }
         else if (_isItemSerial && _serialReceiptPo.Count() < DataResult.Qty)
         {
@@ -95,7 +95,7 @@ public partial class DialogAddLineGoodReceiptPo
     {
         if (_isItemBatch)
         {
-            batchReceiptPOs.RemoveAt(index);
+            _batchReceiptPOs.RemoveAt(index);
         }
         else if (_isItemSerial)
         {
@@ -115,7 +115,7 @@ public partial class DialogAddLineGoodReceiptPo
             { "qty", DataResult.Qty ?? 0 }
         };
         if(_isItemBatch)
-            batchReceiptPOs[index].BatchCode=(await GetGenerateBatchSerial(data));
+            _batchReceiptPOs[index].BatchCode=(await GetGenerateBatchSerial(data));
         else if(_isItemSerial)
             _serialReceiptPo[index].SerialCode=await GetGenerateBatchSerial(data);
     }

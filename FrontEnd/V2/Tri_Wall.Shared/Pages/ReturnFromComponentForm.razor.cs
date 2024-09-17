@@ -12,6 +12,7 @@ using Tri_Wall.Shared.Models.ReturnComponentProduction;
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.ReceiptFromProduction;
+using Tri_Wall.Shared.Views.ReturnComponent;
 
 namespace Tri_Wall.Shared.Pages;
 
@@ -100,7 +101,7 @@ public partial class ReturnFromComponentForm
                 new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
             }
         };
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReceiptFromProductionOrder>(dictionary
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineReturnComponent>(dictionary
             , new DialogParameters
             {
                 Title = (issueProductionLine.ItemCode == "") ? "Add Line" : "Update Line",
@@ -194,6 +195,12 @@ public partial class ReturnFromComponentForm
                     ToastService!.ShowError(error.ErrorMessage);
                 }
 
+                ViewModel.IssueProductionLine =
+                    JsonSerializer.Deserialize<ObservableCollection<ReturnComponentProductionLine>>(strMp) ?? new();
+                ViewModel.GetProductionOrderLines =
+                    JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(
+                        strGetProductionOrderLines) ??
+                    new();
                 return;
             }
 
@@ -216,6 +223,7 @@ public partial class ReturnFromComponentForm
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
         if (ViewModel.PostResponses.ErrorCode == "")
         {
+            _visible = false;
             return;
         }
 

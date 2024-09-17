@@ -84,14 +84,14 @@
                         </FluentButton>
                         <FluentDataGrid TGridItem=@BatchReceiptPo ResizableColumns="true"
                                         GridTemplateColumns="1fr 1fr 0.5fr 1fr 1fr 1fr 1fr"
-                                        Items="batchReceiptPOs.AsQueryable()"
+                                        Items="_batchReceiptPOs.AsQueryable()"
                                         Style=@dataGrid>
                             <TemplateColumn Tooltip="true" Title="Action">
-                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(batchReceiptPOs.IndexOf(context))" 
+                                <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLineFromBatchOrSerial(_batchReceiptPOs.IndexOf(context))" 
                                               IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                     Delete
                                 </FluentButton>
-                                <FluentButton OnClick="@( e=> OnClickGennerateBatchSerial(batchReceiptPOs.IndexOf(context)))"
+                                <FluentButton OnClick="@( e=> OnClickGennerateBatchSerial(_batchReceiptPOs.IndexOf(context)))"
                                               IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Info))">
                                     Generate
                                 </FluentButton>

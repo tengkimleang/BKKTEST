@@ -949,6 +949,94 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			)A 
 			WHERE A."Qty"<>0
 			ORDER BY "DocNum" DESC;
+		ELSE IF :par1='GetForProductionProcess' THEN
+			SELECT * FROM(
+				SELECT 
+					 A."DocEntry" AS "DocEntry"
+					,A."DocNum" AS "DocNum"
+					,TO_VARCHAR(A."DueDate",'DD-MM-yyyy') AS "DueDate"
+					,A."ItemCode" AS "ProductNo"
+					,C."ItemName" AS "ProductName"
+					,A."PlannedQty"-A."CmpltQty" AS "Qty"
+					,D."Price" AS "Price"
+					,CASE WHEN C."ManBtchNum"='Y' THEN
+						'B'
+					 WHEN C."ManSerNum"='Y' THEN
+						'S'
+					 ELSE
+						'N'
+					 END AS "ItemType"
+					,C."CodeBars"
+					,TO_VARCHAR(A."StartDate",'dd-MM-yyyy') AS "StartDate"
+					,E."BPLid" AS "BranchCode"
+					,F."BPLName" AS "BranchName"
+					,A."Warehouse"
+					,A."Uom"
+					,G."QtyIssue"
+				FROM TRIWALL_TRAINKEY."OWOR" AS A
+				LEFT JOIN TRIWALL_TRAINKEY."OITM" AS C ON C."ItemCode"=A."ItemCode"
+				LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS D ON A."ItemCode"=D."ItemCode" AND "PriceList"=1
+				LEFT JOIN TRIWALL_TRAINKEY."OWHS" AS E ON E."WhsCode"=A."Warehouse"
+				LEFT JOIN TRIWALL_TRAINKEY."OBPL" AS F ON E."BPLid"=F."BPLId"
+				LEFT JOIN (
+					SELECT 
+						 "DocEntry" AS "DocEntry"
+						,SUM("IssuedQty") AS "QtyIssue"
+					FROM TRIWALL_TRAINKEY."WOR1"
+					GROUP BY "DocEntry"
+				) AS G ON G."DocEntry"=A."DocEntry"
+				WHERE --A."Series"=CASE WHEN :par1='-1' THEN A."Series" ELSE :par1 END 
+					  --AND 
+					  A."Status"='R'
+					  --AND "DocNum" LIKE '%'|| :par2 ||'%'
+			)A 
+			WHERE A."Qty"<>0
+			ORDER BY "DocNum" DESC;
+		ELSE IF :par1='GetProductionForFinishGoods' THEN
+			SELECT * FROM(
+				SELECT 
+					 A."DocEntry" AS "DocEntry"
+					,A."DocNum" AS "DocNum"
+					,TO_VARCHAR(A."DueDate",'DD-MM-yyyy') AS "DueDate"
+					,A."ItemCode" AS "ProductNo"
+					,C."ItemName" AS "ProductName"
+					,A."PlannedQty"-A."CmpltQty" AS "Qty"
+					,D."Price" AS "Price"
+					,CASE WHEN C."ManBtchNum"='Y' THEN
+						'B'
+					 WHEN C."ManSerNum"='Y' THEN
+						'S'
+					 ELSE
+						'N'
+					 END AS "ItemType"
+					,C."CodeBars"
+					,TO_VARCHAR(A."StartDate",'dd-MM-yyyy') AS "StartDate"
+					,E."BPLid" AS "BranchCode"
+					,F."BPLName" AS "BranchName"
+					,A."Warehouse"
+					,A."Uom"
+					,G."QtyIssue"
+				FROM TRIWALL_TRAINKEY."OWOR" AS A
+				LEFT JOIN TRIWALL_TRAINKEY."OITM" AS C ON C."ItemCode"=A."ItemCode"
+				LEFT JOIN TRIWALL_TRAINKEY."ITM1" AS D ON A."ItemCode"=D."ItemCode" AND "PriceList"=1
+				LEFT JOIN TRIWALL_TRAINKEY."OWHS" AS E ON E."WhsCode"=A."Warehouse"
+				LEFT JOIN TRIWALL_TRAINKEY."OBPL" AS F ON E."BPLid"=F."BPLId"
+				LEFT JOIN (
+					SELECT 
+						 "DocEntry" AS "DocEntry"
+						,SUM("IssuedQty") AS "QtyIssue"
+					FROM TRIWALL_TRAINKEY."WOR1"
+					GROUP BY "DocEntry"
+				) AS G ON G."DocEntry"=A."DocEntry"
+				WHERE --A."Series"=CASE WHEN :par1='-1' THEN A."Series" ELSE :par1 END 
+					  --AND 
+					  A."Status"='R'
+					  --AND "DocNum" LIKE '%'|| :par2 ||'%'
+			)A 
+			WHERE A."Qty"<>0
+			ORDER BY "DocNum" DESC;
+		END IF;
+		END IF;
 		END IF;
 		END IF;
 	ELSE IF :DTYPE='GET_Production_Order_Count' THEN
@@ -4428,6 +4516,28 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			 ,A."U_PROPERTIES" AS PROPERTIES
 			 ,IFNULL(A."U_LayoutPrintName",'') AS LAYOUTPRINTNAME
 		FROM TRIWALL_TRAINKEY."@TBREPORT" AS A WHERE A."Code"=:par1;
+	ELSE IF :DTYPE='GET_Production_Finished_Good' THEN
+		execute immediate '
+			SELECT  
+				 A."DocEntry" AS "DocEntry"
+				--,A."LineNum" AS "OrderLineNum"
+				,0 AS "OrderLineNum"
+				,A."ItemCode" AS "ItemCode"
+				,B."ItemName" AS "ItemName"
+				,A."PlannedQty"-A."CmpltQty" AS "Qty"
+				,A."PlannedQty" AS "PlanQty"
+				,C."UgpCode" AS "Uom"
+				,A."Warehouse" AS "WarehouseCode"
+				,CASE WHEN B."ManSerNum"=''Y'' THEN
+				 	''S''
+				 WHEN B."ManBtchNum"=''Y'' THEN
+				 	''B''
+				 ELSE ''N'' END AS "ItemType"
+			FROM TRIWALL_TRAINKEY."OWOR" AS A
+			LEFT JOIN TRIWALL_TRAINKEY."OITM" AS B ON B."ItemCode"=A."ItemCode"
+			LEFT JOIN TRIWALL_TRAINKEY."OUGP" AS C ON B."UgpEntry"=C."UgpEntry"
+			WHERE A."DocEntry" IN ('|| :par1 ||') AND (A."PlannedQty"-A."CmpltQty")<>0;';
+	END IF;
 	END IF;
 	END IF;
 	END IF;

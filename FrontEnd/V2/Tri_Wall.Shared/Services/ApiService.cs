@@ -8,6 +8,7 @@ using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Models.InventoryTransfer;
 using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ProductionProcess;
+using Tri_Wall.Shared.Models.ReceiptFinishGood;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 namespace Tri_Wall.Shared.Services;
@@ -89,7 +90,7 @@ public class ApiService(IApiService apiService)
         => apiService.PostReturn(deliveryOrderHeader);
     public Task<PostResponse> PostGoodReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostGoodReturn(deliveryOrderHeader);
-    public Task<PostResponse> PostARCreditMemo(DeliveryOrderHeader deliveryOrderHeader)
+    public Task<PostResponse> PostArCreditMemo(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostARCreditMemo(deliveryOrderHeader);
     public Task<PostResponse> PostInventoryCounting(InventoryCountingHeader deliveryOrderHeader)
         => apiService.PostInventoryCounting(deliveryOrderHeader);
@@ -101,4 +102,9 @@ public class ApiService(IApiService apiService)
             "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLineDetailByDocEntry", docEntry));
     public Task<PostResponse> PostProductionProcess(ProductionProcessHeader productionProcessHeader)
         => apiService.UpdateProcessProduction(productionProcessHeader);
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionFinishedGoodLines(string docEntry)
+        => apiService.GetProductionOrderLines(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Finished_Good",docEntry));
+    public Task<PostResponse> PostReceiptFinishGood(ReceiptFinishGoodHeader receiptFinishGoodHeader)
+        => apiService.PostReceiptFinishGood(receiptFinishGoodHeader);
 }

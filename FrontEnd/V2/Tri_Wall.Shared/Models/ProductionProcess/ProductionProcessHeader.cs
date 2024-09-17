@@ -1,6 +1,8 @@
-﻿namespace Tri_Wall.Shared.Models.ProductionProcess;
+﻿using System.Collections.ObjectModel;
+
+namespace Tri_Wall.Shared.Models.ProductionProcess;
 
 public class ProductionProcessHeader
 {
-    public List<ProcessProductionLine> Data { get; set; }= new List<ProcessProductionLine>();
+    public ObservableCollection<ProcessProductionLine> Data { get; set; }= new();
 }

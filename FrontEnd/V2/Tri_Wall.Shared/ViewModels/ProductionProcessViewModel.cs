@@ -11,13 +11,15 @@ namespace Tri_Wall.Shared.ViewModels;
 public partial class ProductionProcessViewModel(ApiService apiService) : ViewModelBase
 {
     #region Data Member
+
     [ObservableProperty] ProductionProcessHeader _productionProcessHeader = new();
     [ObservableProperty] ObservableCollection<GetProductionOrder> _getProductionOrder = new();
     [ObservableProperty] Boolean _isView;
     [ObservableProperty] PostResponse _postResponses = new();
     [ObservableProperty] ProcessProductionLine _processProductionLine = new();
-    [ObservableProperty] List<string> _processType = new()
-    {
+
+    [ObservableProperty] List<string> _processType =
+    [
         "PR1",
         "PR2",
         "PR3",
@@ -35,15 +37,17 @@ public partial class ProductionProcessViewModel(ApiService apiService) : ViewMod
         "SGL",
         "Q-BOX",
         "ASY",
-        "PAC",
-    };
+        "PAC"
+    ];
+
     #endregion
-    
+
     public override async Task Loaded()
     {
-        GetProductionOrder = (await apiService.GetProductionOrders("GetForReceiptProduction")).Data ?? new();
+        GetProductionOrder = (await apiService.GetProductionOrders("GetForProductionProcess")).Data ?? new();
         IsView = true;
     }
+
     [RelayCommand]
     async Task Submit()
     {

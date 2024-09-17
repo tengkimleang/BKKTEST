@@ -75,7 +75,7 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     async Task Submit()
     {
         ARCreditMemoForm.ContactPersonCode = string.IsNullOrEmpty(ARCreditMemoForm.ContactPersonCode) ? "0" : ARCreditMemoForm.ContactPersonCode;
-        PostResponses = await apiService.PostARCreditMemo(ARCreditMemoForm);
+        PostResponses = await apiService.PostArCreditMemo(ARCreditMemoForm);
     }
 
     [RelayCommand]
