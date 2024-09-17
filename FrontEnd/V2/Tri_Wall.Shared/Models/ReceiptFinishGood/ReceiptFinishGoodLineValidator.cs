@@ -7,6 +7,7 @@ public class ReceiptFinishGoodLineValidator : AbstractValidator<ReceiptFinishGoo
     public ReceiptFinishGoodLineValidator()
     {
         RuleFor(x => x.ItemCode).NotEmpty().WithMessage("Item Code is Require");
+        RuleFor(x => x.TransactionType).NotEmpty().WithMessage("Transaction Type is Require");
         RuleFor(x => x.Qty).NotNull().WithMessage("Qty is Require");
         RuleFor(x => x.Qty).GreaterThan(0).WithMessage("Qty is Require");
         RuleFor(x => x.Serials).Must((x, serials) => x.ManageItem == "S" ? serials?.Count > 0 : true)

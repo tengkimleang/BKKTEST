@@ -14,7 +14,7 @@ public class ReceiptFinishGoodLine
     public string UomName { get; set; } = string.Empty;
     public string WhsCode { get; set; } = string.Empty;
     public string ManageItem { get; set; } = string.Empty;
-    public int TransactionType { get; set; }
+    public string TransactionType { get; set; } = string.Empty;
     public List<ReceiptFinishGoodBatch> Batches { get; set; }
     public List<ReceiptFinishGoodSerial> Serials { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace Tri_Wall.Application.ReceiptFinishGood;
 
-public class ReceiptFinishGoodCommandValidator: AbstractValidator<ReceiptFinishGoodCommand>
+public class ReceiptFinishGoodCommandValidator : AbstractValidator<ReceiptFinishGoodCommand>
 {
     public ReceiptFinishGoodCommandValidator()
     {
@@ -15,6 +15,7 @@ public class ReceiptFinishGoodCommandValidator: AbstractValidator<ReceiptFinishG
                 item.RuleFor(i => i.WhsCode).NotEmpty().WithMessage("WhsCode must not be empty");
                 item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
                 item.RuleFor(i => i.BaseLineNum).GreaterThanOrEqualTo(0).WithMessage("RowLine should bigger than 0");
+                item.RuleFor(x => x.TransactionType).GreaterThan(0).WithMessage("Transaction Type is Require");
             }));
     }
 }

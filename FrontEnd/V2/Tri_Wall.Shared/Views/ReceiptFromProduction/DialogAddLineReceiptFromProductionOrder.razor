@@ -53,6 +53,16 @@
                             </FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                            <FluentSelect Width="100%"
+                                          @bind-Value="@DataResult.TransactionType"
+                                          Required
+                                          Label="Status">
+                                <FluentOption Value="" Selected></FluentOption>
+                                <FluentOption Value="0">Yes</FluentOption>
+                                <FluentOption Value="1">No</FluentOption>
+                            </FluentSelect>
+                        </FluentGridItem>
+                        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentNumberField @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
                             </FluentNumberField>
                         </FluentGridItem>
