@@ -15,7 +15,7 @@ public class ReceiptFinishGoodCommandValidator : AbstractValidator<ReceiptFinish
                 item.RuleFor(i => i.WhsCode).NotEmpty().WithMessage("WhsCode must not be empty");
                 item.RuleFor(i => i.Qty).GreaterThan(0).WithMessage("Qty should bigger than 0");
                 item.RuleFor(i => i.BaseLineNum).GreaterThanOrEqualTo(0).WithMessage("RowLine should bigger than 0");
-                item.RuleFor(x => x.TransactionType).Equal(99).WithMessage("Transaction Type is Require");
+                item.RuleFor(x => x.TransactionType).NotEqual(99).WithMessage("Transaction Type is Require");
             }));
     }
 }
