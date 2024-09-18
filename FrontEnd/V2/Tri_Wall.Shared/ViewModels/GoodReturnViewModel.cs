@@ -30,7 +30,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
 
     [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCount = new();
 
-    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountSalesOrder = new();
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalCountGoodReceiptPo = new();
 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
@@ -65,36 +65,55 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        await TotalCountGoodReturn();
-        await TotalCountGoodReceiptPoReturn();
         GoodReturnForm.Series = Series.First().Code;
         IsView = true;
     }
-    
+
     [RelayCommand]
     async Task TotalCountGoodReceiptPoReturn()
     {
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
+        TotalCountGoodReceiptPo = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
     }
-    
+
     [RelayCommand]
     async Task TotalCountGoodReturn()
     {
         TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
     }
+
     [RelayCommand]
     async Task Submit()
     {
-        GoodReturnForm.ContactPersonCode = string.IsNullOrEmpty(GoodReturnForm.ContactPersonCode) ? "0" : GoodReturnForm.ContactPersonCode;
+        GoodReturnForm.ContactPersonCode = string.IsNullOrEmpty(GoodReturnForm.ContactPersonCode)
+            ? "0"
+            : GoodReturnForm.ContactPersonCode;
         PostResponses = await apiService.PostGoodReturn(GoodReturnForm);
     }
 
     [RelayCommand]
-    async Task OnGetGoodReceiptPo(string perPage)
+    async Task OnGetGoodReturn(string perPage)
     {
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", perPage)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [RelayCommand]
+    async Task OnGetReturnBySearch(Dictionary<string, object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", ""
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
         }
         catch (Exception e)
         {
@@ -134,11 +153,11 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     }
 
     [RelayCommand]
-    async Task OnGetPurchaseOrder(string perPage)
+    async Task OnGetGoodReceiptPo(string perPage)
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReceiptPOReturn", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPOHeaderByReturn", perPage)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -161,6 +180,9 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
+        GoodReturnHeaderDetailByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GoodReceiptPoHeaderReturnByDocEntry"))
+            .Data ?? new();
         GetPurchaseOrderLineByDocNums =
             (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry)).Data ??
             new();
@@ -180,8 +202,12 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
                         MfrNo = objSerial.MfrSerialNo,
                         SerialCode = objSerial.SerialBatch,
                         Qty = Convert.ToInt32(objSerial.Qty),
-                        MfrDate = Convert.ToDateTime(objSerial.MrfDate),
-                        ExpDate = Convert.ToDateTime(objSerial.ExpDate),
+                        MfrDate = (string.IsNullOrEmpty(objSerial.MrfDate))
+                            ? DateTime.Now
+                            : Convert.ToDateTime(objSerial.MrfDate),
+                        ExpDate = (string.IsNullOrEmpty(objSerial.ExpDate))
+                            ? DateTime.Now
+                            : Convert.ToDateTime(objSerial.ExpDate),
                         OnSelectedBatchOrSerial = new[] { objSerial },
                     });
                 }
@@ -200,8 +226,8 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
                         LotNo = objBatch.MfrSerialNo,
                         BatchCode = objBatch.SerialBatch,
                         Qty = Convert.ToDouble(objBatch.Qty),
-                        ManfectureDate = Convert.ToDateTime(objBatch.MrfDate),
-                        ExpDate = Convert.ToDateTime(objBatch.ExpDate),
+                        ManfectureDate = Convert.ToDateTime(objBatch.MrfDate ?? ""),
+                        ExpDate = Convert.ToDateTime(objBatch.ExpDate ?? ""),
                         QtyAvailable = Convert.ToDouble(objBatch.Qty),
                         OnSelectedBatchOrSerial = new[] { objBatch },
                     });
@@ -215,7 +241,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReturnDoHeader", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPOHeaderByReturn", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

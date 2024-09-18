@@ -178,7 +178,7 @@ public partial class ReturnDefault
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         //OnGetPurchaseOrder
-        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
+        await ViewModel.GetGoodReturnCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
 
@@ -225,7 +225,7 @@ public partial class ReturnDefault
         await ViewModel.TotalCountGoodReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
-            { "totalItemCount", ViewModel.TotalItemCountSalesOrder },
+            { "totalItemCount", ViewModel.TotalCountGoodReceiptPo },
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListDataPurchaseOrder) },
             //{ "isDelete", true },
             //{"onDelete",new Func<string,Task>(OnDelete)},
@@ -244,7 +244,7 @@ public partial class ReturnDefault
 
     async Task<ObservableCollection<GetListData>> GetListDataPurchaseOrder(int p)
     {
-        await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(p.ToString());
+        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
 

@@ -1,27 +1,29 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen.List;
+namespace Tri_Wall.Shared.Views.Return.MobileAppScreen.List;
 
-public partial class ListSearchSalesOrder
+public partial class ListSearchGoodReceiptPo
 {
     private int _refreshCount;
     private int _count;
     private string? _searchValue;
     private readonly ObservableCollection<GetListData> _scrollingData = new();
     public bool IsViewDetail;
+
     protected override async void OnInitialized()
     {
         StateHasChanged();
-        ComponentAttribute.Title = "List Search";
-        ComponentAttribute.Path = "/deliveryorder";
+        ComponentAttribute.Title = "List Search SO";
+        ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
         await OnRefreshAsync();
         IsViewDetail = false;
     }
+
     private void UpdateGridSize(GridItemSize size)
     {
         if (size != GridItemSize.Xs)
@@ -29,6 +31,7 @@ public partial class ListSearchSalesOrder
             NavigationManager.NavigateTo("deliveryorder");
         }
     }
+
     private async Task OnSearch()
     {
         if (!string.IsNullOrWhiteSpace(_searchValue))
@@ -36,12 +39,14 @@ public partial class ListSearchSalesOrder
             _scrollingData.Clear();
             _count = 0;
             _refreshCount = 0;
-            var dataSearch = new Dictionary<string, object> { { "docNum", _searchValue },{"dateFrom",""},{"dateTo",""} };
-            await ViewModel.GetSaleOrderBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
+            var dataSearch = new Dictionary<string, object>
+                { { "docNum", _searchValue }, { "dateFrom", "" }, { "dateTo", "" } };
+            await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
             foreach (var item in ViewModel.GetListData)
             {
                 _scrollingData.Add(item);
             }
+
             StateHasChanged();
         }
         else
@@ -52,25 +57,27 @@ public partial class ListSearchSalesOrder
 
     public async Task<bool> OnRefreshAsync()
     {
-        await ViewModel.TotalItemCountSaleOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
-        if(Convert.ToInt32(ViewModel.TotalItemCountSalesOrder.FirstOrDefault()?.AllItem??"0")<=_count)
+        await ViewModel.TotalCountGoodReceiptPoReturnCommand.ExecuteAsync(null).ConfigureAwait(false);
+        if (Convert.ToInt32(ViewModel.TotalCountGoodReceiptPo.FirstOrDefault()?.AllItem ?? "0") <= _count)
         {
             return false;
         }
-        await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
+
+        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
         foreach (var item in ViewModel.GetListData)
         {
             _scrollingData.Add(item);
         }
+
         _refreshCount++;
-        _count = + _scrollingData.Count;
+        _count = +_scrollingData.Count;
         StateHasChanged();
         return true;
     }
 
     private Task OnClickCopy(string docEntry)
     {
-        NavigationManager.NavigateTo($"/addDeliveryOrderMobile/{docEntry}");
+        NavigationManager.NavigateTo($"/AddGoodReturnMobile/{docEntry}");
         return Task.CompletedTask;
     }
 }

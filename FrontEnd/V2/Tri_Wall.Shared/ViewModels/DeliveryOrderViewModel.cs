@@ -66,8 +66,8 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        await OnTotalItemCountDeliveryOrder();
-        await OnTotalItemCountSaleOrder();
+        // await OnTotalItemCountDeliveryOrder();
+        // await OnTotalItemCountSaleOrder();
         DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }
@@ -159,6 +159,24 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader", ""
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [RelayCommand]
+    async Task OnGetSaleOrderBySearch(Dictionary<string, object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

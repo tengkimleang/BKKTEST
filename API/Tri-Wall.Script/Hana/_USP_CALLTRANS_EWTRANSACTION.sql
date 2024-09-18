@@ -3123,10 +3123,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."ODLN" 
 			WHERE "DocStatus"='O'
 			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
@@ -3135,21 +3135,34 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		END IF;
 		END IF;
 	ELSE IF :DTYPE='GetSaleOrder' THEN
-
-		DECLARE offset INT;
-		SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
-
-		SELECT 
-			 "DocEntry" AS "DocEntry"
-			,"DocNum" AS "DocumentNumber"
-			,"DocDate" AS "DocDate"
-			,"CardCode" AS "VendorCode"
-			,"Comments" AS "Remarks"
-			,"TaxDate" AS "TaxDate"
-		FROM TRIWALL_TRAINKEY."ORDR" 
-		WHERE "DocStatus"='O'
-		ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
-		
+		IF :par2='' THEN
+			DECLARE offset INT;
+			SELECT CAST(:par1 AS INT)*10 INTO offset FROM DUMMY;
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORDR" 
+			WHERE "DocStatus"='O'
+			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
+		ELSE IF :par2='condition' THEN
+			SELECT 
+				 "DocEntry" AS "DocEntry"
+				,"DocNum" AS "DocumentNumber"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
+				,"CardCode" AS "VendorCode"
+				,"Comments" AS "Remarks"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."ORDR" 
+			WHERE "DocStatus"='O' AND
+			 	"DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
+			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
+			ORDER BY "DocEntry";
+		END IF;
+		END IF;
 	ELSE IF :DTYPE='GET_PurchaseOrder_Line_Detail_By_DocNum' THEN
 	
 		SELECT 
@@ -3586,23 +3599,23 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."ORPD" 
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		ELSE IF :par2='condition' THEN
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."ORPD" 
-			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			WHERE --"DocStatus"='O' AND
+			 	"DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -3798,7 +3811,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
 				,TO_VARCHAR(B."ExpDate",'dd-MM-yyyy') AS "ExpDate"
-				,B."MnfDate" AS "MrfDate"
+				,TO_VARCHAR(B."MnfDate",'dd-MM-yyyy') AS "MrfDate"
 				,'Serial' AS "Type"
 			FROM TRIWALL_TRAINKEY."SRI1" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."OSRN" AS B ON A."ItemCode"=B."ItemCode" AND B."SysNumber"=A."SysSerial"
@@ -3815,7 +3828,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,B."DistNumber" AS "SerialBatch"
 				,B."MnfSerial" AS "MfrSerialNo"
 				,TO_VARCHAR("ExpDate",'dd-MM-yyyy') AS "ExpDate"
-				,B."MnfDate" AS "MrfDate"
+				,TO_VARCHAR(B."MnfDate",'dd-MM-yyyy') AS "MrfDate"
 				,'Batch' AS "Type"
 			FROM TRIWALL_TRAINKEY."IBT1" AS A 
 			LEFT JOIN TRIWALL_TRAINKEY."OBTN" AS B ON A."ItemCode"=B."ItemCode" AND A."BatchNum"=B."DistNumber"
@@ -3907,7 +3920,18 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			
 		END IF;
 		END IF;
-	ELSE IF :DTYPE='GoodReturnDoHeader' THEN
+	ELSE IF :DTYPE='GoodReceiptPoHeaderReturnByDocEntry' THEN
+		SELECT 
+			 "DocEntry" AS "DocEntry"
+			,"DocNum" AS "DocumentNumber"
+			,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
+			,"CardCode" AS "Vendor"
+			,"Comments" AS "RefInv"
+			,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
+		FROM TRIWALL_TRAINKEY."OPDN" 
+		WHERE "DocEntry"=:par1 AND "DocStatus"='O'
+		ORDER BY "DocEntry";
+	ELSE IF :DTYPE='GoodReceiptPOHeaderByReturn' THEN
 	
 		IF :par2='' THEN
 			DECLARE offset INT;
@@ -3916,24 +3940,25 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
-			FROM TRIWALL_TRAINKEY."ORPD" 
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPDN" 
+			WHERE "DocStatus"='O'
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		ELSE IF :par2='condition' THEN
 		
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
-			FROM TRIWALL_TRAINKEY."ORPD" 
-			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
+			FROM TRIWALL_TRAINKEY."OPDN" 
+			WHERE "DocStatus"='O' AND
+				"DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 			
@@ -4537,6 +4562,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."OITM" AS B ON B."ItemCode"=A."ItemCode"
 			LEFT JOIN TRIWALL_TRAINKEY."OUGP" AS C ON B."UgpEntry"=C."UgpEntry"
 			WHERE A."DocEntry" IN ('|| :par1 ||') AND (A."PlannedQty"-A."CmpltQty")<>0;';
+	END IF;
 	END IF;
 	END IF;
 	END IF;
