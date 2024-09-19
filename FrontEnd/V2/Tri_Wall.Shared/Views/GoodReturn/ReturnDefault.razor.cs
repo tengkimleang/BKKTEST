@@ -10,7 +10,7 @@ using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.GoodReturn;
 
-namespace Tri_Wall.Shared.Views.Return;
+namespace Tri_Wall.Shared.Views.GoodReturn;
 
 public partial class ReturnDefault 
 {

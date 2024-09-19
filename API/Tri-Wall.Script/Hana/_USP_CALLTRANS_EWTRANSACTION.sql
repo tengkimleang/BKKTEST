@@ -3018,20 +3018,20 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OPDN" 
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		ELSE IF :par2='condition' THEN
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OPDN" 
 			WHERE "DocStatus"='O'
 			AND "DocDate" BETWEEN :par3 AND :par4

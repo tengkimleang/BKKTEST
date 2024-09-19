@@ -1,16 +1,18 @@
 ﻿
+
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Models.GoodReceiptPo;
 
-namespace Tri_Wall.Shared.Views.Return.MobileAppScreen.Add;
+namespace Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen.Add;
 
 public partial class AddSerialLine
 {
     [Parameter] public Func<Task> IsViewDetail { get; set; } = default!;
-    [Parameter] public Func<SerialDeliveryOrder, Task> SaveSerial { get; set; } = default!;
+    [Parameter] public Func<SerialReceiptPo, Task> SaveSerial { get; set; } = default!;
     [Parameter] public Func<int,Task> DeleteSerial { get; set; } = default!;
 
     [Parameter]
@@ -21,7 +23,7 @@ public partial class AddSerialLine
     [Parameter] public bool IsUpdate { get; set; }
 
     [Parameter] public IEnumerable<GetBatchOrSerial> SelectedSerial { get; set; } = Array.Empty<GetBatchOrSerial>();
-    private SerialDeliveryOrder BatchDeliveryOrder { get; set; } = new();
+    private SerialReceiptPo SerialReceiptPo { get; set; } = new();
 
     protected override void OnInitialized()
     {
@@ -34,7 +36,7 @@ public partial class AddSerialLine
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("deliveryorder");
+            NavigationManager.NavigateTo("goodreceptpoform");
         }
     }
 
@@ -50,14 +52,14 @@ public partial class AddSerialLine
         var firstItem = SelectedSerial.FirstOrDefault();
         if (firstItem == null) return Task.CompletedTask;
         Console.WriteLine(JsonSerializer.Serialize(firstItem));
-        BatchDeliveryOrder.SerialCode = firstItem.SerialBatch;
-        BatchDeliveryOrder.Qty = 1;
-        BatchDeliveryOrder.ExpDate = (!string.IsNullOrEmpty(firstItem.ExpDate))
+        SerialReceiptPo.SerialCode = firstItem.SerialBatch;
+        SerialReceiptPo.Qty = 1;
+        SerialReceiptPo.ExpDate = (!string.IsNullOrEmpty(firstItem.ExpDate))
             ? DateTime.Parse(firstItem.ExpDate)
-            : BatchDeliveryOrder.ExpDate;
-        BatchDeliveryOrder.MfrDate = (!string.IsNullOrEmpty(firstItem.MrfDate))
+            : SerialReceiptPo.ExpDate;
+        SerialReceiptPo.MfrDate = (!string.IsNullOrEmpty(firstItem.MrfDate))
             ? DateTime.Parse(firstItem.MrfDate)
-            : BatchDeliveryOrder.MfrDate;
+            : SerialReceiptPo.MfrDate;
         return Task.CompletedTask;
     }
 }

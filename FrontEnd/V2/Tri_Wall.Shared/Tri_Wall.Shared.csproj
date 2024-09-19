@@ -25,4 +25,28 @@
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.7.2" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\Add\AddBatchLine.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\Add\AddGoodReturnMobile.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\Add\AddItemLineComponent.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\Add\AddSerialLine.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\List\ListSearch.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\List\ListSearchGoodReceiptPo.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\View\ViewDetailGoodReturnMobileForm.razor" />
+	  <UpToDateCheckInput Remove="Views\Return\MobileAppScreen\View\ViewItemDetailGoodReturn.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="Views\GoodReceptPo\MobileAppScreen\View\ViewDetailDeliveryOrderMobileForm.razor" />
+	  <AdditionalFiles Include="Views\GoodReceptPo\MobileAppScreen\View\ViewItemDetailDeliveryOrder.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddBatchLine.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddGoodReturnMobile.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddItemLineComponent.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddSerialLine.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\List\ListSearch.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\List\ListSearchGoodReceiptPo.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\View\ViewDetailGoodReturnMobileForm.razor" />
+	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\View\ViewItemDetailGoodReturn.razor" />
+	</ItemGroup>
 </Project>

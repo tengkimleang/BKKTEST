@@ -5,13 +5,13 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 
-namespace Tri_Wall.Shared.Views.Return.MobileAppScreen.Add;
+namespace Tri_Wall.Shared.Views.GoodReturn.MobileAppScreen.Add;
 
-public partial class AddBatchLine
+public partial class AddSerialLine
 {
     [Parameter] public Func<Task> IsViewDetail { get; set; } = default!;
-    [Parameter] public Func<BatchDeliveryOrder, Task> SaveBatch { get; set; } = default!;
-    [Parameter] public Func<int,Task> DeleteBatch { get; set; } = default!;
+    [Parameter] public Func<SerialDeliveryOrder, Task> SaveSerial { get; set; } = default!;
+    [Parameter] public Func<int,Task> DeleteSerial { get; set; } = default!;
 
     [Parameter]
     public IEnumerable<GetBatchOrSerial> SerialBatchDeliveryOrders { get; set; } = new List<GetBatchOrSerial>();
@@ -20,13 +20,13 @@ public partial class AddBatchLine
 
     [Parameter] public bool IsUpdate { get; set; }
 
-    [Parameter] public IEnumerable<GetBatchOrSerial> SelectedBatch { get; set; } = Array.Empty<GetBatchOrSerial>();
-    private BatchDeliveryOrder BatchDeliveryOrder { get; set; } = new();
+    [Parameter] public IEnumerable<GetBatchOrSerial> SelectedSerial { get; set; } = Array.Empty<GetBatchOrSerial>();
+    private SerialDeliveryOrder BatchDeliveryOrder { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        Console.WriteLine(SelectedBatch.Count());
-        if (SelectedBatch.Count() != 0)
+        Console.WriteLine(SelectedSerial.Count());
+        if (SelectedSerial.Count() != 0)
             UpdateItemDetails("");
     }
 
@@ -47,21 +47,17 @@ public partial class AddBatchLine
 
     private Task UpdateItemDetails(string newValue)
     {
-        var firstItem = SelectedBatch.FirstOrDefault();
+        var firstItem = SelectedSerial.FirstOrDefault();
         if (firstItem == null) return Task.CompletedTask;
         Console.WriteLine(JsonSerializer.Serialize(firstItem));
-        BatchDeliveryOrder.BatchCode = firstItem.SerialBatch;
-        BatchDeliveryOrder.Qty = (string.IsNullOrEmpty(firstItem.InputQty)) ? 0 : Convert.ToDouble(firstItem.InputQty);
+        BatchDeliveryOrder.SerialCode = firstItem.SerialBatch;
+        BatchDeliveryOrder.Qty = 1;
         BatchDeliveryOrder.ExpDate = (!string.IsNullOrEmpty(firstItem.ExpDate))
             ? DateTime.Parse(firstItem.ExpDate)
             : BatchDeliveryOrder.ExpDate;
-        BatchDeliveryOrder.ManfectureDate = (!string.IsNullOrEmpty(firstItem.MrfDate))
+        BatchDeliveryOrder.MfrDate = (!string.IsNullOrEmpty(firstItem.MrfDate))
             ? DateTime.Parse(firstItem.MrfDate)
-            : BatchDeliveryOrder.ManfectureDate;
-        BatchDeliveryOrder.AdmissionDate = (!string.IsNullOrEmpty(firstItem.MrfDate))
-            ? DateTime.Parse(firstItem.MrfDate)
-            : BatchDeliveryOrder.AdmissionDate;
-        BatchDeliveryOrder.QtyAvailable = Convert.ToDouble(firstItem.Qty);
+            : BatchDeliveryOrder.MfrDate;
         return Task.CompletedTask;
     }
 }

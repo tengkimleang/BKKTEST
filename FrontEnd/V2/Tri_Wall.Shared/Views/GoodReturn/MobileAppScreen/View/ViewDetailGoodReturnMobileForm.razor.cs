@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 
-namespace Tri_Wall.Shared.Views.Return.MobileAppScreen.View;
+namespace Tri_Wall.Shared.Views.GoodReturn.MobileAppScreen.View;
 
 public partial class ViewDetailGoodReturnMobileForm 
 {
@@ -29,7 +29,7 @@ public partial class ViewDetailGoodReturnMobileForm
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("deliveryorder");
+            NavigationManager.NavigateTo("goodreturn");
         }
     }
     void ShowItemDetail(string itemCode, string lineNum)

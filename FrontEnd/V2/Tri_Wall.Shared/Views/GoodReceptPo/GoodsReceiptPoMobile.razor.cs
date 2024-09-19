@@ -1,14 +1,14 @@
-﻿
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.Return;
+namespace Tri_Wall.Shared.Views.GoodReceptPo;
 
-public partial class ReturnMobile
+public partial class GoodsReceiptPoMobile
 {
     protected override void OnInitialized()
     {
-        ComponentAttribute.Title = "Goods Return";
+        ComponentAttribute.Title = "Goods Receipt Order";
         ComponentAttribute.Path = "/home";
         ComponentAttribute.IsBackButton = true;
     }
@@ -36,15 +36,15 @@ public partial class ReturnMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/listgoodreturn");
+        NavigationManager.NavigateTo("/ListSearchGoodsReceiptPo");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/addDeliveryOrderMobile/");
+        NavigationManager.NavigateTo("/AddGoodsReceiptPoMobile/");
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchGoodReceiptPo");
+        NavigationManager.NavigateTo("/ListSearchPurchaseOrder");
     }
 }
