@@ -14,7 +14,7 @@ public partial class AddSerialLine
     [Parameter] public Func<Task> IsViewDetail { get; set; } = default!;
     [Parameter] public Func<SerialReceiptPo, Task> SaveSerial { get; set; } = default!;
     [Parameter] public Func<int,Task> DeleteSerial { get; set; } = default!;
-
+    [Parameter] public Func<Task<string>> GetGenerateBatchSerial { get; set; } = default!;
     [Parameter]
     public IEnumerable<GetBatchOrSerial> SerialBatchDeliveryOrders { get; set; } = new List<GetBatchOrSerial>();
 
@@ -61,5 +61,9 @@ public partial class AddSerialLine
             ? DateTime.Parse(firstItem.MrfDate)
             : SerialReceiptPo.MfrDate;
         return Task.CompletedTask;
+    }
+    private async Task OnClickGenerateBatchSerial()
+    {
+        SerialReceiptPo.SerialCode = (await GetGenerateBatchSerial());
     }
 }

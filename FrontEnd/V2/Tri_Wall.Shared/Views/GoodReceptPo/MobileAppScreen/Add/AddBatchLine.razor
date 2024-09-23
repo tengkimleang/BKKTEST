@@ -12,49 +12,31 @@
                 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-                        <FluentAutocomplete Required
-                                            TOption="GetBatchOrSerial"
-                                            Width="100%"
-                                            Placeholder="Batch Search"
-                                            OnOptionsSearch="OnSearchBatch"
-                                            MaximumOptionsSearch="1"
-                                            Label="Batch Code"
-                                            Virtualize="true"
-                                            Items="SerialBatchDeliveryOrders"
-                                            MaximumSelectedOptions="1"
-                                            OptionText="@(item => $"{item.SerialBatch}")"
-                                            @bind-SelectedOptions="@SelectedBatch"
-                                            ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
+                        <div style="display:flex">
+                            <FluentTextField Value="@BatchReceiptPo.BatchCode" 
+                                             style="width: 100%;"
+                                             AutoComplete="off"/>
+                            <FluentButton IconEnd="@(new Icons.Filled.Size20.QrCode())"
+                                          OnClick="OnClickGenerateBatchSerial"
+                                          Appearance="Appearance.Accent"/>
+                        </div>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentNumberField Label="Qty" @bind-Value="@BatchReceiptPo.Qty" style="width: 100%;">
                         </FluentNumberField>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        @* <FluentTextField Value="@($"{(!string.IsNullOrEmpty(SelectedBatch.FirstOrDefault()?.SerialBatch) ? SerialBatchDeliveryOrders.FirstOrDefault(x => x.SerialBatch == SelectedBatch.FirstOrDefault()?.SerialBatch)?.Qty : "0")}")" *@
-                        @*                  ReadOnly="true" *@
-                        @*                  Label="Qty Available" *@
-                        @*                  style="width: 100%;"/> *@
-                        <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
-                                         ReadOnly="true"
-                                         Label="Qty Available"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker Value="@BatchReceiptPo.ExpDate"
+                                          Label="Expire Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(BatchReceiptPo.ExpDate.HasValue ? BatchReceiptPo.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
-                                         Label="Expire Date"
-                                         style="width: 100%;"/>
-                    </FluentGridItem>
-                    <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(BatchReceiptPo.ManfectureDate.HasValue ? BatchReceiptPo.ManfectureDate.Value.ToShortDateString() : "")}")"
-                                         ReadOnly="true"
+                        <FluentDatePicker Value="@BatchReceiptPo.ManfectureDate"
                                          Label="Manufacturer Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(BatchReceiptPo.AdmissionDate.HasValue ? BatchReceiptPo.AdmissionDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
+                        <FluentDatePicker Value="@BatchReceiptPo.AdmissionDate"
                                          Label="Admission Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>
@@ -73,5 +55,5 @@
                            Position="FloatActionButton.PositionEnum.Left"
                            ColorButton="Color.Error"/>
     }
-    
+
 </FluentLayout>

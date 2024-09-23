@@ -17,6 +17,7 @@
         <FluentGridItem xs="12" sm="4" lg="6" xl="6">
             <FluentAutocomplete Required
                                 TOption="Items"
+                                AutoComplete="off"
                                 Width="100%"
                                 Placeholder="Item Master Data"
                                 OnOptionsSearch="OnSearch"
@@ -50,6 +51,7 @@
         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
             <FluentAutocomplete Required
                                 TOption="Warehouses"
+                                AutoComplete="off"
                                 Width="100%"
                                 Placeholder="Warehouse"
                                 OnOptionsSearch="OnSearchWarehouses"
@@ -253,6 +255,7 @@ else
                       IsUpdate="_isUpdate"
                       Index="_indexOfLineBatch"
                       SelectedBatch="_getBatchOrSerials"
+                      GetGenerateBatchSerial="OnGetGenerateBatchSerial"
                       DeleteBatch="OnDeleteBatchLine"/>
     }
 
@@ -264,6 +267,7 @@ else
                        IsUpdate="_isUpdate"
                        Index="_indexOfLineSerial"
                        SelectedSerial="_getBatchOrSerials"
+                       GetGenerateBatchSerial="OnGetGenerateBatchSerial"
                        DeleteSerial="OnDeleteSerialLine"/>
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -62,7 +61,8 @@ public partial class AddGoodReturnMobile
                     }).ToList()
                 };
                 _selectedVendor =
-                    ViewModel.Vendors.Where(x => x.VendorCode == ViewModel.GoodReturnHeaderDetailByDocNums.FirstOrDefault()?.Vendor);
+                    ViewModel.Vendors.Where(x =>
+                        x.VendorCode == ViewModel.GoodReturnHeaderDetailByDocNums.FirstOrDefault()?.Vendor);
                 StateHasChanged();
             }
     }
@@ -126,6 +126,12 @@ public partial class AddGoodReturnMobile
                     },
                     {
                         "PrimaryButtonText", "Delete"
+                    },
+                    {
+                        "ButtonPrimaryColor", "var(--bs-green)"
+                    },
+                    {
+                        "ButtonSecondaryColor", "var(--bs-red)"
                     }
                 }
             });

@@ -125,6 +125,12 @@ public partial class AddDeliveryOrderMobile
                     },
                     {
                         "PrimaryButtonText", "Delete"
+                    },
+                    {
+                        "ButtonPrimaryColor", "var(--bs-green)"
+                    },
+                    {
+                        "ButtonSecondaryColor", "var(--bs-red)"
                     }
                 }
             });

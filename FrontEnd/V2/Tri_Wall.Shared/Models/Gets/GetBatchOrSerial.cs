@@ -11,5 +11,6 @@ public record GetBatchOrSerial(
         string MrfDate,
         string Type,
         string LineNum,
-        string InputQty=""
+        string InputQty="",
+        string AdmissionDate=""
     );

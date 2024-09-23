@@ -7,6 +7,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
+using Tri_Wall.Shared.ViewModels;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.GoodReturn;
 
@@ -14,6 +15,7 @@ namespace Tri_Wall.Shared.Views.GoodReturn;
 
 public partial class ReturnDefault 
 {
+    [Parameter] public GoodReturnViewModel ViewModel { get; set; } = default!;
     [Parameter] public bool Visible { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }

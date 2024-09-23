@@ -11,7 +11,8 @@ public partial class AddBatchLine
 {
     [Parameter] public Func<Task> IsViewDetail { get; set; } = default!;
     [Parameter] public Func<BatchReceiptPo, Task> SaveBatch { get; set; } = default!;
-    [Parameter] public Func<int,Task> DeleteBatch { get; set; } = default!;
+    [Parameter] public Func<int, Task> DeleteBatch { get; set; } = default!;
+    [Parameter] public Func<Task<string>> GetGenerateBatchSerial { get; set; } = default!;
 
     [Parameter]
     public IEnumerable<GetBatchOrSerial> SerialBatchDeliveryOrders { get; set; } = new List<GetBatchOrSerial>();
@@ -48,6 +49,7 @@ public partial class AddBatchLine
     private Task UpdateItemDetails(string newValue)
     {
         var firstItem = SelectedBatch.FirstOrDefault();
+        Console.WriteLine(JsonSerializer.Serialize(firstItem));
         if (firstItem == null) return Task.CompletedTask;
         Console.WriteLine(JsonSerializer.Serialize(firstItem));
         BatchReceiptPo.BatchCode = firstItem.SerialBatch;
@@ -63,5 +65,10 @@ public partial class AddBatchLine
             : BatchReceiptPo.AdmissionDate;
         // BatchReceiptPo.QtyAvailable = Convert.ToDouble(firstItem.Qty);
         return Task.CompletedTask;
+    }
+
+    private async Task OnClickGenerateBatchSerial()
+    {
+        BatchReceiptPo.BatchCode = (await GetGenerateBatchSerial());
     }
 }

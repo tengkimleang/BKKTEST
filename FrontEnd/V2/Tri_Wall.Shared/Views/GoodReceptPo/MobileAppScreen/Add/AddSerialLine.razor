@@ -12,41 +12,32 @@
                 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-                        <FluentAutocomplete Required
-                                            TOption="GetBatchOrSerial"
-                                            Width="100%"
-                                            Placeholder="Batch Search"
-                                            OnOptionsSearch="OnSearchBatch"
-                                            MaximumOptionsSearch="1"
-                                            Label="Serial Code"
-                                            Virtualize="true"
-                                            Items="SerialBatchDeliveryOrders"
-                                            MaximumSelectedOptions="1"
-                                            OptionText="@(item => $"{item.SerialBatch}")"
-                                            @bind-SelectedOptions="@SelectedSerial"
-                                            ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
+                        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+                            <div style="display:flex">
+                                <FluentTextField Value="@SerialReceiptPo.SerialCode"
+                                                 style="width: 100%;"
+                                                 AutoComplete="off"/>
+                                <FluentButton IconEnd="@(new Icons.Filled.Size20.QrCode())"
+                                              OnClick="OnClickGenerateBatchSerial"
+                                              Appearance="Appearance.Accent"/>
+                            </div>
+                        </FluentGridItem>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentNumberField ReadOnly="true" Label="Qty" @bind-Value="@SerialReceiptPo.Qty" style="width: 100%;">
-                        </FluentNumberField>
+                        <FluentNumberField Label="Qty"
+                                           ReadOnly="true"
+                                           @bind-Value="@SerialReceiptPo.Qty"
+                                           style="width: 100%;" />
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(SerialReceiptPo.ExpDate.HasValue ? SerialReceiptPo.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
-                                         Label="Expire Date"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker Value="@SerialReceiptPo.ExpDate"
+                                          Label="Expire Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(SerialReceiptPo.MfrDate.HasValue ? SerialReceiptPo.MfrDate.Value.ToShortDateString() : "")}")"
-                                         ReadOnly="true"
-                                         Label="Manufacturer Date"
-                                         style="width: 100%;"/>
-                    </FluentGridItem>
-                    <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(SerialReceiptPo.ExpDate.HasValue ? SerialReceiptPo.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
-                                         Label="Admission Date"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker Value="@SerialReceiptPo.MfrDate"
+                                          Label="Manufacturer Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                 </FluentGrid>
             </div>
@@ -63,5 +54,5 @@
                            Position="FloatActionButton.PositionEnum.Left"
                            ColorButton="Color.Error"/>
     }
-    
+
 </FluentLayout>

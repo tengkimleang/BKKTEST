@@ -1,5 +1,6 @@
 ﻿@page "/goodreturn"
 @rendermode InteractiveWebAssembly
+@inherits MvvmComponentBase<GoodReturnViewModel>
 @* @attribute [StreamRendering] *@
 <PageTitle>Good Return</PageTitle>
 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
@@ -12,7 +13,8 @@
     }
     else
     {
-        <ReturnDefault Visible="_visible"/>
+        <ReturnDefault ViewModel="ViewModel"
+                       Visible="_visible"/>
     }
 }
 

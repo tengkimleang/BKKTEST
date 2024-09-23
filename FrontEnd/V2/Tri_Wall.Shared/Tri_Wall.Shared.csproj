@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<RunAOTCompilation>true</RunAOTCompilation>
 	</PropertyGroup>
 
 
@@ -38,8 +39,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AdditionalFiles Include="Views\GoodReceptPo\MobileAppScreen\View\ViewDetailDeliveryOrderMobileForm.razor" />
-	  <AdditionalFiles Include="Views\GoodReceptPo\MobileAppScreen\View\ViewItemDetailDeliveryOrder.razor" />
 	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddBatchLine.razor" />
 	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddGoodReturnMobile.razor" />
 	  <AdditionalFiles Include="Views\GoodReturn\MobileAppScreen\Add\AddItemLineComponent.razor" />

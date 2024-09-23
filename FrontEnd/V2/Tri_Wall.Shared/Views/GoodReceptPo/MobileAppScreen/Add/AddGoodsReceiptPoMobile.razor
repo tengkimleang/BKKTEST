@@ -44,6 +44,7 @@
                                                 TOption="Vendors"
                                                 Width="100%"
                                                 Placeholder="Customer"
+                                                AutoComplete="off"
                                                 OnOptionsSearch="OnSearch"
                                                 MaximumOptionsSearch="1"
                                                 Label="Customer"
@@ -155,7 +156,10 @@
 }
 else
 {
-    <AddItemLineComponent IsViewDetail="OnAddItemLineBack" Content="_lineItemContent" SaveItem="OnSaveItem"/>
+    <AddItemLineComponent GetGenerateBatchSerial="OnGetGenerateBatchOrSerial"
+                          IsViewDetail="OnAddItemLineBack"
+                          Content="_lineItemContent"
+                          SaveItem="OnSaveItem"/>
 }
 <FluentOverlay @bind-Visible=@Visible
                Opacity="0.4"
