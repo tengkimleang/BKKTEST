@@ -64,7 +64,8 @@ public partial class AddGoodsReceiptPoMobile
                     }).ToList()
                 };
                 _selectedVendor =
-                    ViewModel.Vendors.Where(x => x.VendorCode == ViewModel.GoodReceiptPoForm.VendorCode);
+                    ViewModel.Vendors.Where(x => x.VendorCode == ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.Vendor)
+                        .ToList();
                 StateHasChanged();
             }
         }
@@ -105,44 +106,43 @@ public partial class AddGoodsReceiptPoMobile
 
     private Task OnDeleteItem(int lineNum)
     {
-        Console.WriteLine(lineNum);
-        // ToastService.ShowToast<ToastCustom, Dictionary<string, object>>(
-        //     new ToastParameters<Dictionary<string, object>>()
-        //     {
-        //         Intent = ToastIntent.Custom,
-        //         Title = "Delete Item",
-        //         Timeout = 6000,
-        //         Icon = (new Icons.Regular.Size20.Delete(), Color.Accent),
-        //         Content = new Dictionary<string, object>
-        //         {
-        //             {
-        //                 "Body", "Are you sure to Delete?"
-        //             },
-        //             {
-        //                 "Index", lineNum
-        //             },
-        //             {
-        //                 "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteItemByLineNum)
-        //             },
-        //             {
-        //                 "PrimaryButtonText", "Delete"
-        //             },
-        //             {
-        //                 "ButtonPrimaryColor", "var(--bs-green)"
-        //             },
-        //             {
-        //                 "ButtonSecondaryColor", "var(--bs-red)"
-        //             }
-        //         }
-        //     });
+        ToastService.ShowToast<ToastCustom, Dictionary<string, object>>(
+            new ToastParameters<Dictionary<string, object>>()
+            {
+                Intent = ToastIntent.Custom,
+                Title = "Delete Item",
+                Timeout = 6000,
+                Icon = (new Icons.Regular.Size20.Delete(), Color.Accent),
+                Content = new Dictionary<string, object>
+                {
+                    {
+                        "Body", "Are you sure to Delete?"
+                    },
+                    {
+                        "Index", lineNum
+                    },
+                    {
+                        "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteItemByLineNum)
+                    },
+                    {
+                        "PrimaryButtonText", "Delete"
+                    },
+                    {
+                        "ButtonPrimaryColor", "var(--bs-green)"
+                    },
+                    {
+                        "ButtonSecondaryColor", "var(--bs-red)"
+                    }
+                }
+            });
 
         return Task.CompletedTask;
     }
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        Console.WriteLine(dictionary["Index"]);
-        // ViewModel.GoodReceiptPoForm.Lines?.RemoveAt((int)dictionary["Index"]);
+        ViewModel.GoodReceiptPoForm.Lines?.RemoveAt(ViewModel.GoodReceiptPoForm.Lines.FindIndex(x =>
+            x.LineNum == Convert.ToInt32(dictionary["Index"])));
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();

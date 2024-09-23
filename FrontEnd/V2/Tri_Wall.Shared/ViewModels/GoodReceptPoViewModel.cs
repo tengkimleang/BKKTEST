@@ -170,6 +170,9 @@ public partial class GoodReceptPoViewModel(ApiService apiService, ILoadMasterDat
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
+        GoodReceiptPoHeaderDetailByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
+                "GET_PurchaseOrder_Header_Detail_By_DocNum")).Data ?? new();
         GetPurchaseOrderLineByDocNums =
             (await apiService.GetLineByDocNum("GET_PurchaseOrder_Line_Detail_By_DocNum", docEntry)).Data ?? new();
     }
