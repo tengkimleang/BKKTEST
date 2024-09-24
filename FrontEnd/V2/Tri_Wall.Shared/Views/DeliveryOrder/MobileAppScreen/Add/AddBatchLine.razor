@@ -27,34 +27,32 @@
                                             ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentNumberField Label="Qty" @bind-Value="@BatchDeliveryOrder.Qty" style="width: 100%;">
+                        <FluentNumberField Label="Qty" 
+                                           @bind-Value="@BatchDeliveryOrder.Qty" 
+                                           style="width: 100%;">
                         </FluentNumberField>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        @* <FluentTextField Value="@($"{(!string.IsNullOrEmpty(SelectedBatch.FirstOrDefault()?.SerialBatch) ? SerialBatchDeliveryOrders.FirstOrDefault(x => x.SerialBatch == SelectedBatch.FirstOrDefault()?.SerialBatch)?.Qty : "0")}")" *@
-                        @*                  ReadOnly="true" *@
-                        @*                  Label="Qty Available" *@
-                        @*                  style="width: 100%;"/> *@
                         <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
-                                         ReadOnly="true"
+                                         Disabled="true"
                                          Label="Qty Available"
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentTextField Value="@($"{(BatchDeliveryOrder.ExpDate.HasValue ? BatchDeliveryOrder.ExpDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
+                                         Disabled="true"
                                          Label="Expire Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentTextField Value="@($"{(BatchDeliveryOrder.ManfectureDate.HasValue ? BatchDeliveryOrder.ManfectureDate.Value.ToShortDateString() : "")}")"
-                                         ReadOnly="true"
+                                         Disabled="true"
                                          Label="Manufacturer Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentTextField Value="@($"{(BatchDeliveryOrder.AdmissionDate.HasValue ? BatchDeliveryOrder.AdmissionDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         ReadOnly="true"
+                                         Disabled="true"
                                          Label="Admission Date"
                                          style="width: 100%;"/>
                     </FluentGridItem>

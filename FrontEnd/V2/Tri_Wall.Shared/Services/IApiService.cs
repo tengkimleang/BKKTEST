@@ -109,5 +109,7 @@ public interface IApiService
     [Post("/receiptFromProduction/receiptFinishGood")]
     public Task<PostResponse> PostReceiptFinishGood(
         [Body] ReceiptFinishGoodHeader request);
-    
+    [Post("/returnRequest")]
+    public Task<PostResponse> PostReturnRequest(
+        [Body] DeliveryOrderHeader request);
 }

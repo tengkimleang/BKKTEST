@@ -223,7 +223,7 @@ public partial class AddItemLineComponent
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("deliveryorder");
+            NavigationManager.NavigateTo("return");
         }
     }
 

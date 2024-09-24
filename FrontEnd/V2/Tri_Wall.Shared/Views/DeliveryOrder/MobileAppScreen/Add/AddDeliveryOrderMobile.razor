@@ -34,10 +34,14 @@
                             </FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" Label="DocDate" style="width: 100%;"/>
+                            <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.DocDate" 
+                                              Label="DocDate" 
+                                              style="width: 100%;"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.TaxDate" Label="TaxDate" style="width: 100%;"/>
+                            <FluentDatePicker @bind-Value="@ViewModel.DeliveryOrderForm.TaxDate" 
+                                              Label="TaxDate" 
+                                              style="width: 100%;"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                             <FluentAutocomplete Required
@@ -65,7 +69,9 @@
                                           @bind-Value="ViewModel.DeliveryOrderForm.ContactPersonCode"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                            <FluentTextField Label="Ref Inv" @bind-Value="ViewModel.DeliveryOrderForm.Remarks" style="width: 100%;"></FluentTextField>
+                            <FluentTextField Label="Ref Inv" 
+                                             @bind-Value="ViewModel.DeliveryOrderForm.Remarks" 
+                                             style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12">
                             <div class="grid" style="width: 100%; overflow:auto;">

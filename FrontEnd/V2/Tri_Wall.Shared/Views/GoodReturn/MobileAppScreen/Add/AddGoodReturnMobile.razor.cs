@@ -23,14 +23,14 @@ public partial class AddGoodReturnMobile
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("goodreturn");
+            NavigationManager.NavigateTo("return");
         }
     }
 
     protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
-        ComponentAttribute.Path = "/goodreturn";
+        ComponentAttribute.Path = "/return";
         ComponentAttribute.IsBackButton = true;
     }
 

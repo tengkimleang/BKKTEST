@@ -88,6 +88,8 @@ public class ApiService(IApiService apiService)
         => apiService.PostInventoryTransfer(inventoryTransfer);
     public Task<PostResponse> PostReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostReturn(deliveryOrderHeader);
+    public Task<PostResponse> PostReturnRequest(DeliveryOrderHeader deliveryOrderHeader)
+        => apiService.PostReturnRequest(deliveryOrderHeader);
     public Task<PostResponse> PostGoodReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostGoodReturn(deliveryOrderHeader);
     public Task<PostResponse> PostArCreditMemo(DeliveryOrderHeader deliveryOrderHeader)

@@ -29,7 +29,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
 
     [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCount = new();
 
-    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountSalesOrder = new();
+    [ObservableProperty] ObservableCollection<TotalItemCount> _totalItemCountDeliveryOrder = new();
 
     [ObservableProperty] ObservableCollection<GetListData> _getListData = new();
 
@@ -71,7 +71,7 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     [RelayCommand]
     async Task TotalCountDeliveryOrderReturn()
     {
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
+        TotalItemCountDeliveryOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturn")).Data ?? new();
     }
     
     [RelayCommand]
@@ -161,6 +161,9 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
+        GoodReceiptPoHeaderDetailByDocNums =
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Delivery_Order_Header_Detail_By_DocNum_Return"))
+            .Data ?? new();
         GetPurchaseOrderLineByDocNums =
             (await apiService.GetLineByDocNum("GetDeliveryOrderLineForReturnDetailByDocEntry", docEntry)).Data ?? new();
         foreach (var obj in GetPurchaseOrderLineByDocNums)

@@ -34,7 +34,7 @@ public partial class AddBatchLine
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("goodreturn");
+            NavigationManager.NavigateTo("return");
         }
     }
 

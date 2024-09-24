@@ -34,7 +34,7 @@ public partial class AddSerialLine
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("deliveryorder");
+            NavigationManager.NavigateTo("return");
         }
     }
 

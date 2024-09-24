@@ -31,10 +31,6 @@
                         </FluentNumberField>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        @* <FluentTextField Value="@($"{(!string.IsNullOrEmpty(SelectedBatch.FirstOrDefault()?.SerialBatch) ? SerialBatchDeliveryOrders.FirstOrDefault(x => x.SerialBatch == SelectedBatch.FirstOrDefault()?.SerialBatch)?.Qty : "0")}")" *@
-                        @*                  ReadOnly="true" *@
-                        @*                  Label="Qty Available" *@
-                        @*                  style="width: 100%;"/> *@
                         <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
                                          ReadOnly="true"
                                          Label="Qty Available"

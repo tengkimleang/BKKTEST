@@ -39,6 +39,7 @@ public static class Dependencies
         services.AddTransient<InventoryCountingViewModel>();
         services.AddScoped<ProductionProcessViewModel>();
         services.AddScoped<ReceiptsFinishedGoodsViewModel>();
+        services.AddScoped<ReturnRequestViewModel>();
         #endregion
 
         #region Validator

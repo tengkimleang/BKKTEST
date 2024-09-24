@@ -1,0 +1,27 @@
+@page "/ReturnRequest"
+@inherits MvvmComponentBase<ReturnRequestViewModel>
+@rendermode InteractiveWebAssembly
+@* @attribute [StreamRendering] *@
+<PageTitle>Return</PageTitle>
+<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+</FluentGrid>
+@if (_init)
+{
+    @if (_isXs)
+    {
+        <ReturnRequestMobile/>
+    }
+    else
+    {
+        <ReturnRequestDefault ViewModel="ViewModel"
+                       Visible="_visible"/>
+    }
+}
+
+<FluentOverlay @bind-Visible=@_visible
+               Opacity="0.4"
+               FullScreen="true"
+               OnClose="OnCloseOverlay"
+               PreventScroll=true>
+    <FluentProgressRing/>
+</FluentOverlay>

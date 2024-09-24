@@ -1,5 +1,5 @@
 ﻿@rendermode InteractiveWebAssembly
-<FluentLayout Style="margin-top: 0px;">
+<FluentLayout Style="margin-top: 0;">
 
     @* <FluentHeader Style="background-color: transparent;padding: 0;z-index: 0;"> *@
     @*     <FluentBreadcrumb> *@
@@ -44,19 +44,30 @@
                         </FluentCard>
                     </FluentGridItem>
                     <FluentGridItem xs="4">
-                        <FluentCard @onclick="@(e => OnNavigate("return"))"
+                        <FluentCard @onclick="@(e => OnNavigate("ReturnRequest"))"
                                     Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                             <FluentIcon Value="@(new Icons.Regular.Size20.ArchiveArrowBack())" />
-                            <FluentLabel Style="font-size:12px; text-align: center;">Return</FluentLabel>
+                            <FluentLabel Style="font-size:12px; text-align: center;">Return Request</FluentLabel>
                         </FluentCard>
                     </FluentGridItem>
-                    <FluentGridItem xs="4">
-                        <FluentCard @onclick="@(e => OnNavigate("arcreditmemo"))"
-                                    Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <FluentIcon Value="@(new Icons.Regular.Size20.WalletCreditCard())" />
-                            <FluentLabel Style="font-size:12px; text-align: center;">A/R Credit Memo</FluentLabel>
-                        </FluentCard>
-                    </FluentGridItem>
+                    @if (1 == 2)
+                    {
+                        <FluentGridItem xs="4">
+                            <FluentCard @onclick="@(e => OnNavigate("return"))"
+                                        Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <FluentIcon Value="@(new Icons.Regular.Size20.ArchiveArrowBack())" />
+                                <FluentLabel Style="font-size:12px; text-align: center;">Return</FluentLabel>
+                            </FluentCard>
+                        </FluentGridItem>
+                        <FluentGridItem xs="4">
+                            <FluentCard @onclick="@(e => OnNavigate("arcreditmemo"))"
+                                        Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <FluentIcon Value="@(new Icons.Regular.Size20.WalletCreditCard())" />
+                                <FluentLabel Style="font-size:12px; text-align: center;">A/R Credit Memo</FluentLabel>
+                            </FluentCard>
+                        </FluentGridItem>
+                    }
+                    
                 </FluentGrid>
                 <!-- #endregion -->
                 <!-- #region A/P Purchase -->
@@ -66,7 +77,6 @@
                         A/P Purchase
                     </span>
                     <FluentDivider Style="height: 10px;border-width:1px;"
-                                   Role="DividerRole.Presentation"
                                    Orientation="Orientation.Horizontal"></FluentDivider>
                 </div>
                 <FluentGrid Spacing="2" AdaptiveRendering="true">
@@ -93,7 +103,6 @@
                         Inventory Transaction
                     </span>
                     <FluentDivider Style="height: 10px;border-width:1px;"
-                                   Role="DividerRole.Presentation"
                                    Orientation="Orientation.Horizontal"></FluentDivider>
                 </div>
                 <FluentGrid Spacing="2" AdaptiveRendering="true">
@@ -120,15 +129,35 @@
                         Production
                     </span>
                     <FluentDivider Style="height: 10px;border-width:1px;"
-                                   Role="DividerRole.Presentation"
                                    Orientation="Orientation.Horizontal"></FluentDivider>
                 </div>
-                <FluentGrid Spacing="2" AdaptiveRendering="true">
+                <FluentGrid Spacing="2" AdaptiveRendering="true" Style="padding-bottom: 5px">
                     <FluentGridItem xs="4">
                         <FluentCard @onclick="@(e => OnNavigate("issueforproduction"))"
                                     Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                             <FluentIcon Value="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())" />
                             <FluentLabel Style="font-size:12px; text-align: center;">Issue For Production</FluentLabel>
+                        </FluentCard>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentCard @onclick="@(e => OnNavigate("ReturnFromComponent"))"
+                                    Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <FluentIcon Value="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())" />
+                            <FluentLabel Style="font-size:12px; text-align: center;">Return From Component</FluentLabel>
+                        </FluentCard>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentCard @onclick="@(e => OnNavigate("ReceiptsFinishedGoods"))"
+                                    Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <FluentIcon Value="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())" />
+                            <FluentLabel Style="font-size:12px; text-align: center;">Receipt Finished Goods</FluentLabel>
+                        </FluentCard>
+                    </FluentGridItem>
+                    <FluentGridItem xs="4">
+                        <FluentCard @onclick="@(e => OnNavigate("ProductionProcess"))"
+                                    Style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <FluentIcon Value="@(new Icons.Regular.Size20.DocumentBulletListArrowLeft())" />
+                            <FluentLabel Style="font-size:12px; text-align: center;">Production Process</FluentLabel>
                         </FluentCard>
                     </FluentGridItem>
                 </FluentGrid>

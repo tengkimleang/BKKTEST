@@ -4,7 +4,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.Views.GoodReturn;
 
-public partial class ReturnMobile
+public partial class GoodReturnMobile
 {
     protected override void OnInitialized()
     {
