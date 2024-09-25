@@ -752,7 +752,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS B ON A."Indicator"=B."Indicator"
 			WHERE 
 				A."Category"=YEAR(CURRENT_DATE)
-				--AND TO_VARCHAR(B."ObjectCode")='234000031' 
+				AND TO_VARCHAR(B."ObjectCode")='234000031' 
 				AND "SubNum"=MONTH(CURRENT_DATE) 
 				And B."Indicator"<>'Default';
 		END IF;
@@ -4427,7 +4427,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			LEFT JOIN TRIWALL_TRAINKEY."OSRI" AS C On C."ItemCode"=A."ItemCode" And C."SysSerial"=A."SysSerial"
 			WHERE A."BaseEntry"=:par1 
 				AND A."BaseType"=67
-				AND A."BaseLinNum"=:par2
+				--AND A."BaseLinNum"=:par2
 				--And C."Status"<>0
 					
 			UNION ALL
@@ -4445,7 +4445,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			--LEFT JOIN TRIWALL_TRAINKEY."OBTQ" AS C ON C."ItemCode"=A."ItemCode" and B."SysNumber"=C."SysNumber"
 			WHERE A."BaseEntry"=:par1
 				AND A."BaseType"=67
-				AND A."BaseLinNum"=:par2
+				--AND A."BaseLinNum"=:par2
 		
 		)AS A;
 	ELSE IF :DTYPE='GetInventoryTransferHeader' THEN
@@ -4456,23 +4456,23 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OWTR" 
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 		ELSE IF :par2='condition' THEN
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
+				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
-				,"TaxDate" AS "TaxDate"
+				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OWTR" 
 			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;

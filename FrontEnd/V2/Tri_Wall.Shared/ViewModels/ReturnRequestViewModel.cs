@@ -11,6 +11,7 @@ namespace Tri_Wall.Shared.ViewModels;
 public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
 {
     #region Data Member
+
     [ObservableProperty] DeliveryOrderHeader _deliveryOrderForm = new();
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
@@ -45,13 +46,16 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
     [ObservableProperty] bool _isView;
+
     #endregion
 
     #region Method
+
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
             (await apiService.GetSeries("234000031")).Data ?? new());
+        DeliveryOrderForm.Series = Series.First().Code;
         Customers = await CheckingValueT(Customers, async () =>
             (await apiService.GetCustomers()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
@@ -62,18 +66,17 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        await TotalCountReturn();
-        await TotalCountDeliveryOrderReturn();
-        DeliveryOrderForm.Series = Series.First().Code;
+        // await TotalCountReturn();
+        // await TotalCountDeliveryOrderReturn();
         IsView = true;
     }
-    
+
     [RelayCommand]
     async Task TotalCountDeliveryOrderReturn()
     {
         TotalItemCountDeliveryOrder = (await apiService.GetTotalItemCount("DeliveryOrderReturnRequest")).Data ?? new();
     }
-    
+
     [RelayCommand]
     async Task TotalCountReturn()
     {
@@ -83,7 +86,9 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
     [RelayCommand]
     async Task Submit()
     {
-        DeliveryOrderForm.ContactPersonCode = string.IsNullOrEmpty(DeliveryOrderForm.ContactPersonCode) ? "0" : DeliveryOrderForm.ContactPersonCode;
+        DeliveryOrderForm.ContactPersonCode = string.IsNullOrEmpty(DeliveryOrderForm.ContactPersonCode)
+            ? "0"
+            : DeliveryOrderForm.ContactPersonCode;
         PostResponses = await apiService.PostReturnRequest(DeliveryOrderForm);
     }
 
@@ -122,7 +127,8 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderReturnRequest", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderReturnRequest", perPage)).Data ??
+                          new();
         }
         catch (Exception e)
         {
@@ -135,7 +141,8 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
         GoodReceiptPoHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Return_Request_Header_Detail_By_DocNum"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
+                "GET_Return_Request_Header_Detail_By_DocNum"))
             .Data ?? new();
         GoodReceiptPoLineByDocNums =
             (await apiService.GetLineByDocNum("GetReturnRequestLineDetailByDocEntry", docEntry)).Data ?? new();
@@ -146,10 +153,12 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
         GoodReceiptPoHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Delivery_Order_Header_Detail_By_DocNum_Return_Request"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,
+                "GET_Delivery_Order_Header_Detail_By_DocNum_Return_Request"))
             .Data ?? new();
         GetPurchaseOrderLineByDocNums =
-            (await apiService.GetLineByDocNum("GetDeliveryOrderLineForReturnRequestDetailByDocEntry", docEntry)).Data ?? new();
+            (await apiService.GetLineByDocNum("GetDeliveryOrderLineForReturnRequestDetailByDocEntry", docEntry)).Data ??
+            new();
         foreach (var obj in GetPurchaseOrderLineByDocNums)
         {
             if (obj.ManageItem == "S")
@@ -165,8 +174,12 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
                         MfrNo = objSerial.MfrSerialNo,
                         SerialCode = objSerial.SerialBatch,
                         Qty = Convert.ToInt32(objSerial.Qty),
-                        MfrDate = Convert.ToDateTime(objSerial.MrfDate),
-                        ExpDate = Convert.ToDateTime(objSerial.ExpDate),
+                        MfrDate = (!string.IsNullOrEmpty(objSerial.MrfDate))
+                            ? Convert.ToDateTime(objSerial.MrfDate)
+                            : DateTime.Now,
+                        ExpDate = (!string.IsNullOrEmpty(objSerial.ExpDate))
+                            ? Convert.ToDateTime(objSerial.ExpDate)
+                            : DateTime.Now,
                         OnSelectedBatchOrSerial = new[] { objSerial },
                     });
                 }
@@ -184,8 +197,12 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
                         LotNo = objBatch.MfrSerialNo,
                         BatchCode = objBatch.SerialBatch,
                         Qty = Convert.ToDouble(objBatch.Qty),
-                        ManfectureDate = Convert.ToDateTime(objBatch.MrfDate),
-                        ExpDate = Convert.ToDateTime(objBatch.ExpDate),
+                        ManfectureDate = (!string.IsNullOrEmpty(objBatch.MrfDate))
+                            ? Convert.ToDateTime(objBatch.MrfDate)
+                            : DateTime.Now,
+                        ExpDate = (!string.IsNullOrEmpty(objBatch.ExpDate))
+                            ? Convert.ToDateTime(objBatch.ExpDate)
+                            : DateTime.Now,
                         QtyAvailable = Convert.ToDouble(objBatch.Qty),
                         OnSelectedBatchOrSerial = new[] { objBatch },
                     });
@@ -211,6 +228,6 @@ public partial class ReturnRequestViewModel(ApiService apiService, ILoadMasterDa
             throw;
         }
     }
-    #endregion
 
+    #endregion
 }

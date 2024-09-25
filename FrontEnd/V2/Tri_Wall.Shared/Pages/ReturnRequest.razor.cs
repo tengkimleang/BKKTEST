@@ -6,9 +6,9 @@ namespace Tri_Wall.Shared.Pages;
 public partial class ReturnRequest
 {
     private bool _isXs;
-    bool _visible;
+    // bool _visible=false;
     private bool _init;
-    protected void OnCloseOverlay() => _visible = true;
+    // protected void OnCloseOverlay() => _visible = true;
     private void UpdateGridSize(GridItemSize size)
     {
         _init=true;

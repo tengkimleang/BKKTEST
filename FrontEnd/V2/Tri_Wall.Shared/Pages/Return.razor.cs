@@ -15,9 +15,7 @@ namespace Tri_Wall.Shared.Pages;
 public partial class Return
 {
     private bool _isXs;
-    bool _visible;
     private bool _init;
-    protected void OnCloseOverlay() => _visible = true;
     private void UpdateGridSize(GridItemSize size)
     {
         _init=true;

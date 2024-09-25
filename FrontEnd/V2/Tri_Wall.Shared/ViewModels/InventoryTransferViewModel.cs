@@ -60,17 +60,15 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         Series = await CheckingValueT(Series, async () =>
                  (await apiService.GetSeries("67")).Data ?? new());
+        InventoryTransferForm.Series= Series.First().Code ?? "";
         Items = await CheckingValueT(Items, async () =>
                     (await apiService.GetItems()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
                     (await apiService.GetWarehouses()).Data ?? new());
         WarehousesTo = await CheckingValueT(WarehousesTo, async () =>
                            (await apiService.GetWarehouses()).Data ?? new());
-        await TotalCountInventoryTransfer();
-        await TotalCountInventoryTransferRequest();
         InventoryTransferForm.FromWarehouse = Warehouses.First().Code ?? "";
         InventoryTransferForm.ToWarehouse = WarehousesTo.First().Code ?? "";
-        InventoryTransferForm.Series= Series.First().Code ?? "";
         IsView = true;
     }
     [RelayCommand]
@@ -149,7 +147,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", ""
+            GetListData = (await apiService.GetListGoodReceiptPo("GetInventoryTransferHeader", ""
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

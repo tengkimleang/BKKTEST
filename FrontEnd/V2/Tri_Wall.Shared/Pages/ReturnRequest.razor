@@ -13,15 +13,6 @@
     }
     else
     {
-        <ReturnRequestDefault ViewModel="ViewModel"
-                       Visible="_visible"/>
+        <ReturnRequestDefault ViewModel="ViewModel" />
     }
 }
-
-<FluentOverlay @bind-Visible=@_visible
-               Opacity="0.4"
-               FullScreen="true"
-               OnClose="OnCloseOverlay"
-               PreventScroll=true>
-    <FluentProgressRing/>
-</FluentOverlay>

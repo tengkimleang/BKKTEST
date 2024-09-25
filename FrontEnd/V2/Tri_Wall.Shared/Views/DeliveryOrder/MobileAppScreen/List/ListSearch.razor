@@ -46,7 +46,7 @@ else
                                              ShowStaticTip="false">
                             <ChildContent>
                                 <div class="pull-content">
-                                    @foreach (var obj in scrollingData)
+                                    @foreach (var obj in _scrollingData)
                                     {
                                         <FluentCard MinimalStyle="true" Style="width: 100%; margin-bottom: 10px;" @onclick="(e) => OnClickCopy(obj.DocEntry)">
                                             <FluentGrid Spacing="2" AdaptiveRendering="true">

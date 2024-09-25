@@ -13,7 +13,6 @@ namespace Tri_Wall.Shared.Views.GoodReceptPo;
 
 public partial class GoodsReceiptPoDefault
 {
-    [Parameter] public bool Visible { get; set; }
     [Inject]
     public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
     // [Inject]
@@ -24,11 +23,11 @@ public partial class GoodsReceiptPoDefault
     private string saveWord = "Save";
     string? dataGrid = "width: 1600px;height:405px";
     bool isView;
-    protected void OnCloseOverlay() => visible = true;
+    protected void OnCloseOverlay() => _visible = true;
 
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
-    bool visible;
+    bool _visible;
 
     async Task OpenDialogAsync(MouseEventArgs e, GoodReceiptPoLine goodReceiptPoLine)
     {
@@ -118,7 +117,7 @@ public partial class GoodsReceiptPoDefault
                 }
                 return;
             }
-            visible = true;
+            _visible = true;
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.PostResponses));
             if (ViewModel.PostResponses.ErrorCode == "")
@@ -131,7 +130,7 @@ public partial class GoodsReceiptPoDefault
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;
+        _visible = false;
     }
     Task OnSeleted(string e)
     {

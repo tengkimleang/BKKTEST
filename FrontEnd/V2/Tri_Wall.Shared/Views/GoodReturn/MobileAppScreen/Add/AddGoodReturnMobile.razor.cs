@@ -23,14 +23,14 @@ public partial class AddGoodReturnMobile
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("return");
+            NavigationManager.NavigateTo("goodreturn");
         }
     }
 
     protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
-        ComponentAttribute.Path = "/return";
+        ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
     }
 
@@ -58,6 +58,25 @@ public partial class AddGoodReturnMobile
                         WarehouseCode = x.WarehouseCode,
                         BaseLine = Convert.ToInt32(x.BaseLineNumber),
                         BaseEntry = Convert.ToInt32(x.DocEntry),
+                        Batches = x.Batches.Select(b => new BatchDeliveryOrder
+                        {
+                            BatchCode = b.BatchCode,
+                            ExpDate = Convert.ToDateTime(b.ExpDate),
+                            LotNo = b.LotNo,
+                            ManfectureDate = Convert.ToDateTime(b.ManfectureDate),
+                            Qty = Convert.ToDouble(b.Qty),
+                            QtyAvailable = Convert.ToDouble(b.QtyAvailable),
+                            OnSelectedBatchOrSerial = Array.Empty<GetBatchOrSerial>()
+                        }).ToList(),
+                        Serials = x.Serials.Select(s => new SerialDeliveryOrder
+                        {
+                            ExpDate = Convert.ToDateTime(s.ExpDate),
+                            MfrDate = Convert.ToDateTime(s.MfrDate),
+                            MfrNo = s.MfrNo,
+                            Qty = Convert.ToInt32(s.Qty),
+                            SerialCode = s.SerialCode,
+                            OnSelectedBatchOrSerial = Array.Empty<GetBatchOrSerial>()
+                        }).ToList()
                     }).ToList()
                 };
                 _selectedVendor =

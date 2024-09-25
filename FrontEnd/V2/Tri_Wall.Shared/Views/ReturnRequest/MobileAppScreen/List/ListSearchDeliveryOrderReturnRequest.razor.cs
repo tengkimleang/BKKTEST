@@ -62,7 +62,7 @@ public partial class ListSearchDeliveryOrderReturnRequest
             return false;
         }
 
-        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
+        await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
         foreach (var item in ViewModel.GetListData)
         {
             _scrollingData.Add(item);

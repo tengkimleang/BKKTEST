@@ -15,7 +15,9 @@ namespace Tri_Wall.Shared.Views.ReturnRequest;
 public partial class ReturnRequestDefault
 {
     [Parameter] public ReturnRequestViewModel ViewModel { get; set; } = default!;
-    [Parameter] public bool Visible { get; set; }
+    private bool Visible { get; set; }
+    protected void OnCloseOverlay() => Visible = true;
+
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
 
@@ -24,12 +26,9 @@ public partial class ReturnRequestDefault
     private string _saveWord = "Save";
     string? _dataGrid = "width: 1600px;height:405px";
     bool _isView;
-    protected void OnCloseOverlay() => _visible = true;
-
+    
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
-
-    bool _visible;
-
+    
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
         Console.WriteLine(JsonSerializer.Serialize(deliveryOrderLine));
@@ -119,7 +118,7 @@ public partial class ReturnRequestDefault
                 }
                 return;
             }
-            _visible = true;
+            Visible = true;
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
@@ -132,7 +131,7 @@ public partial class ReturnRequestDefault
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        _visible = false;
+        Visible = false;
     }
 
     Task OnSeleted(string e)

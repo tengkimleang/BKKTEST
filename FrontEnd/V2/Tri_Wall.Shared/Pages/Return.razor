@@ -1,4 +1,4 @@
-﻿@page "/return"
+﻿@* @page "/return" *@
 @inherits MvvmComponentBase<ReturnViewModel>
 @rendermode InteractiveWebAssembly
 @* @attribute [StreamRendering] *@
@@ -13,15 +13,6 @@
     }
     else
     {
-        <ReturnDefault ViewModel="ViewModel"
-                           Visible="_visible"/>
+        <ReturnDefault ViewModel="ViewModel"/>
     }
 }
-
-<FluentOverlay @bind-Visible=@_visible
-               Opacity="0.4"
-               FullScreen="true"
-               OnClose="OnCloseOverlay"
-               PreventScroll=true>
-    <FluentProgressRing/>
-</FluentOverlay>

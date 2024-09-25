@@ -7,11 +7,11 @@ namespace Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen.List;
 
 public partial class ListSearch
 {
-    int refreshcount = 0;
-    int count = 0;
+    int _refreshCount;
+    int _count;
     private string? _searchValue;
-    private ObservableCollection<GetListData> scrollingData = new();
-    private bool _isViewDetail = false;
+    private readonly ObservableCollection<GetListData> _scrollingData = new();
+    private bool _isViewDetail;
     protected override async void OnInitialized()
     {
         StateHasChanged();
@@ -32,14 +32,14 @@ public partial class ListSearch
     {
         if (!string.IsNullOrWhiteSpace(_searchValue))
         {
-            scrollingData.Clear();
-            count = 0;
-            refreshcount = 0;
+            _scrollingData.Clear();
+            _count = 0;
+            _refreshCount = 0;
             var dataSearch = new Dictionary<string, object> { { "docNum", _searchValue },{"dateFrom",""},{"dateTo",""} };
             await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
             foreach (var item in ViewModel.GetListData)
             {
-                scrollingData.Add(item);
+                _scrollingData.Add(item);
             }
             StateHasChanged();
             // tmpData= new ObservableCollection<GetListData>(scrollingData);
@@ -65,19 +65,19 @@ public partial class ListSearch
     public async Task<bool> OnRefreshAsync()
     {
         await ViewModel.TotalItemCountDeliveryOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
-        if(Convert.ToInt32(ViewModel.TotalItemCount.FirstOrDefault()?.AllItem??"0")<=count)
+        if(Convert.ToInt32(ViewModel.TotalItemCount.FirstOrDefault()?.AllItem??"0")<=_count)
         {
             return false;
         }
         Console.WriteLine(Convert.ToInt32(ViewModel.TotalItemCount.FirstOrDefault()?.AllItem));
-        Console.WriteLine(scrollingData.Count);
-        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(refreshcount.ToString()).ConfigureAwait(false);
+        Console.WriteLine(_scrollingData.Count);
+        await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
         foreach (var item in ViewModel.GetListData)
         {
-            scrollingData.Add(item);
+            _scrollingData.Add(item);
         }
-        refreshcount++;
-        count = + scrollingData.Count;
+        _refreshCount++;
+        _count = + _scrollingData.Count;
         StateHasChanged();
         return true;
     }

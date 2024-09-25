@@ -62,8 +62,6 @@ public partial class ReturnViewModel(ApiService apiService, ILoadMasterData load
             (await apiService.GetTaxSales()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        await TotalCountReturn();
-        await TotalCountDeliveryOrderReturn();
         DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }

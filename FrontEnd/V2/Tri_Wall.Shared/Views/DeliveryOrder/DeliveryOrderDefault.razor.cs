@@ -15,7 +15,8 @@ public partial class DeliveryOrderDefault
 {
     
     [Parameter] public DeliveryOrderViewModel ViewModel { get; set; } = default!;
-    [Parameter] public bool Visible { get; set; }
+    public bool Visible { get; set; }
+    protected void OnCloseOverlay() => Visible = true;
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
     private string _stringDisplay = "Delivery Order";

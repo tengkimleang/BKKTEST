@@ -13,20 +13,11 @@ namespace Tri_Wall.Shared.Pages;
 
 public partial class GoodReceiptPoForm
 {
-    private bool isXs = false;
-    bool visible = false;
-    private bool init = false;
-    protected void OnCloseOverlay() => visible = true;
+    private bool _isXs;
+    private bool _init;
     private void UpdateGridSize(GridItemSize size)
     {
-        init=true;
-        if (size == GridItemSize.Xs)
-        {
-            isXs = true;
-        }
-        else
-        {
-            isXs = false;
-        }
+        _init=true;
+        _isXs = size == GridItemSize.Xs;
     }
 }

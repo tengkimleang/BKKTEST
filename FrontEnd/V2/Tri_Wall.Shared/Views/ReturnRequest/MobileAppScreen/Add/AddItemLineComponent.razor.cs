@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -50,6 +51,7 @@ public partial class AddItemLineComponent
         if (Content.TryGetValue("line", out var value))
         {
             DataResult = value as DeliveryOrderLine ?? new DeliveryOrderLine();
+            Console.WriteLine(JsonSerializer.Serialize(DataResult));
             _batchReceiptPo = DataResult.Batches ?? new List<BatchDeliveryOrder>();
             _serialReceiptPo = DataResult.Serials ?? new List<SerialDeliveryOrder>();
             _selectedItem = Item.Where(i => i.ItemCode == DataResult.ItemCode);

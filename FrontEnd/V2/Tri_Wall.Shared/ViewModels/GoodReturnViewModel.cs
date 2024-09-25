@@ -55,6 +55,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     {
         Series = await CheckingValueT(Series, async () =>
             (await apiService.GetSeries("21")).Data ?? new());
+        GoodReturnForm.Series = Series.First().Code;
         Vendors = await CheckingValueT(Vendors, async () =>
             (await apiService.GetVendors()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
@@ -65,7 +66,6 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             (await apiService.GetTaxPurchases()).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses()).Data ?? new());
-        GoodReturnForm.Series = Series.First().Code;
         IsView = true;
     }
 

@@ -133,3 +133,11 @@ else
                                                                   GoodReceiptPoLineByDocNums="ViewModel.GoodReceiptPoLineByDocNums"/>
     </div>
 }
+
+<FluentOverlay @bind-Visible=@Visible
+               Opacity="0.4"
+               FullScreen="true"
+               OnClose="OnCloseOverlay"
+               PreventScroll=true>
+    <FluentProgressRing/>
+</FluentOverlay>

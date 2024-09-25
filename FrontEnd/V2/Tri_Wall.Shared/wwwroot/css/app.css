@@ -216,11 +216,11 @@ code {
     }
 }
 
-.fab-button {
-    background-color: #0078d4; /* Adjust as needed */
-    color: white;
-    display: flex;
-    /*align-items: center;*/
-    justify-content: center;
-}
+/*.fab-button {*/
+/*    background-color: #0078d4; !* Adjust as needed *!*/
+/*    color: white;*/
+/*    display: flex;*/
+/*    !*align-items: center;*!*/
+/*    justify-content: center;*/
+/*}*/
 

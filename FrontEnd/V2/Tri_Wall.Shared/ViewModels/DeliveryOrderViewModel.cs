@@ -56,6 +56,7 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
     {
         Series = await CheckingValueT(Series, async () =>
             (await apiService.GetSeries("15")).Data ?? new());
+        DeliveryOrderForm.Series = Series.First().Code;
         Customers = await CheckingValueT(Customers, async () =>
             (await apiService.GetCustomers()).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
@@ -68,7 +69,6 @@ public partial class DeliveryOrderViewModel(ApiService apiService, ILoadMasterDa
             (await apiService.GetWarehouses()).Data ?? new());
         // await OnTotalItemCountDeliveryOrder();
         // await OnTotalItemCountSaleOrder();
-        DeliveryOrderForm.Series = Series.First().Code;
         IsView = true;
     }
     [RelayCommand]

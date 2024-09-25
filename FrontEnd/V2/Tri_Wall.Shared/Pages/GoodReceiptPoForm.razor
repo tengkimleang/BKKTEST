@@ -4,23 +4,15 @@
 <PageTitle>Good Receipt PO</PageTitle>
 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 </FluentGrid>
-@if (init)
+@if (_init)
 {
-    @if (isXs)
+    @if (_isXs)
     {
         <GoodsReceiptPoMobile />
     }
     else
     {
-        <GoodsReceiptPoDefault Visible="visible"/>
+        <GoodsReceiptPoDefault />
     }
 }
 
-
-<FluentOverlay @bind-Visible=@visible
-               Opacity="0.4"
-               FullScreen="true"
-               OnClose="OnCloseOverlay"
-               PreventScroll=true>
-    <FluentProgressRing/>
-</FluentOverlay>
