@@ -24,26 +24,27 @@ public partial class AddItemLineComponent
 
 
     private InventoryCountingLine DataResult { get; set; } = new();
-    private List<InventoryCountingBatch> _batchReceiptPo = new();
-    private List<InventoryCountingSerial> _serialReceiptPo = new();
-    private IEnumerable<GetBatchOrSerial> _serialBatchDeliveryOrders = new List<GetBatchOrSerial>();
+    private List<InventoryCountingBatch> _inventoryCountingBatches = new();
+    private List<InventoryCountingSerial> _inventoryCountingSerials = new();
+    private IEnumerable<GetBatchOrSerial> _serialBatchInventoryCounting = new List<GetBatchOrSerial>();
     private bool _isItemBatch;
     private bool _isItemSerial;
-    private IEnumerable<Items> _selectedItem = Array.Empty<Items>();
+    private IEnumerable<GetInventoryCountingLines> _selectedItem = Array.Empty<GetInventoryCountingLines>();
     private IEnumerable<Warehouses>? _selectedWarehouses = Array.Empty<Warehouses>();
     private IEnumerable<GetBatchOrSerial> _selectedSerialDeliveryOrders = Array.Empty<GetBatchOrSerial>();
     private bool _isUpdate = false;
     private int _indexOfLineBatch = 0;
     private int _indexOfLineSerial = 0;
     private IEnumerable<GetBatchOrSerial> _getBatchOrSerials = Array.Empty<GetBatchOrSerial>();
-    private IEnumerable<Items> Item => Content["item"] as IEnumerable<Items> ?? new List<Items>();
     private Func<int, Task> OnDeleteLineItem => Content["OnDeleteLineItem"] as Func<int, Task> ?? default!;
+
     private Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch =>
         Content["getSerialBatch"] as Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> ??
         default!;
 
-    private IEnumerable<VatGroups>? VatGroup => Content["taxPurchase"] as IEnumerable<VatGroups>;
-    private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
+    private IEnumerable<GetInventoryCountingLines> ListGetProductionOrderLines =>
+        Content["item"] as IEnumerable<GetInventoryCountingLines> ?? new List<GetInventoryCountingLines>();
+
     string? _dataGrid = "width: 1600px;overflow-x:scroll;";
 
     protected override async void OnInitialized()
@@ -51,31 +52,24 @@ public partial class AddItemLineComponent
         if (Content.TryGetValue("line", out var value))
         {
             DataResult = value as InventoryCountingLine ?? new InventoryCountingLine();
-            _batchReceiptPo = DataResult.Batches;
-            _serialReceiptPo = DataResult.Serials;
-            _selectedItem = Item.Where(i => i.ItemCode == DataResult.ItemCode);
-            _selectedWarehouses = Warehouses?.Where(i => i.Code == DataResult.WhsCode);
+            _inventoryCountingBatches = DataResult.Batches;
+            _inventoryCountingSerials = DataResult.Serials;
+            _selectedItem = ListGetProductionOrderLines.Where(i => i.ItemCode == DataResult.ItemCode);
             await UpdateItemDetails(DataResult.ItemCode);
         }
     }
 
-    private void OnSearch(OptionsSearchEventArgs<Items> e)
+    private void OnSearch(OptionsSearchEventArgs<GetInventoryCountingLines> e)
     {
-        e.Items = Item.Where(i => i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                                  i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+        e.Items = ListGetProductionOrderLines.Where(i =>
+                i.ItemCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+                i.ItemName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.ItemCode);
-    }
-
-    private void OnSearchWarehouses(OptionsSearchEventArgs<Warehouses> e)
-    {
-        e.Items = Warehouses?.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                                         i.Code.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(i => i.Code);
     }
 
     private void OnSearchSerial(OptionsSearchEventArgs<GetBatchOrSerial> e)
     {
-        e.Items = _serialBatchDeliveryOrders.Where(i =>
+        e.Items = _serialBatchInventoryCounting.Where(i =>
                 i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                 i.SerialBatch.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.SerialBatch);
@@ -83,8 +77,8 @@ public partial class AddItemLineComponent
 
     private async Task SaveAsync()
     {
-        DataResult.Batches = _batchReceiptPo;
-        DataResult.Serials = _serialReceiptPo;
+        DataResult.Batches = _inventoryCountingBatches;
+        DataResult.Serials = _inventoryCountingSerials;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
         {
@@ -120,10 +114,12 @@ public partial class AddItemLineComponent
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.ManageItem = firstItem?.ItemType ?? "";
+        DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
+        DataResult.Uom = firstItem?.Uom ?? "";
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";
         if (firstItem?.ItemType != "N")
-            _serialBatchDeliveryOrders = await GetSerialBatch(new Dictionary<string, string>
+            _serialBatchInventoryCounting = await GetSerialBatch(new Dictionary<string, string>
             {
                 { "ItemCode", firstItem?.ItemCode ?? "" },
                 { "ItemType", firstItem?.ItemType ?? "" }
@@ -135,26 +131,26 @@ public partial class AddItemLineComponent
     {
         if (type == "Batch")
         {
-            var firstItem = _batchReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
+            var firstItem = _inventoryCountingBatches[index].OnSelectedBatchOrSerial.FirstOrDefault();
             if (firstItem != null)
             {
-                _batchReceiptPo[index].BatchCode = firstItem.SerialBatch;
-                _batchReceiptPo[index].Qty = 0;
-                _batchReceiptPo[index].QtyAvailable = Convert.ToInt32(firstItem.Qty);
-                _batchReceiptPo[index].ManufactureDate = DateTime.Parse(firstItem.MrfDate);
-                _batchReceiptPo[index].ExpireDate = DateTime.Parse(firstItem.ExpDate);
+                _inventoryCountingBatches[index].BatchCode = firstItem.SerialBatch;
+                _inventoryCountingBatches[index].Qty = 0;
+                _inventoryCountingBatches[index].QtyAvailable = Convert.ToInt32(firstItem.Qty);
+                _inventoryCountingBatches[index].ManufactureDate = DateTime.Parse(firstItem.MrfDate);
+                _inventoryCountingBatches[index].ExpireDate = DateTime.Parse(firstItem.ExpDate);
             }
         }
         else if (type == "Serial")
         {
-            var firstItem = _serialReceiptPo[index].OnSelectedBatchOrSerial.FirstOrDefault();
+            var firstItem = _inventoryCountingSerials[index].OnSelectedBatchOrSerial.FirstOrDefault();
             if (firstItem != null)
             {
-                _serialReceiptPo[index].SerialCode = firstItem.SerialBatch;
-                _serialReceiptPo[index].Qty = 1;
-                _serialReceiptPo[index].MfrDate = DateTime.Parse(firstItem.MrfDate);
-                _serialReceiptPo[index].ExpDate = DateTime.Parse(firstItem.ExpDate);
-                _serialReceiptPo[index].MfrNo = firstItem.MfrSerialNo;
+                _inventoryCountingSerials[index].SerialCode = firstItem.SerialBatch;
+                _inventoryCountingSerials[index].Qty = 1;
+                _inventoryCountingSerials[index].MfrDate = DateTime.Parse(firstItem.MrfDate);
+                _inventoryCountingSerials[index].ExpDate = DateTime.Parse(firstItem.ExpDate);
+                _inventoryCountingSerials[index].MfrNo = firstItem.MfrSerialNo;
             }
         }
     }
@@ -173,7 +169,7 @@ public partial class AddItemLineComponent
                     "B", "",
                     inventoryCountingBatch.Qty.ToString(CultureInfo.InvariantCulture))
             };
-            _indexOfLineBatch = _batchReceiptPo.IndexOf(inventoryCountingBatch);
+            _indexOfLineBatch = _inventoryCountingBatches.IndexOf(inventoryCountingBatch);
             _isUpdate = true;
         }
 
@@ -195,7 +191,7 @@ public partial class AddItemLineComponent
                     "B", "",
                     inventoryCountingSerial.Qty.ToString(CultureInfo.InvariantCulture))
             };
-            _indexOfLineSerial = _serialReceiptPo.IndexOf(inventoryCountingSerial);
+            _indexOfLineSerial = _inventoryCountingSerials.IndexOf(inventoryCountingSerial);
             _isUpdate = true;
         }
 
@@ -207,11 +203,11 @@ public partial class AddItemLineComponent
     {
         if (_isItemBatch)
         {
-            _batchReceiptPo.RemoveAt(index);
+            _inventoryCountingBatches.RemoveAt(index);
         }
         else if (_isItemSerial)
         {
-            _serialReceiptPo.RemoveAt(index);
+            _inventoryCountingSerials.RemoveAt(index);
         }
     }
 
@@ -235,7 +231,7 @@ public partial class AddItemLineComponent
 
     private async Task OnDeleteItemLine(int index)
     {
-        _batchReceiptPo.RemoveAt(index);
+        _inventoryCountingBatches.RemoveAt(index);
         await OnAddItemLineBack();
     }
 
@@ -254,11 +250,11 @@ public partial class AddItemLineComponent
 
         if (_isUpdate == false)
         {
-            _batchReceiptPo.Add(inventoryCountingBatch);
+            _inventoryCountingBatches.Add(inventoryCountingBatch);
         }
         else
         {
-            _batchReceiptPo[_indexOfLineBatch] = inventoryCountingBatch;
+            _inventoryCountingBatches[_indexOfLineBatch] = inventoryCountingBatch;
         }
 
         _isBackFromBatch = false;
@@ -280,11 +276,11 @@ public partial class AddItemLineComponent
 
         if (_isUpdate == false)
         {
-            _serialReceiptPo.Add(inventoryCountingSerial);
+            _inventoryCountingSerials.Add(inventoryCountingSerial);
         }
         else
         {
-            _serialReceiptPo[_indexOfLineSerial] = inventoryCountingSerial;
+            _inventoryCountingSerials[_indexOfLineSerial] = inventoryCountingSerial;
         }
 
         _isBackFromBatch = false;
@@ -312,17 +308,17 @@ public partial class AddItemLineComponent
                         "OnClickPrimaryButton", new Func<Dictionary<string, object>, Task>(OnDeleteBatch)
                     },
                     {
-                        "PrimaryButtonText" , "Confirm"
+                        "PrimaryButtonText", "Confirm"
                     },
                     {
-                        "ButtonPrimaryColor","var(--bs-green)"
+                        "ButtonPrimaryColor", "var(--bs-green)"
                     },
                     {
-                        "ButtonSecondaryColor","var(--bs-red)"
+                        "ButtonSecondaryColor", "var(--bs-red)"
                     }
                 }
             });
-        // _batchReceiptPo.RemoveAt(index);
+        // _inventoryCountingBatches.RemoveAt(index);
         // _isBackFromBatch = false;
         // StateHasChanged();
         return Task.CompletedTask;
@@ -364,7 +360,7 @@ public partial class AddItemLineComponent
 
     private Task OnDeleteBatch(Dictionary<string, object> dictionary)
     {
-        _batchReceiptPo.RemoveAt(Convert.ToInt32(dictionary["Index"]));
+        _inventoryCountingBatches.RemoveAt(Convert.ToInt32(dictionary["Index"]));
         _isBackFromBatch = false;
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
@@ -374,7 +370,7 @@ public partial class AddItemLineComponent
 
     private Task OnDeleteSerial(Dictionary<string, object> dictionary)
     {
-        _serialReceiptPo.RemoveAt(Convert.ToInt32(dictionary["Index"]));
+        _inventoryCountingSerials.RemoveAt(Convert.ToInt32(dictionary["Index"]));
         _isBackFromBatch = false;
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
@@ -384,8 +380,8 @@ public partial class AddItemLineComponent
 
     private async Task OnConfirmLine()
     {
-        DataResult.Batches = _batchReceiptPo;
-        DataResult.Serials = _serialReceiptPo;
+        DataResult.Batches = _inventoryCountingBatches;
+        DataResult.Serials = _inventoryCountingSerials;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);
         if (!result.IsValid)
         {

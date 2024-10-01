@@ -15,8 +15,8 @@ public class IssueProductionLine
     public string WhsCode { get; set; } = string.Empty;
     public string UomName { get; set; } = string.Empty;
     public string? ManageItem { get; set; }
-    public List<BatchIssueProduction>? Batches { get; set; }
-    public List<SerialIssueProduction>? Serials { get; set; }
+    public List<BatchIssueProduction>? Batches { get; set; }= new();
+    public List<SerialIssueProduction>? Serials { get; set; }= new();
 }
 
 public class BatchIssueProduction

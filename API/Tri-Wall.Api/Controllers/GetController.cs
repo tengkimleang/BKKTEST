@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Tri_Wall.API.Controllers;
 using Tri_Wall.Application.Queries;
 using Tri_Wall.Domain.DataProviders;
 

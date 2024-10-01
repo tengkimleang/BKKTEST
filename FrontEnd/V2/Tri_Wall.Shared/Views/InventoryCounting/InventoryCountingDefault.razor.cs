@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
@@ -13,41 +12,22 @@ using Tri_Wall.Shared.Views.GoodReceptPo;
 
 namespace Tri_Wall.Shared.Views.InventoryCounting;
 
-public partial class InventoryCountingDefault 
+public partial class InventoryCountingDefault
 {
     [Inject] public IValidator<InventoryCountingHeader>? Validator { get; init; }
     [Inject] public IValidator<InventoryCountingLine>? ValidatorLine { get; init; }
     [Inject] public Blazored.LocalStorage.ISyncLocalStorageService? LocalStorage { get; init; }
 
-    private string stringDisplay = "Inventory Counting";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
-    protected void OnCloseOverlay() => visible = true;
-    private IEnumerable<GetInventoryCountingList> _getProductionOrder = new List<GetInventoryCountingList>();
+    private string _stringDisplay = "Inventory Counting";
+    private string _saveWord = "Save";
+    string? _dataGrid = "width: 1600px;height:405px";
+    bool _isView = false;
+    protected void OnCloseOverlay() => _visible = true;
 
-    private IEnumerable<GetInventoryCountingList> SelectedProductionOrder
-    {
-        get => _getProductionOrder;
-        set
-        {
-            if (!value.Any()) return;
-            ViewModel.InventoryCountingHeader.DocEntry = Convert.ToInt32(value.ToList()[0].DocEntry);
-            ViewModel.InventoryCountingHeader.Series = value.ToList()[0].Series;
-            ViewModel.InventoryCountingHeader.CreateDate = Convert.ToDateTime(value.ToList()[0].CreateDate);
-            ViewModel.InventoryCountingHeader.CreateTime = value.ToList()[0].CreateTime;
-            ViewModel.InventoryCountingHeader.OtherRemark = value.ToList()[0].OtherRemark;
-            ViewModel.InventoryCountingHeader.Ref2 = value.ToList()[0].Ref2;
-            ViewModel.InventoryCountingHeader.InventoryCountingType=value.ToList()[0].InventoryCountingType;
-            Console.WriteLine(value.ToList()[0].DocEntry);
-            ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(value.ToList()[0].DocEntry)
-                .ConfigureAwait(false);
-            _getProductionOrder = value;
-            StateHasChanged();
-        }
-    }
+    private IEnumerable<GetInventoryCountingList> SelectedProductionOrder { get; set; } =
+        new List<GetInventoryCountingList>();
 
-    bool visible;
+    bool _visible;
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
     {
@@ -116,15 +96,15 @@ public partial class InventoryCountingDefault
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "Inventory Counting";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "Inventory Counting";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
 
@@ -145,12 +125,14 @@ public partial class InventoryCountingDefault
                 {
                     ToastService!.ShowError(error.ErrorMessage);
                 }
+
                 return;
             }
-            visible = true;
+
+            _visible = true;
             await SubmitTransaction(type);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;        
+        _visible = false;
     }
 
     private void AddIssueProductionLine(GetProductionOrderLines vmIssueProductionLine, IssueProductionLine line,
@@ -173,7 +155,7 @@ public partial class InventoryCountingDefault
     {
         try
         {
-            visible = true;
+            _visible = true;
 
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
@@ -194,13 +176,13 @@ public partial class InventoryCountingDefault
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
             }
 
-            visible = false;
+            _visible = false;
         }
         catch (ApiException ex)
         {
             var content = await ex.GetContentAsAsync<Dictionary<string, string>>();
             ToastService!.ShowError(ex.ReasonPhrase ?? "");
-            visible = false;
+            _visible = false;
         }
     }
 
@@ -208,7 +190,7 @@ public partial class InventoryCountingDefault
     {
         // Console.WriteLine(e);
         ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -221,7 +203,7 @@ public partial class InventoryCountingDefault
 
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -278,5 +260,33 @@ public partial class InventoryCountingDefault
             Width = "80%",
             Height = "80%"
         }).ConfigureAwait(false);
+    }
+
+    private async Task UpdateItemDetails(string? newValue)
+    {
+        if (!SelectedProductionOrder.Any())
+        {
+            ViewModel.InventoryCountingHeader.DocEntry = 0;
+            ViewModel.InventoryCountingHeader.Series = "";
+            ViewModel.InventoryCountingHeader.CreateDate = DateTime.Now;
+            ViewModel.InventoryCountingHeader.CreateTime = "";
+            ViewModel.InventoryCountingHeader.OtherRemark = "";
+            ViewModel.InventoryCountingHeader.Ref2 = "";
+            ViewModel.InventoryCountingHeader.InventoryCountingType = "";
+            return;
+        }
+
+        ViewModel.InventoryCountingHeader.DocEntry = Convert.ToInt32(SelectedProductionOrder.ToList()[0].DocEntry);
+        ViewModel.InventoryCountingHeader.Series = SelectedProductionOrder.ToList()[0].Series;
+        ViewModel.InventoryCountingHeader.CreateDate =
+            Convert.ToDateTime(SelectedProductionOrder.ToList()[0].CreateDate);
+        ViewModel.InventoryCountingHeader.CreateTime = SelectedProductionOrder.ToList()[0].CreateTime;
+        ViewModel.InventoryCountingHeader.OtherRemark = SelectedProductionOrder.ToList()[0].OtherRemark;
+        ViewModel.InventoryCountingHeader.Ref2 = SelectedProductionOrder.ToList()[0].Ref2;
+        ViewModel.InventoryCountingHeader.InventoryCountingType =
+            SelectedProductionOrder.ToList()[0].InventoryCountingType;
+        await ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(SelectedProductionOrder.ToList()[0].DocEntry)
+            .ConfigureAwait(false);
+        StateHasChanged();
     }
 }

@@ -1,12 +1,10 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Shared;
 using Tri_Wall.Shared.ViewModels;
-using Tri_Wall.WebApp.Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services

@@ -8,7 +8,7 @@ namespace Tri_Wall.API.Controllers;
 
 
 [Route("/arCreditMemo")]
-public class ARCreditMemoController(ISender mediator) : ApiController
+public class ArCreditMemoController(ISender mediator) : ApiController
 {
     [HttpPost]
     public async Task<IActionResult> Create(AddARCreditMemoCommand command, IValidator<AddARCreditMemoCommand> validator)

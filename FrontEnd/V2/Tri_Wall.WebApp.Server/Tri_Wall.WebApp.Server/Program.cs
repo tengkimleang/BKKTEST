@@ -19,7 +19,9 @@ builder.Services.AddFluentUIComponents()
 builder.Services.AddSingleton<ILoadMasterData, LoadMasterData>();
 builder.Services.AddHostedService<LoadMasterDataService>();
 builder.Services.AddBlazoredLocalStorage();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

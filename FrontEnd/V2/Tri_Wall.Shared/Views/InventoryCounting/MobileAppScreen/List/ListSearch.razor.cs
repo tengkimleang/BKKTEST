@@ -17,7 +17,7 @@ public partial class ListSearch
     {
         StateHasChanged();
         ComponentAttribute.Title = "List Search";
-        ComponentAttribute.Path = "/inventorycounting";
+        ComponentAttribute.Path = "/issueforproduction";
         ComponentAttribute.IsBackButton = true;
         await OnRefreshAsync();
         _isViewDetail = false;
@@ -26,7 +26,7 @@ public partial class ListSearch
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("inventorycounting");
+            NavigationManager.NavigateTo("issueforproduction");
         }
     }
     private async Task OnSearch()

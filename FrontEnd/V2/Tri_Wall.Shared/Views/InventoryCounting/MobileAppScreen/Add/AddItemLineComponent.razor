@@ -13,44 +13,44 @@
     <FluentBodyContent Class="body-content" Style="overflow: auto">
     <div class="content">
 
-    <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+            
+            <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+                <FluentAutocomplete Required
+                                    TOption="GetInventoryCountingLines"
+                                    Width="100%"
+                                    Placeholder="Item Master Data"
+                                    OnOptionsSearch="OnSearch"
+                                    MaximumOptionsSearch="1"
+                                    Label="Item Code"
+                                    Virtualize="true"
+                                    Items="ListGetProductionOrderLines"
+                                    MaximumSelectedOptions="1"
+                                    OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
+                                    @bind-SelectedOptions="@_selectedItem"
+                                    ValueChanged="@(UpdateItemDetails)"/>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                <FluentTextField ReadOnly="true" Label="Item Name" @bind-Value="@DataResult.ItemName" style="width: 100%;">
+                </FluentTextField>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                <FluentNumberField ReadOnly="true" @bind-Value="@DataResult.Qty" Label="Qty In Whs" style="width: 100%;">
+                </FluentNumberField>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                <FluentNumberField @bind-Value="@DataResult.QtyCounted" Label="Qty" Required="true" style="width: 100%;">
+                </FluentNumberField>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                <FluentTextField ReadOnly="true" @bind-Value="@DataResult.Uom" Label="Uom" style="width: 100%;">
+                </FluentTextField>
+            </FluentGridItem>
+            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                <FluentTextField ReadOnly="true" @bind-Value="@DataResult.WhsCode" Label="Warehouse" style="width: 100%;"/>
+            </FluentGridItem>
 
-        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-            <FluentAutocomplete Required
-                                TOption="Items"
-                                Width="100%"
-                                Placeholder="Item Master Data"
-                                OnOptionsSearch="OnSearch"
-                                MaximumOptionsSearch="1"
-                                Label="Item Code"
-                                Virtualize="true"
-                                Items="Item"
-                                MaximumSelectedOptions="1"
-                                OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
-                                @bind-SelectedOptions="@_selectedItem"
-                                ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
-        </FluentGridItem>
-        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-            <FluentNumberField @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
-            </FluentNumberField>
-        </FluentGridItem>
-        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-            <FluentAutocomplete Required
-                                TOption="Warehouses"
-                                Width="100%"
-                                Placeholder="Warehouse"
-                                OnOptionsSearch="OnSearchWarehouses"
-                                MaximumOptionsSearch="1"
-                                Label="Warehouse"
-                                Virtualize="true"
-                                Items="Warehouses"
-                                OptionValue="@(i => i.Code)"
-                                MaximumSelectedOptions="1"
-                                OptionText="@(item => $"{item.Name}")"
-                                @bind-SelectedOptions="@_selectedWarehouses"
-                                ValueChanged="@(e => UpdateWarehouses(e ?? ""))"/>
-        </FluentGridItem>
-    </FluentGrid>
+        </FluentGrid>
     @if (_isItemBatch)
     {
         <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToBatch(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">
@@ -75,7 +75,7 @@
                     </CompletedTemplate>
                     <ChildContent>
                         <div class="pull-content">
-                            @foreach (var obj in _batchReceiptPo)
+                            @foreach (var obj in _inventoryCountingBatches)
                             {
                                 <FluentCard MinimalStyle="true"
                                             Style="width: 100%; margin-bottom: 10px;"
@@ -146,7 +146,7 @@
                     </CompletedTemplate>
                     <ChildContent>
                         <div class="pull-content">
-                            @foreach (var obj in _serialReceiptPo)
+                            @foreach (var obj in _inventoryCountingSerials)
                             {
                                 <FluentCard MinimalStyle="true"
                                             Style="width: 100%; margin-bottom: 10px;"
@@ -236,7 +236,7 @@ else
     {
         <AddBatchLine IsViewDetail="OnAddItemLineBack"
                       SaveBatch="OnAddBatchLine"
-                      SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
+                      SerialBatchDeliveryOrders="_serialBatchInventoryCounting"
                       IsUpdate="_isUpdate"
                       Index="_indexOfLineBatch"
                       SelectedBatch="_getBatchOrSerials"
@@ -247,7 +247,7 @@ else
     {
         <AddSerialLine IsViewDetail="OnAddItemLineBack"
                        SaveSerial="OnAddSerialLine"
-                       SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
+                       SerialBatchDeliveryOrders="_serialBatchInventoryCounting"
                        IsUpdate="_isUpdate"
                        Index="_indexOfLineSerial"
                        SelectedSerial="_getBatchOrSerials"

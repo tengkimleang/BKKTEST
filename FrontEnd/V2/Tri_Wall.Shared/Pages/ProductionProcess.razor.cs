@@ -16,14 +16,23 @@ public partial class ProductionProcess
     //ProductionProcessHeaderValidator
     private string _stringDisplay = "Production Process";
     string? _dataGrid = "width: 1600px;height:405px";
+    bool _isXs;
     private string _buttonAddName = "Add Line";
     protected void OnCloseOverlay() => _visible = true;
+
+    public List<string> Status { get; set; } = ["Yes", "No"];
+    public IEnumerable<string> StatusSelect { get; set; } = default!;
 
     IEnumerable<GetProductionOrder> _selectedProductionOrders = Array.Empty<GetProductionOrder>();
     IEnumerable<string> _selectProcessType = Array.Empty<string>();
 
     bool _visible;
 
+    protected override void OnInitialized()
+    {
+        ComponentAttribute.Path = "/home";
+        ComponentAttribute.IsBackButton = true;
+    }
 
     private void OnSearch(OptionsSearchEventArgs<GetProductionOrder> e)
     {
@@ -43,9 +52,11 @@ public partial class ProductionProcess
         {
             _stringDisplay = "";
             _dataGrid = "width: 1600px;height:205px";
+            _isXs = true;
         }
         else
         {
+            _isXs = false;
             _stringDisplay = "Production Process";
             _dataGrid = "width: 1600px;height:405px";
         }
@@ -77,6 +88,7 @@ public partial class ProductionProcess
             ViewModel.ProcessProductionLine = new();
             _selectedProductionOrders = Array.Empty<GetProductionOrder>();
             _selectProcessType = Array.Empty<string>();
+            StatusSelect = Array.Empty<string>();
         }
         else
         {
@@ -93,7 +105,8 @@ public partial class ProductionProcess
             ViewModel.ProcessProductionLine = new();
             _selectedProductionOrders = Array.Empty<GetProductionOrder>();
             _selectProcessType = Array.Empty<string>();
-            _buttonAddName="Add Line";
+            StatusSelect = Array.Empty<string>();
+            _buttonAddName = "Add Line";
         }
     }
 
@@ -109,7 +122,8 @@ public partial class ProductionProcess
         };
         _selectedProductionOrders = ViewModel.GetProductionOrder.Where(i => i.DocNum == productionProcess.DocNum);
         _selectProcessType = ViewModel.ProcessType.Where(i => i == productionProcess.ProcessStage);
-        _buttonAddName="Update Line";
+        StatusSelect = Status.Where(i => i == productionProcess.Status);
+        _buttonAddName = "Update Line";
     }
 
     async Task OnSaveTransaction()

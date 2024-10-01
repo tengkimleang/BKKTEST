@@ -3117,10 +3117,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT DISTINCT
 				 A."DocEntry" AS "DocEntry"
 				,A."DocNum" AS "DocumentNumber"
-				,A."DocDate" AS "DocDate"
+				,TO_VARCHAR(A."DocDate",'yyyy-MM-dd') AS "DocDate"
 				,A."CardCode" AS "VendorCode"
 				,A."Comments" AS "Remarks"
-				,A."TaxDate" AS "TaxDate"
+				,TO_VARCHAR(A."TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OIGE" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."IGE1" AS B ON B."DocEntry"=A."DocEntry" 
 			WHERE B."BaseType"='202'
@@ -3129,15 +3129,15 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT DISTINCT
 				 A."DocEntry" AS "DocEntry"
 				,A."DocNum" AS "DocumentNumber"
-				,A."DocDate" AS "DocDate"
+				,TO_VARCHAR(A."DocDate",'yyyy-MM-dd') AS "DocDate"
 				,A."CardCode" AS "VendorCode"
 				,A."Comments" AS "Remarks"
-				,A."TaxDate" AS "TaxDate"
+				,TO_VARCHAR(A."TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OIGE" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."IGE1" AS B ON B."DocEntry"=A."DocEntry" 
 			WHERE A."DocStatus"='O'
 			AND B."BaseType"='202'
-			AND A."DocDate" BETWEEN :par3 AND :par4
+			AND A."DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND A."DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -3506,10 +3506,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT DISTINCT
 				 A."DocEntry" AS "DocEntry"
 				,A."DocNum" AS "DocumentNumber"
-				,A."DocDate" AS "DocDate"
+				,TO_VARCHAR(A."DocDate",'yyyy-MM-dd') AS "DocDate"
 				,A."CardCode" AS "VendorCode"
 				,A."Comments" AS "Remarks"
-				,A."TaxDate" AS "TaxDate"
+				,TO_VARCHAR(A."TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OIGN" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."IGN1" AS B ON B."DocEntry"=A."DocEntry" 
 			WHERE B."BaseType"='202'
@@ -3518,15 +3518,15 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT DISTINCT
 				 A."DocEntry" AS "DocEntry"
 				,A."DocNum" AS "DocumentNumber"
-				,A."DocDate" AS "DocDate"
+				,TO_VARCHAR(A."DocDate",'yyyy-MM-dd') AS "DocDate"
 				,A."CardCode" AS "VendorCode"
 				,A."Comments" AS "Remarks"
-				,A."TaxDate" AS "TaxDate"
+				,TO_VARCHAR(A."TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OIGN" AS A
 			LEFT JOIN TRIWALL_TRAINKEY."IGN1" AS B ON B."DocEntry"=A."DocEntry" 
 			WHERE A."DocStatus"='O'
 			AND B."BaseType"='202'
-			AND A."DocDate" BETWEEN :par3 AND :par4
+			AND A."DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND A."DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;

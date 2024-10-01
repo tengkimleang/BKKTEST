@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
@@ -43,10 +42,9 @@ public partial class AddInventoryCountingMobile
 
     private Task OnAddLineItem(InventoryCountingLine inventoryCounting)
     {
-        Console.WriteLine(JsonSerializer.Serialize(inventoryCounting));
         _lineItemContent = new Dictionary<string, object>
         {
-            { "item", ViewModel.GetInventoryCountingLists },
+            { "item", ViewModel.GetInventoryCountingLines },
             { "warehouse", ViewModel.Warehouses },
             { "line", inventoryCounting },
             {
@@ -119,7 +117,8 @@ public partial class AddInventoryCountingMobile
     {
         if (inventoryCountingLine.LineNum == 0)
         {
-            inventoryCountingLine.LineNum = ViewModel.InventoryCountingHeader.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+            inventoryCountingLine.LineNum =
+                ViewModel.InventoryCountingHeader.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
             Console.WriteLine(JsonSerializer.Serialize(inventoryCountingLine));
             ViewModel.InventoryCountingHeader.Lines ??= new();
             ViewModel.InventoryCountingHeader.Lines?.Add(inventoryCountingLine);
@@ -127,7 +126,8 @@ public partial class AddInventoryCountingMobile
         }
         else
         {
-            var index = ViewModel.InventoryCountingHeader.Lines!.FindIndex(i => i.LineNum == inventoryCountingLine.LineNum);
+            var index = ViewModel.InventoryCountingHeader.Lines!.FindIndex(i =>
+                i.LineNum == inventoryCountingLine.LineNum);
             ViewModel.InventoryCountingHeader.Lines[index] = inventoryCountingLine;
         }
 
@@ -193,6 +193,9 @@ public partial class AddInventoryCountingMobile
 
             if (ViewModel.PostResponses.ErrorCode == "")
             {
+                SelectedProductionOrder = new List<GetInventoryCountingList>();
+                ViewModel.InventoryCountingHeader = new();
+                ViewModel.InventoryCountingLines = new();
                 ToastService.ShowSuccess("Success");
                 // if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
             }
@@ -202,6 +205,7 @@ public partial class AddInventoryCountingMobile
         Visible = false;
         StateHasChanged();
     }
+
     private void OnSearch(OptionsSearchEventArgs<GetInventoryCountingList> e)
     {
         e.Items = ViewModel.GetInventoryCountingLists.Where(i => i.Series.Contains(e.Text,
@@ -210,26 +214,37 @@ public partial class AddInventoryCountingMobile
                                                                      , StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.Series);
     }
-    private IEnumerable<GetInventoryCountingList> _getProductionOrder = new List<GetInventoryCountingList>();
-    private IEnumerable<GetInventoryCountingList> SelectedProductionOrder
+
+    private IEnumerable<GetInventoryCountingList> SelectedProductionOrder { get; set; } =
+        new List<GetInventoryCountingList>();
+
+    private async Task UpdateItemDetails(string? newValue)
     {
-        get => _getProductionOrder;
-        set
+        if (!SelectedProductionOrder.Any())
         {
-            if (!value.Any()) return;
-            ViewModel.InventoryCountingHeader.DocEntry = Convert.ToInt32(value.ToList()[0].DocEntry);
-            ViewModel.InventoryCountingHeader.Series = value.ToList()[0].Series;
-            ViewModel.InventoryCountingHeader.CreateDate = Convert.ToDateTime(value.ToList()[0].CreateDate);
-            ViewModel.InventoryCountingHeader.CreateTime = value.ToList()[0].CreateTime;
-            ViewModel.InventoryCountingHeader.OtherRemark = value.ToList()[0].OtherRemark;
-            ViewModel.InventoryCountingHeader.Ref2 = value.ToList()[0].Ref2;
-            ViewModel.InventoryCountingHeader.InventoryCountingType=value.ToList()[0].InventoryCountingType;
-            Console.WriteLine(value.ToList()[0].DocEntry);
-            ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(value.ToList()[0].DocEntry)
-                .ConfigureAwait(false);
-            _getProductionOrder = value;
-            StateHasChanged();
+            ViewModel.InventoryCountingHeader.DocEntry = 0;
+            ViewModel.InventoryCountingHeader.Series = "";
+            ViewModel.InventoryCountingHeader.CreateDate = DateTime.Now;
+            ViewModel.InventoryCountingHeader.CreateTime = "";
+            ViewModel.InventoryCountingHeader.OtherRemark = "";
+            ViewModel.InventoryCountingHeader.Ref2 = "";
+            ViewModel.InventoryCountingHeader.InventoryCountingType = "";
+            return;
         }
+
+        ViewModel.InventoryCountingHeader.DocEntry = Convert.ToInt32(SelectedProductionOrder.ToList()[0].DocEntry);
+        ViewModel.InventoryCountingHeader.Series = SelectedProductionOrder.ToList()[0].Series;
+        ViewModel.InventoryCountingHeader.CreateDate =
+            Convert.ToDateTime(SelectedProductionOrder.ToList()[0].CreateDate);
+        ViewModel.InventoryCountingHeader.CreateTime = SelectedProductionOrder.ToList()[0].CreateTime;
+        ViewModel.InventoryCountingHeader.OtherRemark = SelectedProductionOrder.ToList()[0].OtherRemark;
+        ViewModel.InventoryCountingHeader.Ref2 = SelectedProductionOrder.ToList()[0].Ref2;
+        ViewModel.InventoryCountingHeader.InventoryCountingType =
+            SelectedProductionOrder.ToList()[0].InventoryCountingType;
+        await ViewModel.GetPurchaseOrderLineByDocEntryCommand.ExecuteAsync(SelectedProductionOrder.ToList()[0].DocEntry)
+            .ConfigureAwait(false);
+        StateHasChanged();
     }
+
     protected void OnCloseOverlay() => Visible = true;
 }
