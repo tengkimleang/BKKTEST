@@ -21,6 +21,16 @@ public static class Dependencies
                 //client.BaseAddress = new Uri("http://localhost:8082");
                 client.BaseAddress = new Uri("http://192.168.20.2:8082");
             })
+            // .ConfigurePrimaryHttpMessageHandler(() => new AuthenticatedHttpClientHandler(GetToken.Token))
+            .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
+        
+        services.AddRefitClient<IApiAuthService>()
+            .ConfigureHttpClient(static client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(10);
+                client.BaseAddress = new Uri("http://192.168.20.2:8082");
+            })
+            // .ConfigurePrimaryHttpMessageHandler(() => new AuthenticatedHttpClientHandler(token))
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
 
         #endregion
@@ -40,6 +50,7 @@ public static class Dependencies
         services.AddScoped<ProductionProcessViewModel>();
         services.AddScoped<ReceiptsFinishedGoodsViewModel>();
         services.AddScoped<ReturnRequestViewModel>();
+
         #endregion
 
         #region Validator
@@ -58,12 +69,33 @@ public static class Dependencies
         }
 
         #endregion
-
+        services.AddScoped(sp => new HttpClient
+        {
+            BaseAddress = new Uri("http://localhost:5087"),
+        });
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();
         services.AddScoped<CookieAuthenticationSateProvider>();
-        services.AddScoped<AuthenticationStateProvider>(sp
-            => sp.GetRequiredService<CookieAuthenticationSateProvider>());
+        services.AddScoped<AuthenticationStateProvider>(sp =>
+            sp.GetRequiredService<CookieAuthenticationSateProvider>()
+        );
         return services;
+    }
+}
+
+public class GetToken
+{
+    public GetToken(CookieAuthenticationSateProvider cookieManager)
+    {
+        _ = GetTokenStatic(cookieManager);
+    }
+    
+    public static string? Token { get; private set; } = string.Empty;
+
+    public async Task GetTokenStatic(CookieAuthenticationSateProvider cookieManager)
+    {
+        Token = string.Empty;
+        var tokenCookie = await cookieManager.GetClaimAsync();
+        Token = tokenCookie.FindFirst("token")?.Value;
     }
 }

@@ -1,21 +1,29 @@
 ﻿@page "/home"
 @rendermode InteractiveWebAssembly
-@attribute [StreamRendering]
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
+@* @attribute [StreamRendering] *@
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Home</PageTitle>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
 
-@if (isXs == false)
-{
-    <HomeDefualt />
-}
-else
-{
-    <HomeMobile />
-
-}
+        @if (isXs == false)
+        {
+            <HomeDefualt/>
+        }
+        else
+        {
+            <HomeMobile/>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <Login/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
     private bool isXs = false;
+
     private void UpdateGridSize(GridItemSize size)
     {
         if (size == GridItemSize.Xs)
@@ -27,5 +35,5 @@ else
             isXs = false;
         }
     }
-    
+
 }

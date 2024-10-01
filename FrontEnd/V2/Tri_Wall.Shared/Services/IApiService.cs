@@ -10,6 +10,7 @@ using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ProductionProcess;
 using Tri_Wall.Shared.Models.ReceiptFinishGood;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
+using Tri_Wall.Shared.Models.User;
 
 namespace Tri_Wall.Shared.Services;
 
@@ -112,4 +113,11 @@ public interface IApiService
     [Post("/returnRequest")]
     public Task<PostResponse> PostReturnRequest(
         [Body] DeliveryOrderHeader request);
+}
+
+public interface IApiAuthService
+{
+    [Post("/auth")]
+    public Task<CheckUserResponse> CheckingUser(
+        [Body] CreateUser getRequest);
 }

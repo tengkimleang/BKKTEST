@@ -4806,6 +4806,16 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			
 		END IF;
 		END IF;
+	ELSE IF :DTYPE='JwtCheckAccount' THEN
+		IF :par1='admin' AND :par2='1234' THEN
+		
+			SELECT 
+				 'Hello' AS "Account"
+				,'123' AS "Password"
+			From DUMMY;
+		
+		END IF;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

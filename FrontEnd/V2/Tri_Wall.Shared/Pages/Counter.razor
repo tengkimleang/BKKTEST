@@ -16,14 +16,14 @@
         <p>You're not authorized.</p>
     </NotAuthorized>
 </AuthorizeView>
-<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+@* <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton> *@
 
 @code {
-    private int currentCount = 0;
-    [Inject] public CookieAuthenticationSateProvider cookieAuthenticationSateProvider { get; set; }
-    private async void IncrementCount()
-    {
-        await cookieAuthenticationSateProvider.Login();
-    }
+    // private int currentCount = 0;
+    // [Inject] public CookieAuthenticationSateProvider cookieAuthenticationSateProvider { get; set; }
+    // private async void IncrementCount()
+    // {
+    //     await cookieAuthenticationSateProvider.Login();
+    // }
 
 }

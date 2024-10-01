@@ -10,103 +10,153 @@ using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ProductionProcess;
 using Tri_Wall.Shared.Models.ReceiptFinishGood;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
+using Tri_Wall.Shared.Models.User;
 
 namespace Tri_Wall.Shared.Services;
 
 public class ApiService(IApiService apiService)
 {
-    public Task<ResponseData<ObservableCollection<Series>>> GetSeries(string SeriesNumber) 
+    public Task<ResponseData<ObservableCollection<Series>>> GetSeries(string SeriesNumber)
         => apiService.GetSeries(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION","SERIES",SeriesNumber));
+            "_USP_CALLTRANS_EWTRANSACTION", "SERIES", SeriesNumber));
+
     public Task<ResponseData<ObservableCollection<Items>>> GetItems()
         => apiService.GetItems(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetItem"));
+
     public Task<ResponseData<ObservableCollection<Vendors>>> GetVendors()
         => apiService.GetVendors(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetVendor"));
+
     public Task<ResponseData<ObservableCollection<Vendors>>> GetCustomers()
         => apiService.GetVendors(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetCustomer"));
+
     public Task<ResponseData<ObservableCollection<ContactPersons>>> GetContactPersons()
         => apiService.GetContactPersons(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetContactPersonByCardCode"));
+
     public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxPurchases()
         => apiService.GetTaxPurchases(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetVatCodePurchase"));
+
     public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxSales()
         => apiService.GetTaxSales(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetTaxSale"));
+
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses()
         => apiService.GetWarehouses(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetWarehouseMasterData"));
+
     public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(string type)
         => apiService.GetTotalItemCount(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "TotalItemCount",type));
-    public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(string storeType,string perPage
-        ,string type="",string dateFrom="",string dateTo="",string docNum="")
+            "_USP_CALLTRANS_EWTRANSACTION", "TotalItemCount", type));
+
+    public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(string storeType, string perPage
+        , string type = "", string dateFrom = "", string dateTo = "", string docNum = "")
         => apiService.GetListGoodReceiptPo(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", storeType,perPage,type,dateFrom,dateTo,docNum));
+            "_USP_CALLTRANS_EWTRANSACTION", storeType, perPage, type, dateFrom, dateTo, docNum));
+
     public Task<PostResponse> PostGoodReceptPo(GoodReceiptPoHeader goodReceiptPoHeader)
         => apiService.PostGoodReceptPo(goodReceiptPoHeader);
+
     public Task<PostResponse> PostDelveryOrder(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostDelveryOrder(deliveryOrderHeader);
-    public Task<ResponseData<ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum>>> GoodReceiptPoHeaderDeatialByDocNum(string docEntry,string type)
+
+    public Task<ResponseData<ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum>>>
+        GoodReceiptPoHeaderDeatialByDocNum(string docEntry, string type)
         => apiService.GoodReceiptPoHeaderDeatialByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", type, docEntry));
-    public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GetLineByDocNum(string storeType,string docEntry)
+
+    public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GetLineByDocNum(string storeType,
+        string docEntry)
         => apiService.GetLineByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", storeType, docEntry));
-    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(string docEntry,string type,string lineNum="")
+
+    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(string docEntry, string type,
+        string lineNum = "")
         => apiService.GetBatchOrSerial(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", type, docEntry,lineNum));
-    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,string itemType,string itemCode,string docEntry="")
+            "_USP_CALLTRANS_EWTRANSACTION", type, docEntry, lineNum));
+
+    public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerialByItemCode(string storeType,
+        string itemType, string itemCode, string docEntry = "")
         => apiService.GetBatchOrSerial(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType,itemCode,docEntry));
-    public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(string itemCode,string qty)
+            "_USP_CALLTRANS_EWTRANSACTION", storeType, itemType, itemCode, docEntry));
+
+    public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(string itemCode,
+        string qty)
         => apiService.GennerateBatchSerial(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GennerateBatchOrSerial", itemCode,qty));
+            "_USP_CALLTRANS_EWTRANSACTION", "GennerateBatchOrSerial", itemCode, qty));
+
     public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders(string type)
         => apiService.GetProductionOrders(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order",type));
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order", type));
+
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order_Lines",docEntry));
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Order_Lines", docEntry));
+
     public Task<PostResponse> PostIssueProduction(IssueProductionHeader issueProductionHeader)
         => apiService.PostIssueProduction(issueProductionHeader);
+
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetIssueProductionLines(string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines",docEntry));
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Issue_Production_Lines", docEntry));
+
     public Task<ResponseData<ObservableCollection<GetInventoryCountingList>>> GetInventoryCountingLists(string type)
         => apiService.GetInventoryCountingLists(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingList",type));
-    public Task<ResponseData<ObservableCollection<GetInventoryCountingLines>>> GetInventoryCountingLines(string docEntry)
+            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingList", type));
+
+    public Task<ResponseData<ObservableCollection<GetInventoryCountingLines>>> GetInventoryCountingLines(
+        string docEntry)
         => apiService.GetInventoryCountingLines(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLine",docEntry));
+            "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLine", docEntry));
+
     public Task<PostResponse> PostReturnFromProduction(ReturnComponentProductionHeader issueProductionHeader)
         => apiService.PostReturnFromProduction(issueProductionHeader);
+
     public Task<PostResponse> PostInventoryTransfer(InventoryTransferHeader inventoryTransfer)
         => apiService.PostInventoryTransfer(inventoryTransfer);
+
     public Task<PostResponse> PostReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostReturn(deliveryOrderHeader);
+
     public Task<PostResponse> PostReturnRequest(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostReturnRequest(deliveryOrderHeader);
+
     public Task<PostResponse> PostGoodReturn(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostGoodReturn(deliveryOrderHeader);
+
     public Task<PostResponse> PostArCreditMemo(DeliveryOrderHeader deliveryOrderHeader)
         => apiService.PostARCreditMemo(deliveryOrderHeader);
+
     public Task<PostResponse> PostInventoryCounting(InventoryCountingHeader deliveryOrderHeader)
         => apiService.PostInventoryCounting(deliveryOrderHeader);
-    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingHeaderByDocNum>>> GetDetailInventoryCountingHeaderByDocNum(string docEntry)
+
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingHeaderByDocNum>>>
+        GetDetailInventoryCountingHeaderByDocNum(string docEntry)
         => apiService.GetDetailInventoryCountingHeaderByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GET_InventoryCounting_Header_Detail_By_DocNum", docEntry));
-    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(string docEntry)
+
+    public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>>
+        GetDetailInventoryCountingLineByDocNum(string docEntry)
         => apiService.GetDetailInventoryCountingLineByDocNum(new GetRequest(
             "_USP_CALLTRANS_EWTRANSACTION", "GetInventoryCountingLineDetailByDocEntry", docEntry));
+
     public Task<PostResponse> PostProductionProcess(ProductionProcessHeader productionProcessHeader)
         => apiService.UpdateProcessProduction(productionProcessHeader);
-    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionFinishedGoodLines(string docEntry)
+
+    public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionFinishedGoodLines(
+        string docEntry)
         => apiService.GetProductionOrderLines(new GetRequest(
-            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Finished_Good",docEntry));
+            "_USP_CALLTRANS_EWTRANSACTION", "GET_Production_Finished_Good", docEntry));
+
     public Task<PostResponse> PostReceiptFinishGood(ReceiptFinishGoodHeader receiptFinishGoodHeader)
         => apiService.PostReceiptFinishGood(receiptFinishGoodHeader);
+}
+
+public class ApiAuthService(IApiAuthService apiService)
+{
+    public Task<CheckUserResponse> CheckingUser(string userName, string password)
+        => apiService.CheckingUser(new CreateUser() { Account = userName, Password = password });
 }

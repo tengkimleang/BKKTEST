@@ -1,54 +1,53 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 
 namespace Tri_Wall.Shared.Services;
 
-public class CookieAuthenticationSateProvider(IApiService ApiService) : AuthenticationStateProvider
+public class CookieAuthenticationSateProvider(HttpClient httpClient) : AuthenticationStateProvider
 {
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var user = await GetUserStateAsync();
+        var user = await GetClaimAsync();
+
         return new AuthenticationState(user);
     }
-    //public override Task<AuthenticationState> GetAuthenticationStateAsync()
-    //{
-    //    var identity = new ClaimsIdentity();
-    //    var user = new ClaimsPrincipal(identity);
 
-    //    return Task.FromResult(new AuthenticationState(user));
-    //}
-    public async Task Login()
+    public async Task<HttpResponseMessage> Login(string userName, string password)
     {
-        var user = await ApiService.PostUser(new { });
-        //var identity = new ClaimsIdentity(new[]
-        //{
-        //    new Claim(ClaimTypes.Name, "test"),
-        //}, "Custom Authentication");
-
-        //var user = new ClaimsPrincipal(identity);
-
-        //NotifyAuthenticationStateChanged(
-        //    Task.FromResult(new AuthenticationState(await GetUserStateAsync())));
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-    }
-    private async Task<ClaimsPrincipal> GetUserStateAsync()
-    {
-       // var user = await ApiService.GetUser();
-        //if (!string.IsNullOrEmpty(user.Id))
-        //{
-        //    return new ClaimsPrincipal(new ClaimsIdentity());
-        //}
-
-        var claims = new List<Claim>
+        var rs = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>
         {
-            new Claim("id", "asdasd"),
-            // Add other claims as needed, e.g.:
-            // new Claim(ClaimTypes.Name, user.Name),
-            // new Claim(ClaimTypes.Email, user.Email)
-        };
+            { "UserName", userName },
+            { "Password", password }
+        });
+        NotifyAuthenticationStateChanged(Task.FromResult(await GetAuthenticationStateAsync()));
+        return rs;
+    }
+    public async Task LogOut()
+    {
+        var rs = await httpClient.PostAsJsonAsync("/api/logout", new Dictionary<string, string>());
+        NotifyAuthenticationStateChanged(Task.FromResult(await GetAuthenticationStateAsync()));
+    }
 
-        var identity = new ClaimsIdentity(claims, "CustomAuthentication");
-        return new ClaimsPrincipal(identity);
+    public async Task<ClaimsPrincipal> GetClaimAsync()
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
+
+        var content = await response.Content.ReadAsStringAsync();
+        var userClaims = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+
+        if (userClaims == null || !userClaims.ContainsKey("userName"))
+        {
+            return new ClaimsPrincipal();
+        }
+        else
+        {
+            return new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    userClaims.Select(kv => new Claim(kv.Key, kv.Value)),
+                    "custom"
+                ));
+        }
     }
 }

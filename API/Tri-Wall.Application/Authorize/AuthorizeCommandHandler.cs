@@ -14,7 +14,7 @@ namespace Tri_Wall.Application.Authorize
         {
             var dt = await dataProviderRepository.Query(new DataProvider
             {
-                StoreName = "",
+                StoreName = "_USP_CALLTRANS_EWTRANSACTION",
                 DBType = "JwtCheckAccount",
                 Par1 = request.Account,
                 Par2 = request.Password
