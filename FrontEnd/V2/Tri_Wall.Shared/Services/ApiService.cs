@@ -158,5 +158,5 @@ public class ApiService(IApiService apiService)
 public class ApiAuthService(IApiAuthService apiService)
 {
     public Task<CheckUserResponse> CheckingUser(string userName, string password)
-        => apiService.CheckingUser(new CreateUser() { Account = userName, Password = password });
+        => apiService.CheckingUser(new CreateUser { Account = userName, Password = password });
 }

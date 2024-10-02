@@ -7,6 +7,9 @@ using Tri_Wall.Infrastructure.Common.Setting;
 using Tri_Wall.Infrastructure.Common.Persistence;
 using Tri_Wall.Infrastructure.Common.QueryData;
 using Tri_Wall.Infrastructure.LoadConnection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Tri_Wall.Infrastructure;
 
@@ -36,6 +39,30 @@ public static class DependencyInjection
         services.AddSingleton<IReportLayout, ReportLayout>();
         // Add user repository to the service collection
         services.AddHostedService<LoadConnectionSapService>();
+        #region ConfigureJWTToken
+        var tokenvalidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configure.GetSection("JwtSetting:SecretKey").Value ?? "")),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = true,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+        services.AddSingleton(tokenvalidationParameters);
+        services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(x =>
+        {
+            x.SaveToken = true;
+            x.TokenValidationParameters = tokenvalidationParameters;
+        });
+        #endregion
         return services;
     }
 }

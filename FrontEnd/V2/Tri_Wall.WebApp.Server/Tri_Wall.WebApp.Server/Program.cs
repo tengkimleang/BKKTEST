@@ -34,7 +34,7 @@ api.MapPost("/login",
             return Results.Ok(userClaimsPrincipal.Claims.ToDictionary(x => x.Type, x => x.Value));
         }
 
-        var result = await apiAuthService.CheckingUser(user["UserName"], user["Password"]);
+        var result = await apiAuthService.CheckingUser(user["UserName"]??"", user["Password"]??"");
         if (result.ErrorCode != "0")
         {
             return Results.Ok(result);

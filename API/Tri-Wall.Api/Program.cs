@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Text;
 using Tri_Wall.Application;
 using Tri_Wall.Infrastructure;
 
@@ -6,8 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
-
-builder.Services.AddAuthentication().AddCookie("cookies");
 
 builder.Services.AddCors(options =>
 {

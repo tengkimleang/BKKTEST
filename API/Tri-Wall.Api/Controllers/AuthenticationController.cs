@@ -9,10 +9,10 @@ namespace Tri_Wall.API;
 
 [ApiController]
 [Route("/auth")]
-public class AuthenticationController(ISender mediator, IValidator<AuthorizeCommand> validator) : ControllerBase
+public class AuthenticationController(ISender mediator) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Authenicate(AuthorizeCommand command)
+    public async Task<IActionResult> Authenicate(AuthorizeCommand command, IValidator<AuthorizeCommand> validator)
     {
         var validationResult = await validator.ValidateAsync(command).ConfigureAwait(false);
         if (!validationResult.IsValid)

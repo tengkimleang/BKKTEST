@@ -610,3 +610,13 @@ Content-Type: application/json
 
 
 ###
+     
+POST {{API_HostAddress}}/auth
+Content-Type: application/json
+
+{
+    "Account": "admin",
+    "Password": "1234"
+}
+
+###
