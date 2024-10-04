@@ -11,6 +11,13 @@
 <!--		<UsingBrowserRuntimeWorkload>false</UsingBrowserRuntimeWorkload>-->
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Views\ProductionProcess\**" />
+	  <Content Remove="Views\ProductionProcess\**" />
+	  <EmbeddedResource Remove="Views\ProductionProcess\**" />
+	  <None Remove="Views\ProductionProcess\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
@@ -43,10 +50,6 @@
 	  <AdditionalFiles Include="Views\ReturnComponent\MobileAppScreen\Add\AddBatchLine.razor" />
 	  <AdditionalFiles Include="Views\ReturnComponent\MobileAppScreen\Add\AddItemLineComponent.razor" />
 	  <AdditionalFiles Include="Views\ReturnComponent\MobileAppScreen\Add\AddSerialLine.razor" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Views\ProductionProcess\" />
 	</ItemGroup>
 
 <!--	<ItemGroup>-->

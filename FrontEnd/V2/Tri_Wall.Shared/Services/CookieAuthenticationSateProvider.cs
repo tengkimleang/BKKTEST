@@ -32,22 +32,23 @@ public class CookieAuthenticationSateProvider(HttpClient httpClient) : Authentic
 
     public async Task<ClaimsPrincipal> GetClaimAsync()
     {
-        var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
+        //var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
 
-        var content = await response.Content.ReadAsStringAsync();
-        var userClaims = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+        //var content = await response.Content.ReadAsStringAsync();
+        //var userClaims = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
 
-        if (userClaims == null || !userClaims.ContainsKey("userName"))
-        {
-            return new ClaimsPrincipal();
-        }
-        else
-        {
-            return new ClaimsPrincipal(
-                new ClaimsIdentity(
-                    userClaims.Select(kv => new Claim(kv.Key, kv.Value)),
-                    "custom"
-                ));
-        }
+        //if (userClaims == null || !userClaims.ContainsKey("userName"))
+        //{
+        //    return new ClaimsPrincipal();
+        //}
+        //else
+        //{
+        //    return new ClaimsPrincipal(
+        //        new ClaimsIdentity(
+        //            userClaims.Select(kv => new Claim(kv.Key, kv.Value)),
+        //            "custom"
+        //        ));
+        //}
+        return new ClaimsPrincipal();
     }
 }

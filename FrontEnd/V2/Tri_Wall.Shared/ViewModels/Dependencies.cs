@@ -73,7 +73,7 @@ public static class Dependencies
         #endregion
         services.AddScoped(sp => new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5087"),
+            BaseAddress = new Uri("http://localhost:5121"),
         });
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();

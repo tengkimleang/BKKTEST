@@ -12,6 +12,7 @@ GET {{API_HostAddress}}/HeloWord
 
 POST {{API_HostAddress}}/getQuery
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImZlMmZmZDc2LWJjOWUtNDFmZi05YmJjLTBmNTViNjJhOWUzNiIsImlkIjoiYWRtaW4xMC8wMi8yMDI0IDAyOjU0OjIwIiwibmJmIjoxNzI3ODM3NjYwLCJleHAiOjE3Mjg0NDI0NjAsImlhdCI6MTcyNzgzNzY2MH0.vkMAIEdI6AiPGJpLxR_8RA-p6nqnE-pM3XvBXuyalVY
 
 {
     "storeName": "_USP_CALLTRANS_EWTRANSACTION",
