@@ -24,6 +24,7 @@ public class CookieAuthenticationSateProvider(HttpClient httpClient) : Authentic
         NotifyAuthenticationStateChanged(Task.FromResult(await GetAuthenticationStateAsync()));
         return rs;
     }
+
     public async Task LogOut()
     {
         var rs = await httpClient.PostAsJsonAsync("/api/logout", new Dictionary<string, string>());
@@ -32,23 +33,22 @@ public class CookieAuthenticationSateProvider(HttpClient httpClient) : Authentic
 
     public async Task<ClaimsPrincipal> GetClaimAsync()
     {
-        //var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
+        var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
 
-        //var content = await response.Content.ReadAsStringAsync();
-        //var userClaims = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
-
-        //if (userClaims == null || !userClaims.ContainsKey("userName"))
-        //{
-        //    return new ClaimsPrincipal();
-        //}
-        //else
-        //{
-        //    return new ClaimsPrincipal(
-        //        new ClaimsIdentity(
-        //            userClaims.Select(kv => new Claim(kv.Key, kv.Value)),
-        //            "custom"
-        //        ));
-        //}
-        return new ClaimsPrincipal();
+        var content = await response.Content.ReadAsStringAsync();
+        var userClaims = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+        Console.WriteLine(content);
+        if (userClaims == null || !userClaims.ContainsKey("token"))
+        {
+            return new ClaimsPrincipal();
+        }
+        else
+        {
+            return new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    userClaims.Select(kv => new Claim(kv.Key, kv.Value)),
+                    "custom"
+                ));
+        }
     }
 }

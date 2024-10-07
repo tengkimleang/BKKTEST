@@ -35,7 +35,7 @@ api.MapPost("/login",
         }
 
         var result = await apiAuthService.CheckingUser(user["UserName"]??"", user["Password"]??"");
-        if (result.ErrorCode != "0")
+        if (result.ErrorCode != "")
         {
             return Results.Ok(result);
         }
@@ -44,7 +44,7 @@ api.MapPost("/login",
                 new ClaimsIdentity(
                     new[]
                     {
-                        new Claim("userName", user["UserName"]),
+                        // new Claim("userName", user["UserName"]),
                         new Claim("token", result.Token)
                     },
                     "cookies"

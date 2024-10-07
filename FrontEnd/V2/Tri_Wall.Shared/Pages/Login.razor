@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Text.Json
 @using Tri_Wall.Shared.Models.User
 @layout EmptyLayout
 @rendermode InteractiveWebAssembly
@@ -27,26 +28,31 @@
 
 @code {
     [Inject] CookieAuthenticationSateProvider CustomizeAuthenticationState { get; set; } = default!;
+
     private LoginForm model = new LoginForm
     {
         Username = "admin",
         Password = "1234"
     };
+
     private async Task OnValidSubmit()
     {
         try
         {
-            var a= await CustomizeAuthenticationState.Login(model.Username, model.Password);
-            if(a.Content.ReadAsStringAsync().Result.Contains("errorCode"))
+            var a = await CustomizeAuthenticationState.Login(model.Username, model.Password);
+            if (a.Content.ReadAsStringAsync().Result.Contains("errorCode"))
             {
+                // var result = JsonSerializer.Deserialize<CheckUserResponse>(a.Content.ReadAsStringAsync().Result);
                 var result = await a.Content.ReadFromJsonAsync<CheckUserResponse>();
-                if(result != null)
+                Console.WriteLine(JsonSerializer.Serialize(result));
+                if (!string.IsNullOrEmpty(result?.ErrorCode ?? ""))
                 {
-                    ToastService.ShowError(result.ErrorMessage);
+                    ToastService.ShowError(result?.ErrorMessage ?? "");
                 }
-            }
-            else
+            }else
             {
+                var claimsPrincipal = await CustomizeAuthenticationState.GetClaimAsync();
+                GetToken.Token = claimsPrincipal.FindFirst("token")?.Value;
                 NavigationManager.NavigateTo("/Home");
             }
             // if (model is { Username: "admin", Password: "1234" } || model is { Username: "admin1", Password: "1234" })
