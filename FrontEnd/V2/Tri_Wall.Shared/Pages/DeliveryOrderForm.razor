@@ -2,17 +2,20 @@
 @rendermode InteractiveWebAssembly
 @inherits MvvmComponentBase<DeliveryOrderViewModel>
 <PageTitle>Delivery Order</PageTitle>
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
-@if (_init)
-{
-    @if (_isXs)
-    {
-        <DeliveryOrderMobile/>
-    }
-    else
-    {
-        <DeliveryOrderDefault ViewModel="ViewModel"/>
-    }
-}
-
+<AuthorizeView Context="another_name">
+    <Authorized>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
+        @if (_init)
+        {
+            @if (_isXs)
+            {
+                <DeliveryOrderMobile/>
+            }
+            else
+            {
+                <DeliveryOrderDefault ViewModel="ViewModel"/>
+            }
+        }
+    </Authorized>
+</AuthorizeView>

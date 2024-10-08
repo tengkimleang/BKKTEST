@@ -2,17 +2,20 @@
 @rendermode InteractiveWebAssembly
 @* @attribute [StreamRendering] *@
 <PageTitle>Good Receipt PO</PageTitle>
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
-@if (_init)
-{
-    @if (_isXs)
-    {
-        <GoodsReceiptPoMobile />
-    }
-    else
-    {
-        <GoodsReceiptPoDefault />
-    }
-}
-
+<AuthorizeView Context="another_name">
+    <Authorized>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
+        @if (_init)
+        {
+            @if (_isXs)
+            {
+                <GoodsReceiptPoMobile/>
+            }
+            else
+            {
+                <GoodsReceiptPoDefault/>
+            }
+        }
+    </Authorized>
+</AuthorizeView>

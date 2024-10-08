@@ -21,7 +21,7 @@ public partial class ProductionProcess
     protected void OnCloseOverlay() => _visible = true;
 
     public List<string> Status { get; set; } = ["Yes", "No"];
-    public IEnumerable<string> StatusSelect { get; set; } = default!;
+    private IEnumerable<string> StatusSelect { get; set; } = default!;
 
     IEnumerable<GetProductionOrder> _selectedProductionOrders = Array.Empty<GetProductionOrder>();
     IEnumerable<string> _selectProcessType = Array.Empty<string>();

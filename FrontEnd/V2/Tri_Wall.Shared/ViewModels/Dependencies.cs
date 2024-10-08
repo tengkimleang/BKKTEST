@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Net.Http.Headers;
+using FluentValidation;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
@@ -13,6 +14,7 @@ public static class Dependencies
     {
         #region Add Refit Client
 
+        // services.AddScoped<AuthenticatedHttpClientHandler>();
         services.AddRefitClient<IApiService>()
             .ConfigureHttpClient(static client =>
             {
@@ -20,10 +22,10 @@ public static class Dependencies
                 // client.BaseAddress = new Uri("http://localhost:5253");
                 //client.BaseAddress = new Uri("http://localhost:8082");
                 client.BaseAddress = new Uri("http://192.168.20.2:8082");
-            })
-            .ConfigurePrimaryHttpMessageHandler(() => new AuthenticatedHttpClientHandler(
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImZlMmZmZDc2LWJjOWUtNDFmZi05YmJjLTBmNTViNjJhOWUzNiIsImlkIjoiYWRtaW4xMC8wMi8yMDI0IDAyOjU0OjIwIiwibmJmIjoxNzI3ODM3NjYwLCJleHAiOjE3Mjg0NDI0NjAsImlhdCI6MTcyNzgzNzY2MH0.vkMAIEdI6AiPGJpLxR_8RA-p6nqnE-pM3XvBXuyalVY"))
-            .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImZlMmZmZDc2LWJjOWUtNDFmZi05YmJjLTBmNTViNjJhOWUzNiIsImlkIjoiYWRtaW4xMC8wMi8yMDI0IDAyOjU0OjIwIiwibmJmIjoxNzI3ODM3NjYwLCJleHAiOjE3Mjg0NDI0NjAsImlhdCI6MTcyNzgzNzY2MH0.vkMAIEdI6AiPGJpLxR_8RA-p6nqnE-pM3XvBXuyalVY");
+            }).AddStandardResilienceHandler(static options =>
+                options.Retry = new WebOrMobileHttpRetryStrategyOptions());
 
         services.AddRefitClient<IApiAuthService>()
             .ConfigureHttpClient(static client =>
@@ -32,7 +34,6 @@ public static class Dependencies
                 // client.BaseAddress = new Uri("http://localhost:5253");
                 client.BaseAddress = new Uri("http://192.168.20.2:8082");
             })
-            // .ConfigurePrimaryHttpMessageHandler(() => new AuthenticatedHttpClientHandler(token))
             .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
 
         #endregion

@@ -1,17 +1,22 @@
 ﻿@page "/ReturnFromComponent"
 <PageTitle>Return From Component</PageTitle>
 @rendermode InteractiveWebAssembly
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
-@if (_init)
-{
-    @* @if (_isXs) *@
-    @* { *@
-    @*     <ReturnComponentMobile/> *@
-    @* } *@
-    @* else *@
-    @* { *@
-    @*     <ReturnComponentDefault /> *@
-    @* } *@
-    <ReturnComponentDefault />
-}
+
+<AuthorizeView Context="another_name">
+    <Authorized>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
+        @if (_init)
+        {
+            @if (_isXs)
+            {
+                <ReturnComponentMobile/>
+            }
+            else
+            {
+                <ReturnComponentDefault/>
+            }
+            @* <ReturnComponentDefault /> *@
+        }
+    </Authorized>
+</AuthorizeView>

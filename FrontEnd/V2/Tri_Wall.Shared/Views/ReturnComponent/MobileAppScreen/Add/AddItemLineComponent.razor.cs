@@ -44,6 +44,9 @@ public partial class AddItemLineComponent
 
     private Func<int, Task> OnDeleteLineItem => Content["OnDeleteLineItem"] as Func<int, Task> ?? default!;
 
+    private IEnumerable<GetProductionOrder> SelectedProductionOrder =>
+        Content["docNumOrderSelected"] as IEnumerable<GetProductionOrder> ?? default!;
+
     private Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> GetSerialBatch =>
         Content["getSerialBatch"] as Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>> ??
         default!;
@@ -140,7 +143,7 @@ public partial class AddItemLineComponent
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";
         _isItemNone = firstItem?.ItemType == "N";
-        //Console.WriteLine(JsonSerializer.Serialize(firstItem));
+        Console.WriteLine(JsonSerializer.Serialize(firstItem));
         if (firstItem?.ItemType != "N")
             _serialBatchDeliveryOrders = await GetSerialBatch(new Dictionary<string, string>
             {
@@ -295,6 +298,9 @@ public partial class AddItemLineComponent
             return;
         }
 
+        Console.WriteLine("After Add Manual");
+        Console.WriteLine(JsonSerializer.Serialize(batchReturnComponentProduction));
+        Console.WriteLine(JsonSerializer.Serialize(DataResult));
         if (_isUpdate == false)
         {
             _batchReturnComponent?.Add(batchReturnComponentProduction);

@@ -3,16 +3,20 @@
 @rendermode InteractiveWebAssembly
 @* @attribute [StreamRendering] *@
 <PageTitle>Return</PageTitle>
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
-@if (_init)
-{
-    @if (_isXs)
-    {
-        <ReturnRequestMobile/>
-    }
-    else
-    {
-        <ReturnRequestDefault ViewModel="ViewModel" />
-    }
-}
+<AuthorizeView Context="another_name">
+    <Authorized>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
+        @if (_init)
+        {
+            @if (_isXs)
+            {
+                <ReturnRequestMobile/>
+            }
+            else
+            {
+                <ReturnRequestDefault ViewModel="ViewModel"/>
+            }
+        }
+    </Authorized>
+</AuthorizeView>

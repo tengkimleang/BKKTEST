@@ -26,9 +26,49 @@
                                             @bind-SelectedOptions="@SelectedBatch"
                                             ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
                     </FluentGridItem>
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentAutocomplete Required
+                                            TOption="ItemType"
+                                            Width="100%"
+                                            Placeholder="Serial Code"
+                                            OnOptionsSearch="OnSearchType"
+                                            MaximumOptionsSearch="1"
+                                            Virtualize="true"
+                                            Items="_type"
+                                            MaximumSelectedOptions="1"
+                                            OptionValue="@(item => item.Id.ToString())"
+                                            OptionText="@(item => $"{item.Name}")"
+                                            @bind-SelectedOptions="@BatchReturnComponentProduction.OnSelectedType"
+                                            ValueChanged="@(e => OnSelectedType(e))"/>
+                    </FluentGridItem>
+                    @if (DisplayNoneOrShow)
+                    {
+                        @if (BatchReturnComponentProduction.OnSelectedType.FirstOrDefault()?.Name == "Manual")
+                        {
+                            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                                <FluentAutocomplete Required
+                                                    TOption="GetProductionOrder"
+                                                    Width="100%"
+                                                    Placeholder="Search DocNum"
+                                                    OnOptionsSearch="OnSearchDocNum"
+                                                    MaximumOptionsSearch="1"
+                                                    Virtualize="true"
+                                                    Items="SelectedProductionOrder"
+                                                    MaximumSelectedOptions="1"
+                                                    OptionText="@(item => $"{item.DocNum}")"
+                                                    @bind-SelectedOptions="@BatchReturnComponentProduction.OnSelectedProductionOrder"
+                                                    ValueChanged="@((e) => OnSelectedDocument(e))"/>
+                            </FluentGridItem>
+                            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                                <FluentNumberField @bind-Value=@BatchReturnComponentProduction.QtyManual 
+                                                   @onchange="@(e => OnChangeQtyManual(e, BatchReturnComponentProduction))"
+                                                   Placeholder="Qty" TValue="double"/>
+                            </FluentGridItem>
+                        }
+                    }
                     <FluentGridItem xs="12">
-                        <FluentNumberField Label="Qty" 
-                                           @bind-Value="@BatchReturnComponentProduction.Qty" 
+                        <FluentNumberField Label="Qty"
+                                           @bind-Value="@BatchReturnComponentProduction.Qty"
                                            style="width: 100%;">
                         </FluentNumberField>
                     </FluentGridItem>
@@ -71,5 +111,5 @@
                            Position="FloatActionButton.PositionEnum.Left"
                            ColorButton="Color.Error"/>
     }
-    
+
 </FluentLayout>

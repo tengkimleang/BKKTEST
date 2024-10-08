@@ -3,25 +3,30 @@
 @inherits MvvmComponentBase<GoodReturnViewModel>
 @* @attribute [StreamRendering] *@
 <PageTitle>Good Return</PageTitle>
-<FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-</FluentGrid>
-@if (_init)
-{
-    @if (_isXs)
-    {
-        <GoodReturnMobile/>
-    }
-    else
-    {
-        <GoodReturnDefault ViewModel="ViewModel"
-                       Visible="_visible"/>
-    }
-}
 
-<FluentOverlay @bind-Visible=@_visible
-               Opacity="0.4"
-               FullScreen="true"
-               OnClose="OnCloseOverlay"
-               PreventScroll=true>
-    <FluentProgressRing/>
-</FluentOverlay>
+<AuthorizeView Context="another_name">
+    <Authorized>
+        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+        </FluentGrid>
+        @if (_init)
+        {
+            @if (_isXs)
+            {
+                <GoodReturnMobile/>
+            }
+            else
+            {
+                <GoodReturnDefault ViewModel="ViewModel"
+                                   Visible="_visible"/>
+            }
+        }
+
+        <FluentOverlay @bind-Visible=@_visible
+                       Opacity="0.4"
+                       FullScreen="true"
+                       OnClose="OnCloseOverlay"
+                       PreventScroll=true>
+            <FluentProgressRing/>
+        </FluentOverlay>
+    </Authorized>
+</AuthorizeView>

@@ -329,18 +329,21 @@ else
     {
         <AddBatchLine IsViewDetail="OnAddItemLineBack"
                       SaveBatch="OnAddBatchLine"
-                      SerialBatchDeliveryOrders="_serialBatchInventoryCounting"
-                      IsUpdate="_isUpdate"
+                      DeleteBatch="OnDeleteBatchLine"
+                      DataResult="DataResult"
+                      SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
+                      SelectedProductionOrder="@SelectedProductionOrder"
+                      BatchReturnComponent="_batchReturnComponent"
                       Index="_indexOfLineBatch"
-                      SelectedBatch="_getBatchOrSerials"
-                      DeleteBatch="OnDeleteBatchLine"/>
+                      IsUpdate="_isUpdate"
+                      SelectedBatch="_getBatchOrSerials"/>
     }
 
     @if (_isItemSerial)
     {
         <AddSerialLine IsViewDetail="OnAddItemLineBack"
                        SaveSerial="OnAddSerialLine"
-                       SerialBatchDeliveryOrders="_serialBatchInventoryCounting"
+                       SerialBatchDeliveryOrders="_serialBatchDeliveryOrders"
                        IsUpdate="_isUpdate"
                        Index="_indexOfLineSerial"
                        SelectedSerial="_getBatchOrSerials"
