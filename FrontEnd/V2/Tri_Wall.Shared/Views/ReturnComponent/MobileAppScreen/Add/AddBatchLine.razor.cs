@@ -118,11 +118,13 @@ public partial class AddBatchLine
         Console.WriteLine(e.Value);
         if (double.TryParse(e.Value?.ToString(), out double qty))
         {
-            obj.QtyManual = qty;
+            obj.QtyLost = qty;
             DataResult.QtyManual =
-                BatchReturnComponent.Sum(x => x.QtyManual) + BatchReturnComponentProduction.QtyManual;
-            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) -
-                                 BatchReturnComponent.Sum(x => x.QtyManual);
+                BatchReturnComponent.Sum(x => x.QtyLost) + BatchReturnComponentProduction.QtyLost;
+            Console.WriteLine((DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty));
+            Console.WriteLine(BatchReturnComponent.Sum(x => x.QtyLost));
+            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) - DataResult.QtyManual;
+            //BatchReturnComponent.Sum(x => x.QtyLost);
         }
     }
 }

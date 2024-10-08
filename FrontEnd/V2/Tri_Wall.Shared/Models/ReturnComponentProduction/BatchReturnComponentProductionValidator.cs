@@ -6,15 +6,18 @@ public class BatchReturnComponentProductionValidator : AbstractValidator<BatchRe
 {
     public BatchReturnComponentProductionValidator()
     {
-        RuleFor(x => x.Qty).NotEmpty().WithMessage("Item Code is Require");
-        RuleFor(x => x.BatchCode).NotEmpty().WithMessage("Batch Code is Require");
-        RuleFor(x=>x).Custom((x,context)=>
+        RuleFor(x => x).Custom((x, context) =>
         {
             if (x.QtyAvailable < x.Qty)
             {
-                context.AddFailure("Qty","Qty is not available");
+                context.AddFailure("Qty", "Qty is not available");
+            }
+
+            if (x is { Qty: 0, QtyManual: 0 })
+            {
+                context.AddFailure("Qty", "Either Qty or QtyManual must be provided");
             }
         });
-        
+        RuleFor(x => x.BatchCode).NotEmpty().WithMessage("Batch Code is Require");
     }
 }

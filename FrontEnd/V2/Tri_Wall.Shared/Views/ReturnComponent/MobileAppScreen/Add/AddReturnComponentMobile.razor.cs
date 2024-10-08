@@ -242,6 +242,7 @@ public partial class AddReturnComponentMobile
             }
 
             Visible = true;
+            StateHasChanged();
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
@@ -254,6 +255,7 @@ public partial class AddReturnComponentMobile
                 ViewModel.IssueProductionLine = new();
                 ViewModel.GetProductionOrderLines = new();
                 ViewModel.ReceiptFromProductionOrderForm = new();
+                StateHasChanged();
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
@@ -261,6 +263,7 @@ public partial class AddReturnComponentMobile
         if (ViewModel.PostResponses.ErrorCode == "")
         {
             Visible = false;
+            StateHasChanged();
             return;
         }
 
@@ -271,6 +274,7 @@ public partial class AddReturnComponentMobile
             JsonSerializer.Deserialize<ObservableCollection<GetProductionOrderLines>>(strGetProductionOrderLines) ??
             new();
         Visible = false;
+        StateHasChanged();
     }
 
     private void OnSearch(OptionsSearchEventArgs<GetProductionOrder> e)
