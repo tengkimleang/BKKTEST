@@ -9,13 +9,13 @@ using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.ViewModels;
 using Tri_Wall.Shared.Views.GoodReceptPo;
-using Tri_Wall.Shared.Views.GoodReturn;
 
 namespace Tri_Wall.Shared.Views.GoodReturn;
 
 public partial class GoodReturnDefault 
 {
     [Parameter] public GoodReturnViewModel ViewModel { get; set; } = default!;
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Parameter] public bool Visible { get; set; }
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
@@ -30,9 +30,11 @@ public partial class GoodReturnDefault
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
     bool _visible;
-    protected override async Task OnInitializedAsync()
+
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)

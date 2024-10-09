@@ -1,7 +1,7 @@
-﻿@page "/GoodReceiptPo/Mobile/ListGoodsReceiptPo"
-@using Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen.List
+@page "/GoodReturn/Mobile/ListGoodReturn"
+@using Tri_Wall.Shared.Views.GoodReturn.MobileAppScreen.List
 @rendermode InteractiveWebAssembly
-<PageTitle>List Good Receipt PO</PageTitle>
+<PageTitle>List Good Return</PageTitle>
 <AuthorizeView Context="anotherName">
     <Authorized>
         <ListSearch Token="@anotherName.User.FindFirst("token")?.Value" />

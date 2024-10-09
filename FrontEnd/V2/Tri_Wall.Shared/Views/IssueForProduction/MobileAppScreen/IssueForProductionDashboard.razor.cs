@@ -1,21 +1,22 @@
-﻿
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.GoodReturn;
+namespace Tri_Wall.Shared.Views.IssueForProduction.MobileAppScreen;
 
-public partial class GoodReturnMobile
+public partial class IssueForProductionDashboard
 {
     protected override void OnInitialized()
     {
-        ComponentAttribute.Title = "Goods Return";
+        ComponentAttribute.Title = "Inventory Transfer";
         ComponentAttribute.Path = "/home";
         ComponentAttribute.IsBackButton = true;
     }
+
     private void OnFloatButtonClick()
     {
         // Handle the float button click event
     }
+
     void UpdateGridSize(GridItemSize size)
     {
         // if (size == GridItemSize.Xs)
@@ -36,15 +37,16 @@ public partial class GoodReturnMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/listgoodreturn");
+        NavigationManager.NavigateTo("/ListSearchIssueForProductionMobile");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddGoodReturnMobile/");
+        NavigationManager.NavigateTo("/AddIssueForProductionMobile");
     }
+
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchGoodReceiptPo");
+        NavigationManager.NavigateTo("/ListSearchSalesOrder");
     }
 }

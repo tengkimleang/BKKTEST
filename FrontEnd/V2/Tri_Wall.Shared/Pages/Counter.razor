@@ -11,7 +11,7 @@
 </div> *@
 <AuthorizeView Context="another_name">
     <Authorized>
-        <p>@(GetToken.Token=@another_name.User.FindFirst("token")?.Value)</p>
+        <p>@another_name.User.FindFirst("token")?.Value</p>
     </Authorized>
     <NotAuthorized>
         <p>You're not authorized.</p>

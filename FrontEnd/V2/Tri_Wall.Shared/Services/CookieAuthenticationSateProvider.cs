@@ -32,7 +32,7 @@ public class CookieAuthenticationSateProvider(HttpClient httpClient) : Authentic
         NotifyAuthenticationStateChanged(Task.FromResult(await GetAuthenticationStateAsync()));
     }
 
-    public async Task<ClaimsPrincipal> GetClaimAsync()
+    private async Task<ClaimsPrincipal> GetClaimAsync()
     {
         var response = await httpClient.PostAsJsonAsync("/api/login", new Dictionary<string, string>());
 

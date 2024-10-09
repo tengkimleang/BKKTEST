@@ -87,8 +87,3 @@ public static class Dependencies
         return services;
     }
 }
-
-public static class GetToken
-{
-    public static string Token { get; set; } = string.Empty;
-}

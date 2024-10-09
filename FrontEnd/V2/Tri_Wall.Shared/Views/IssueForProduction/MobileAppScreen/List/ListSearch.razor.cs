@@ -1,5 +1,6 @@
 
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
@@ -8,6 +9,7 @@ namespace Tri_Wall.Shared.Views.IssueForProduction.MobileAppScreen.List;
 
 public partial class ListSearch
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     int _refreshCount;
     int _count;
     private string? _searchValue;

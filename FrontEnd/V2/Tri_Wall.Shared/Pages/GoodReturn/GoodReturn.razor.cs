@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.FluentUI.AspNetCore.Components;
 
-namespace Tri_Wall.Shared.Pages;
+namespace Tri_Wall.Shared.Pages.GoodReturn;
 
 public partial class GoodReturn
 {

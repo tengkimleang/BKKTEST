@@ -1,14 +1,13 @@
-
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.IssueForProduction;
+namespace Tri_Wall.Shared.Views.InventoryTransfer.MobileAppScreen;
 
-public partial class IssueForProductionMobile
+public partial class InventoryTransferDashboard
 {
     protected override void OnInitialized()
     {
-        ComponentAttribute.Title = "Inventory Transfer";
+        ComponentAttribute.Title = "Inventory Counting";
         ComponentAttribute.Path = "/home";
         ComponentAttribute.IsBackButton = true;
     }
@@ -38,12 +37,12 @@ public partial class IssueForProductionMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchIssueForProductionMobile");
+        NavigationManager.NavigateTo("/ListSearchInventoryTransfer");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddIssueForProductionMobile");
+        NavigationManager.NavigateTo("/AddInventoryTransferMobile/");
     }
 
     private void OnClickListSearchSalesOrder()

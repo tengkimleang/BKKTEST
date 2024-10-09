@@ -13,16 +13,12 @@ namespace Tri_Wall.Shared.Views.GoodReturn.MobileAppScreen.Add;
 public partial class AddGoodReturnMobile
 {
     [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
     Dictionary<string, object> _lineItemContent = new();
     bool _isItemLineClickAdd;
     private bool Visible { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
-    }
 
     private void UpdateGridSize(GridItemSize size)
     {
@@ -37,6 +33,9 @@ public partial class AddGoodReturnMobile
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

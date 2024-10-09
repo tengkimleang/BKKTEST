@@ -1,9 +1,10 @@
 ﻿@page "/inventorytransfer"
+@using Tri_Wall.Shared.Views.InventoryTransfer.MobileAppScreen
 @inherits MvvmComponentBase<InventoryTransferViewModel>
 @rendermode InteractiveWebAssembly
 @* @attribute [StreamRendering] *@
 <PageTitle>Inventory Transfer</PageTitle>
-<AuthorizeView Context="another_name">
+<AuthorizeView Context="anotherName">
     <Authorized>
         <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
         </FluentGrid>
@@ -11,11 +12,11 @@
         {
             @if (_isXs)
             {
-                <InventoryTransferMobile/>
+                <InventoryTransferDashboard/>
             }
             else
             {
-                <InventoryTransferDefault ViewModel="ViewModel"/>
+                <InventoryTransferDefault Token="@(anotherName.User.FindFirst("token")?.Value)" ViewModel="ViewModel"/>
             }
         }
     </Authorized>

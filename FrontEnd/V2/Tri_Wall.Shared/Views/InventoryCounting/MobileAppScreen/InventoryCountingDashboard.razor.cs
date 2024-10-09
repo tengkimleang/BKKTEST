@@ -1,10 +1,9 @@
-
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.InventoryCounting;
+namespace Tri_Wall.Shared.Views.InventoryCounting.MobileAppScreen;
 
-public partial class InventoryCountingMobile 
+public partial class InventoryCountingDashboard 
 {
     protected override void OnInitialized()
     {

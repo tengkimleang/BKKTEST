@@ -8,6 +8,7 @@ namespace Tri_Wall.Shared.Views.GoodReturn.MobileAppScreen.List;
 
 public partial class ListSearchGoodReceiptPo
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     private int _refreshCount;
     private int _count;
     private string? _searchValue;
@@ -20,6 +21,7 @@ public partial class ListSearchGoodReceiptPo
         ComponentAttribute.Title = "List Search SO";
         ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.Token = Token;
         await OnRefreshAsync();
         IsViewDetail = false;
     }

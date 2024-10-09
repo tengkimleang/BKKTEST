@@ -13,6 +13,7 @@ namespace Tri_Wall.Shared.Views.InventoryTransfer.MobileAppScreen.Add;
 
 public partial class AddInventoryTransferMobile
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<InventoryTransferHeader>? Validator { get; init; }
     private IEnumerable<Warehouses>? _selectedWarehousesFrom = Array.Empty<Warehouses>();
     private IEnumerable<Warehouses>? _selectedWarehousesTo = Array.Empty<Warehouses>();

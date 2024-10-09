@@ -1,0 +1,10 @@
+@page "/InventoryTransfer/Mobile/Add"
+@using Tri_Wall.Shared.Views.InventoryTransfer.MobileAppScreen.Add
+@rendermode InteractiveWebAssembly
+<PageTitle>Create Inventory Transfer</PageTitle>
+
+<AuthorizeView Context="anotherName">
+    <Authorized>
+        <AddInventoryTransferMobile Token="@anotherName.User.FindFirst("token")?.Value" />
+    </Authorized>
+</AuthorizeView>

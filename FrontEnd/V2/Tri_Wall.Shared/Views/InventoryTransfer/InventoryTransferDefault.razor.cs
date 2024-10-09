@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
@@ -11,25 +10,28 @@ using Tri_Wall.Shared.Views.GoodReceptPo;
 
 namespace Tri_Wall.Shared.Views.InventoryTransfer;
 
-public partial class InventoryTransferDefault 
+public partial class InventoryTransferDefault
 {
     [Parameter] public InventoryTransferViewModel ViewModel { get; set; } = default!;
-    [Inject]
-    public IValidator<InventoryTransferHeader>? Validator { get; init; }
-    [Inject]
-    public IValidator<InventoryTransferLine>? ValidatorLine { get; init; }
+    [Parameter] public string Token { get; set; } = string.Empty;
 
-    private string stringDisplay = "Inventory Transfer";
-    private string fromWord = "From";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView = false;
-    protected void OnCloseOverlay() => visible = true;
+    [Inject] public IValidator<InventoryTransferHeader>? Validator { get; init; }
+    // [Inject]
+    // public IValidator<InventoryTransferLine>? ValidatorLine { get; init; }
 
-    bool visible = false;
-    protected override async Task OnInitializedAsync()
+    private string _stringDisplay = "Inventory Transfer";
+    private string _fromWord = "From";
+    private string _saveWord = "Save";
+    string? _dataGrid = "width: 1600px;height:405px";
+    bool _isView = false;
+    protected void OnCloseOverlay() => _visible = true;
+
+    bool _visible = false;
+
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task OpenDialogAsync(InventoryTransferLine deliveryOrderLine)
@@ -39,32 +41,38 @@ public partial class InventoryTransferDefault
             { "item", ViewModel.Items },
             { "warehouse", ViewModel.Warehouses },
             { "line", deliveryOrderLine },
-            { "getSerialBatch", new Func<Dictionary<string,string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch) }
+            {
+                "getSerialBatch",
+                new Func<Dictionary<string, string>, Task<ObservableCollection<GetBatchOrSerial>>>(GetSerialBatch)
+            }
         };
 
-        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineInventoryTrasfer>(dictionary, new DialogParameters
-        {
-            Title = (deliveryOrderLine == null) ? "Add Line" : "Update Line",
-            PreventDismissOnOverlayClick = true,
-            PreventScroll = false,
-            Width = "80%",
-            Height = "80%"
-        }).ConfigureAwait(false);
+        var dialog = await DialogService!.ShowDialogAsync<DialogAddLineInventoryTrasfer>(dictionary,
+            new DialogParameters
+            {
+                Title = string.IsNullOrEmpty(deliveryOrderLine.ItemCode) ? "Add Line" : "Update Line",
+                PreventDismissOnOverlayClick = true,
+                PreventScroll = false,
+                Width = "80%",
+                Height = "80%"
+            }).ConfigureAwait(false);
 
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if (ViewModel.InventoryTransferForm.Lines == null) ViewModel.InventoryTransferForm.Lines = new List<InventoryTransferLine>();
+            if (ViewModel.InventoryTransferForm.Lines.Count == 0) ViewModel.InventoryTransferForm.Lines = new();
             if (data["data"] is InventoryTransferLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
                 {
-                    receiptPoLine.LineNum = ViewModel.InventoryTransferForm.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
-                    ViewModel.InventoryTransferForm.Lines?.Add(receiptPoLine);
+                    receiptPoLine.LineNum =
+                        ViewModel.InventoryTransferForm.Lines.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                    ViewModel.InventoryTransferForm.Lines.Add(receiptPoLine);
                 }
                 else
                 {
-                    var index = ViewModel.InventoryTransferForm.Lines.FindIndex(i => i.LineNum == receiptPoLine.LineNum);
+                    var index = ViewModel.InventoryTransferForm.Lines.FindIndex(i =>
+                        i.LineNum == receiptPoLine.LineNum);
                     ViewModel.InventoryTransferForm.Lines[index] = receiptPoLine;
                 }
             }
@@ -75,23 +83,25 @@ public partial class InventoryTransferDefault
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            fromWord = "";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _fromWord = "";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "Inventory Transfer";
-            fromWord = "From";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "Inventory Transfer";
+            _fromWord = "From";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
+
     private void DeleteLine(int index)
     {
-        ViewModel.InventoryTransferForm.Lines!.RemoveAt(index);
+        ViewModel.InventoryTransferForm.Lines.RemoveAt(index);
     }
+
     async Task OnSaveTransaction(string type = "")
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
@@ -104,9 +114,11 @@ public partial class InventoryTransferDefault
                 {
                     ToastService!.ShowError(error.ErrorMessage);
                 }
+
                 return;
             }
-            visible = true;
+
+            _visible = true;
 
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
@@ -114,18 +126,19 @@ public partial class InventoryTransferDefault
             {
                 ViewModel.InventoryTransferForm = new InventoryTransferHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
             }
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        visible = false;
+        _visible = false;
     }
+
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -135,12 +148,14 @@ public partial class InventoryTransferDefault
         Console.WriteLine(e);
         return Task.CompletedTask;
     }
+
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
+
     async Task OnGetBatchOrSerial()
     {
         var dictionary = new Dictionary<string, object>
@@ -156,17 +171,20 @@ public partial class InventoryTransferDefault
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         //OnGetPurchaseOrder
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
+
     async Task<ObservableCollection<GetListData>> OnSearchGoodReceiptPo(Dictionary<string, object> e)
     {
         await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(e);
         return ViewModel.GetListData;
     }
+
     async Task OpenListDataAsyncAsync()
     {
         await ViewModel.TotalCountInventoryTransferCommand.ExecuteAsync(null).ConfigureAwait(false);
@@ -176,8 +194,11 @@ public partial class InventoryTransferDefault
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) },
             //{ "isDelete", true },
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeleted)},
-            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)},
+            { "onSelete", new Func<string, Task>(OnSeleted) },
+            {
+                "onSearch",
+                new Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)
+            },
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
@@ -195,6 +216,7 @@ public partial class InventoryTransferDefault
         await ViewModel.GetBatchOrSerialByItemCodeCommand.ExecuteAsync(dictionary);
         return ViewModel.GetBatchOrSerialsByItemCode;
     }
+
     async Task ListCopyFromPurchaseOrder()
     {
         var dictionary = new Dictionary<string, object>
@@ -204,7 +226,7 @@ public partial class InventoryTransferDefault
             //{ "isDelete", true },
             //{"onDelete",new Func<string,Task>(OnDelete)},
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeletedPurchaseOrder)},
+            { "onSelete", new Func<string, Task>(OnSeletedPurchaseOrder) },
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
@@ -215,6 +237,7 @@ public partial class InventoryTransferDefault
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task<ObservableCollection<GetListData>> GetListDataPurchaseOrder(int p)
     {
         await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(p.ToString());
@@ -244,6 +267,7 @@ public partial class InventoryTransferDefault
             });
             i++;
         }
+
         StateHasChanged();
     }
 }

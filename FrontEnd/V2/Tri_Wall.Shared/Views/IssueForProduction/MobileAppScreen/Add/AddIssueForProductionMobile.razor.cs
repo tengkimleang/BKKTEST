@@ -16,7 +16,7 @@ namespace Tri_Wall.Shared.Views.IssueForProduction.MobileAppScreen.Add;
 
 public partial class AddIssueForProductionMobile
 {
-    [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<IssueProductionHeader>? Validator { get; init; }
     Dictionary<string, object> _lineItemContent = new();
 
@@ -34,12 +34,13 @@ public partial class AddIssueForProductionMobile
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/issueforproduction";
         ComponentAttribute.IsBackButton = true;
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);   
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)

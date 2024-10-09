@@ -16,6 +16,7 @@ namespace Tri_Wall.Shared.Views.IssueForProduction;
 
 public partial class IssueForProductionDefault
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<IssueProductionHeader>? Validator { get; init; }
     // [Inject] public IValidator<IssueProductionLine>? ValidatorLine { get; init; }
 
@@ -53,9 +54,10 @@ public partial class IssueForProductionDefault
     }
 
     bool _visible;
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)

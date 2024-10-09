@@ -3,7 +3,6 @@ using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.InventoryCounting;
 using Tri_Wall.Shared.Services;
@@ -13,7 +12,7 @@ namespace Tri_Wall.Shared.Views.InventoryCounting.MobileAppScreen.Add;
 
 public partial class AddInventoryCountingMobile
 {
-    [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<InventoryCountingHeader>? Validator { get; init; }
     Dictionary<string, object> _lineItemContent = new();
     bool _isItemLineClickAdd;
@@ -27,12 +26,13 @@ public partial class AddInventoryCountingMobile
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/inventorycounting";
         ComponentAttribute.IsBackButton = true;
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
@@ -119,15 +119,15 @@ public partial class AddInventoryCountingMobile
         if (inventoryCountingLine.LineNum == 0)
         {
             inventoryCountingLine.LineNum =
-                ViewModel.InventoryCountingHeader.Lines?.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+                ViewModel.InventoryCountingHeader.Lines.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
             Console.WriteLine(JsonSerializer.Serialize(inventoryCountingLine));
-            ViewModel.InventoryCountingHeader.Lines ??= new();
-            ViewModel.InventoryCountingHeader.Lines?.Add(inventoryCountingLine);
+            // ViewModel.InventoryCountingHeader.Lines ??= [];
+            ViewModel.InventoryCountingHeader.Lines.Add(inventoryCountingLine);
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.InventoryCountingHeader));
         }
         else
         {
-            var index = ViewModel.InventoryCountingHeader.Lines!.FindIndex(i =>
+            var index = ViewModel.InventoryCountingHeader.Lines.FindIndex(i =>
                 i.LineNum == inventoryCountingLine.LineNum);
             ViewModel.InventoryCountingHeader.Lines[index] = inventoryCountingLine;
         }

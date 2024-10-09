@@ -14,6 +14,7 @@ namespace Tri_Wall.Shared.Views.InventoryCounting;
 
 public partial class InventoryCountingDefault
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<InventoryCountingHeader>? Validator { get; init; }
     [Inject] public IValidator<InventoryCountingLine>? ValidatorLine { get; init; }
     [Inject] public Blazored.LocalStorage.ISyncLocalStorageService? LocalStorage { get; init; }
@@ -28,9 +29,11 @@ public partial class InventoryCountingDefault
         new List<GetInventoryCountingList>();
 
     bool _visible;
-    protected override async Task OnInitializedAsync()
+    
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)

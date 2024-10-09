@@ -1,7 +1,8 @@
-﻿@page "/inventorycounting"
+﻿@page "/issueforproduction"
+@using Tri_Wall.Shared.Views.IssueForProduction.MobileAppScreen
 @rendermode InteractiveWebAssembly
-<PageTitle>Inventory Counting</PageTitle>
-<AuthorizeView Context="another_name">
+<PageTitle>Issue For Production</PageTitle>
+<AuthorizeView Context="anotherName">
     <Authorized>
         <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
         </FluentGrid>
@@ -9,11 +10,11 @@
         {
             @if (_isXs)
             {
-                <InventoryCountingMobile/>
+                <IssueForProductionDashboard/>
             }
             else
             {
-                <InventoryCountingDefault/>
+                <IssueForProductionDefault Token="@(anotherName.User.FindFirst("token")?.Value)"/>
             }
         }
     </Authorized>
