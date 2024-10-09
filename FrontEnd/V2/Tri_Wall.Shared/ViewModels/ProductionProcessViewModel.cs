@@ -39,18 +39,18 @@ public partial class ProductionProcessViewModel(ApiService apiService) : ViewMod
         "ASY",
         "PAC"
     ];
-
+    [ObservableProperty] string _token = string.Empty;
     #endregion
 
     public override async Task Loaded()
     {
-        GetProductionOrder = (await apiService.GetProductionOrders("GetForProductionProcess")).Data ?? new();
+        GetProductionOrder = (await apiService.GetProductionOrders("GetForProductionProcess",Token)).Data ?? new();
         IsView = true;
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostProductionProcess(ProductionProcessHeader);
+        PostResponses = await apiService.PostProductionProcess(ProductionProcessHeader,Token);
     }
 }

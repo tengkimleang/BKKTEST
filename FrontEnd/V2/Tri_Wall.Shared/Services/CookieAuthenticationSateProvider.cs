@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
+using Tri_Wall.Shared.ViewModels;
 
 namespace Tri_Wall.Shared.Services;
 

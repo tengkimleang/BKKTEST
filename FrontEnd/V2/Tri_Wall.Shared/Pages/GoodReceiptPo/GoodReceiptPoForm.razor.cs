@@ -1,10 +1,8 @@
-﻿
+﻿using Microsoft.FluentUI.AspNetCore.Components;
 
-using Microsoft.FluentUI.AspNetCore.Components;
+namespace Tri_Wall.Shared.Pages.GoodReceiptPo;
 
-namespace Tri_Wall.Shared.Pages;
-
-public partial class DeliveryOrderForm
+public partial class GoodReceiptPoForm
 {
     private bool _isXs;
     private bool _init;
@@ -13,5 +11,4 @@ public partial class DeliveryOrderForm
         _init=true;
         _isXs = size == GridItemSize.Xs;
     }
-
 }

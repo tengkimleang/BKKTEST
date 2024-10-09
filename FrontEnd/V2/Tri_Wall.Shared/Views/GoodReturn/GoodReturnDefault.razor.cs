@@ -30,6 +30,10 @@ public partial class GoodReturnDefault
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
     bool _visible;
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {

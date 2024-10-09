@@ -28,6 +28,10 @@ public partial class InventoryCountingDefault
         new List<GetInventoryCountingList>();
 
     bool _visible;
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
     {

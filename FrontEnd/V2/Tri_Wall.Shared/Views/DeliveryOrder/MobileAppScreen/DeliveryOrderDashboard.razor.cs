@@ -1,9 +1,9 @@
 ﻿using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.DeliveryOrder;
+namespace Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen;
 
-public partial class DeliveryOrderMobile
+public partial class DeliveryOrderDashboard
 {
     protected override void OnInitialized()
     {
@@ -35,15 +35,15 @@ public partial class DeliveryOrderMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/listdeliveryorder");
+        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListDeliveryOrder");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/addDeliveryOrderMobile/");
+        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/Add/");
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchSalesOrder");
+        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListSalesOrder");
     }
 }

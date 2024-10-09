@@ -8,7 +8,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class GoodReturnViewModel(ApiService apiService) : ViewModelBase //, ILoadMasterData loadMasterData
 {
     #region Data Member
 
@@ -16,15 +16,15 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 
-    [ObservableProperty] ObservableCollection<Vendors> _vendors = loadMasterData.GetVendors;
+    [ObservableProperty] private ObservableCollection<Vendors> _vendors = new(); //= loadMasterData.GetVendors;
 
-    [ObservableProperty] ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
+    [ObservableProperty] private ObservableCollection<ContactPersons> _contactPeople = new(); //= loadMasterData.GetContactPersons;
 
-    [ObservableProperty] ObservableCollection<Items> _items = loadMasterData.GetItems;
+    [ObservableProperty] private ObservableCollection<Items> _items = new(); //= loadMasterData.GetItems;
 
-    [ObservableProperty] ObservableCollection<VatGroups> _taxPurchases = loadMasterData.GetTaxPurchases;
+    [ObservableProperty] private ObservableCollection<VatGroups> _taxPurchases = new(); //= loadMasterData.GetTaxPurchases;
 
-    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehouses = new(); //= loadMasterData.GetWarehouses;
 
     [ObservableProperty] PostResponse _postResponses = new();
 
@@ -46,39 +46,39 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
     [ObservableProperty] Boolean _isView;
-
+    [ObservableProperty] string _token = string.Empty;
     #endregion
 
     #region Method
-
-    public override async Task Loaded()
+    
+    [RelayCommand]
+    async Task OnLoading()
     {
         Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("21")).Data ?? new());
+            (await apiService.GetSeries("21",Token)).Data ?? new());
         GoodReturnForm.Series = Series.First().Code;
         Vendors = await CheckingValueT(Vendors, async () =>
-            (await apiService.GetVendors()).Data ?? new());
+            (await apiService.GetVendors(Token)).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
-            (await apiService.GetContactPersons()).Data ?? new());
+            (await apiService.GetContactPersons(Token)).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
-            (await apiService.GetItems()).Data ?? new());
+            (await apiService.GetItems(Token)).Data ?? new());
         TaxPurchases = await CheckingValueT(TaxPurchases, async () =>
-            (await apiService.GetTaxPurchases()).Data ?? new());
+            (await apiService.GetTaxPurchases(Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-            (await apiService.GetWarehouses()).Data ?? new());
+            (await apiService.GetWarehouses(Token)).Data ?? new());
         IsView = true;
     }
-
     [RelayCommand]
     async Task TotalCountGoodReceiptPoReturn()
     {
-        TotalCountGoodReceiptPo = (await apiService.GetTotalItemCount("GoodReceiptPOReturn")).Data ?? new();
+        TotalCountGoodReceiptPo = (await apiService.GetTotalItemCount("GoodReceiptPOReturn",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task TotalCountGoodReturn()
     {
-        TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("GoodReturn",Token)).Data ?? new();
     }
 
     [RelayCommand]
@@ -87,7 +87,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
         GoodReturnForm.ContactPersonCode = string.IsNullOrEmpty(GoodReturnForm.ContactPersonCode)
             ? "0"
             : GoodReturnForm.ContactPersonCode;
-        PostResponses = await apiService.PostGoodReturn(GoodReturnForm);
+        PostResponses = await apiService.PostGoodReturn(GoodReturnForm,Token);
     }
 
     [RelayCommand]
@@ -95,7 +95,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -131,7 +131,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
                 await apiService.GetBatchOrSerialByItemCode(
                     "OnGetBatchOrSerialAvailableByItemCode",
                     dictionary["ItemType"],
-                    dictionary["ItemCode"])
+                    dictionary["ItemCode"],Token)
             ).Data ?? new();
             //if(dictionary["DocEntry"]=="" && dictionary["DocEntry"] == "0")
             //{
@@ -157,7 +157,7 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPOHeaderByReturn", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPOHeaderByReturn", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -170,21 +170,21 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
         GoodReturnHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_Good_Return_Header_Detail_By_DocNum",Token))
             .Data ?? new();
         GoodReturnLineByDocNums =
-            (await apiService.GetLineByDocNum("GetGoodReturnLineDetailByDocEntry", docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReturn")).Data ?? new();
+            (await apiService.GetLineByDocNum("GetGoodReturnLineDetailByDocEntry", docEntry,Token)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReturn",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
         GoodReturnHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GoodReceiptPoHeaderReturnByDocEntry"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GoodReceiptPoHeaderReturnByDocEntry",Token))
             .Data ?? new();
         GetPurchaseOrderLineByDocNums =
-            (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry)).Data ??
+            (await apiService.GetLineByDocNum("GetGoodReceiptPOLineForGoodReturnDetailByDocEntry", docEntry,Token)).Data ??
             new();
         foreach (var obj in GetPurchaseOrderLineByDocNums)
         {
@@ -192,8 +192,9 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             {
                 obj.Serials = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn",
-                        obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn"
+                        ,Token
+                        ,obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objSerial in rs)
                 {
@@ -216,8 +217,9 @@ public partial class GoodReturnViewModel(ApiService apiService, ILoadMasterData 
             {
                 obj.Batches = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn",
-                        obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialGoodReceiptPOForGoodReturn"
+                        ,Token
+                        ,obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objBatch in rs)
                 {

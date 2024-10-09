@@ -24,6 +24,7 @@ public partial class ReceiptFromProductionDefault
     private string _saveWord = "Save";
     private string? _dataGrid = "width: 1600px;height:405px";
     private bool _isView;
+    public FluentTextField _token { get; set; }
 
 //ViewModel.IssueProductionLine
     protected void OnCloseOverlay() => _visible = true;
@@ -56,6 +57,10 @@ public partial class ReceiptFromProductionDefault
     }
 
     bool _visible;
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     private async Task<string> OnGetGenerateBatchOrSerial(Dictionary<string, object> e)
     {

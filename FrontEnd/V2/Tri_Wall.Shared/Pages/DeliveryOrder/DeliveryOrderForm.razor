@@ -10,12 +10,19 @@
         {
             @if (_isXs)
             {
-                <DeliveryOrderMobile/>
+                <DeliveryOrderDashboard/>
             }
             else
             {
-                <DeliveryOrderDefault ViewModel="ViewModel"/>
+                <DeliveryOrderDefault Token="@another_name.User.FindFirst("token")?.Value"
+                                      ViewModel="ViewModel"/>
             }
         }
     </Authorized>
+    <NotAuthorized>
+        @if (string.IsNullOrEmpty(@another_name.User.FindFirst("token")?.Value))
+        {
+            <FluentLabel> No Authorize </FluentLabel>
+        }
+    </NotAuthorized>
 </AuthorizeView>

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.FluentUI.AspNetCore.Components;
+﻿using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.GoodReceptPo;
+namespace Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen;
 
-public partial class GoodsReceiptPoMobile
+public partial class GoodsReceiptPoDashboard
 {
     protected override void OnInitialized()
     {
@@ -36,15 +35,15 @@ public partial class GoodsReceiptPoMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchGoodsReceiptPo");
+        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListGoodsReceiptPo");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddGoodsReceiptPoMobile/");
+        NavigationManager.NavigateTo("/GoodReceiptPo/Mobile/Add/");
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchPurchaseOrder");
+        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListPurchaseOrder");
     }
 }

@@ -33,7 +33,6 @@
 		<PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.8.0" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.7.2" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.DataGrid.EntityFrameworkAdapter" Version="4.7.2" />
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Emoji" Version="4.6.0" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.7.2" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
@@ -41,11 +40,9 @@
 
 	<ItemGroup>
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\Add\AddBatchLine.razor" />
-	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\Add\AddGoodsReceiptPoMobile.razor" />
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\Add\AddItemLineComponent.razor" />
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\Add\AddSerialLine.razor" />
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\List\ListSearch.razor" />
-	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\List\ListSearchPurchaseOrder.razor" />
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\View\ViewDetailGoodReceiptPoMobileForm.razor" />
 	  <AdditionalFiles Include="Views\ReceiptFromProduction\MobileAppScreen\View\ViewItemDetailGoodReceiptPo.razor" />
 	  <AdditionalFiles Include="Views\ReturnComponent\MobileAppScreen\Add\AddBatchLine.razor" />

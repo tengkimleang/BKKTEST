@@ -1,8 +1,8 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
@@ -13,8 +13,9 @@ namespace Tri_Wall.Shared.Views.GoodReceptPo;
 
 public partial class GoodsReceiptPoDefault
 {
-    [Inject]
-    public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
+    [Parameter] public string Token { get; set; } = string.Empty;
+
+    [Inject] public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
     // [Inject]
     // public IValidator<GoodReceiptPoLine>? ValidatorLine { init; get; }
 
@@ -28,6 +29,12 @@ public partial class GoodsReceiptPoDefault
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
 
     bool _visible;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel.Token = Token;
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task OpenDialogAsync(MouseEventArgs e, GoodReceiptPoLine goodReceiptPoLine)
     {
@@ -52,7 +59,8 @@ public partial class GoodsReceiptPoDefault
         var result = await dialog.Result.ConfigureAwait(false);
         if (!result.Cancelled && result.Data is Dictionary<string, object> data)
         {
-            if (ViewModel.GoodReceiptPoForm.Lines == null) ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
+            if (ViewModel.GoodReceiptPoForm.Lines == null)
+                ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
             if (data["data"] is GoodReceiptPoLine receiptPoLine)
             {
                 if (receiptPoLine.LineNum == 0)
@@ -74,11 +82,12 @@ public partial class GoodsReceiptPoDefault
         await ViewModel.GetGennerateBatchSerialCommand.ExecuteAsync(e);
         return ViewModel.GetGenerateBatchSerial.FirstOrDefault()?.BatchOrSerial ?? "";
     }
+
     private void OnSearch(OptionsSearchEventArgs<Vendors> e)
     {
         e.Items = ViewModel.Vendors.Where(i => i.VendorCode.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                            i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
-                            .OrderBy(i => i.VendorCode);
+                                               i.VendorName.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.VendorCode);
     }
 
     void UpdateGridSize(GridItemSize size)
@@ -98,10 +107,12 @@ public partial class GoodsReceiptPoDefault
             dataGrid = "width: 1600px;height:405px";
         }
     }
+
     private void DeleteLine(MouseEventArgs e, int index)
     {
         ViewModel.GoodReceiptPoForm.Lines!.RemoveAt(index);
     }
+
     async Task OnSaveTransaction(MouseEventArgs e, string type = "")
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
@@ -115,8 +126,10 @@ public partial class GoodsReceiptPoDefault
                 {
                     ToastService!.ShowError(error.ErrorMessage);
                 }
+
                 return;
             }
+
             _visible = true;
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.PostResponses));
@@ -132,6 +145,7 @@ public partial class GoodsReceiptPoDefault
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
         _visible = false;
     }
+
     Task OnSeleted(string e)
     {
         Console.WriteLine(e);
@@ -140,6 +154,7 @@ public partial class GoodsReceiptPoDefault
         StateHasChanged();
         return Task.CompletedTask;
     }
+
     // Task OnDelete(string e)
     // {
     //     Console.WriteLine(e);
@@ -180,12 +195,14 @@ public partial class GoodsReceiptPoDefault
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task<ObservableCollection<GetListData>> GetListData(int p)
     {
         //OnGetPurchaseOrder
         await ViewModel.GetGoodReceiptPoCommand.ExecuteAsync(p.ToString());
         return ViewModel.GetListData;
     }
+
     async Task OpenListDataAsyncAsync()
     {
         await ViewModel.TotalCountGoodReceiptPoCommand.ExecuteAsync(null).ConfigureAwait(false);
@@ -195,8 +212,11 @@ public partial class GoodsReceiptPoDefault
             { "getData", new Func<int, Task<ObservableCollection<GetListData>>>(GetListData) },
             //{ "isDelete", true },
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeleted)},
-            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)},
+            { "onSelete", new Func<string, Task>(OnSeleted) },
+            {
+                "onSearch",
+                new Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>>(OnSearchGoodReceiptPo)
+            },
             //{"onDelete",new Func<string,Task>(OnDelete)},
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
@@ -219,8 +239,11 @@ public partial class GoodsReceiptPoDefault
             //{ "isDelete", true },
             //{"onDelete",new Func<string,Task>(OnDelete)},
             { "isSelete", true },
-            {"onSelete",new Func<string,Task>(OnSeletedPurchaseOrder)},
-            {"onSearch",new Func<Dictionary<string,object>,Task<ObservableCollection<GetListData>>>(OnSearchPurchaseOrder)},
+            { "onSelete", new Func<string, Task>(OnSeletedPurchaseOrder) },
+            {
+                "onSearch",
+                new Func<Dictionary<string, object>, Task<ObservableCollection<GetListData>>>(OnSearchPurchaseOrder)
+            },
         };
         await DialogService!.ShowDialogAsync<ListGoodReceiptPo>(dictionary, new DialogParameters
         {
@@ -231,6 +254,7 @@ public partial class GoodsReceiptPoDefault
             Height = "80%"
         }).ConfigureAwait(false);
     }
+
     async Task<ObservableCollection<GetListData>> GetListDataPurchaseOrder(int p)
     {
         await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(p.ToString());
@@ -264,6 +288,7 @@ public partial class GoodsReceiptPoDefault
             });
             i++;
         }
+
         StateHasChanged();
     }
 }

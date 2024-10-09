@@ -1,8 +1,4 @@
-﻿@page "/ListSearchSalesOrder"
-@rendermode InteractiveWebAssembly
-@inherits MvvmComponentBase<DeliveryOrderViewModel>
-<PageTitle>List Sales Order</PageTitle>
-
+﻿@inherits MvvmComponentBase<DeliveryOrderViewModel>
 <SectionContent SectionName="Is-BackButton">
     <BackButtonAction/>
     @(new MarkupString($@"&nbsp;&nbsp;List Delivery Order"))
@@ -37,22 +33,22 @@
                             <div class="pull-content">
                                 @foreach (var obj in _scrollingData)
                                 {
-                                <FluentCard MinimalStyle="true" Style="width: 100%; margin-bottom: 10px;" @onclick="(e) => OnClickCopy(obj.DocEntry)">
-                                    <FluentGrid Spacing="2" AdaptiveRendering="true">
-                                        <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel>@Convert.ToDateTime(obj.DocDate).ToShortDateString()</FluentLabel>
-                                        </FluentGridItem>
-                                        <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel>@obj.DocumentNumber</FluentLabel>
-                                        </FluentGridItem>
-                                        <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel>@obj.VendorCode</FluentLabel>
-                                        </FluentGridItem>
-                                        <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel>@obj.Remarks</FluentLabel>
-                                        </FluentGridItem>
-                                    </FluentGrid>
-                                </FluentCard>
+                                    <FluentCard MinimalStyle="true" Style="width: 100%; margin-bottom: 10px;" @onclick="(e) => OnClickCopy(obj.DocEntry)">
+                                        <FluentGrid Spacing="2" AdaptiveRendering="true">
+                                            <FluentGridItem xs="6" sm="6">
+                                                <FluentLabel>@Convert.ToDateTime(obj.DocDate).ToShortDateString()</FluentLabel>
+                                            </FluentGridItem>
+                                            <FluentGridItem xs="6" sm="6">
+                                                <FluentLabel>@obj.DocumentNumber</FluentLabel>
+                                            </FluentGridItem>
+                                            <FluentGridItem xs="6" sm="6">
+                                                <FluentLabel>@obj.VendorCode</FluentLabel>
+                                            </FluentGridItem>
+                                            <FluentGridItem xs="6" sm="6">
+                                                <FluentLabel>@obj.Remarks</FluentLabel>
+                                            </FluentGridItem>
+                                        </FluentGrid>
+                                    </FluentCard>
                                 }
                             </div>
                         </ChildContent>

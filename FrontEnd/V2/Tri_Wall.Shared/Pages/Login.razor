@@ -49,10 +49,9 @@
                 {
                     ToastService.ShowError(result?.ErrorMessage ?? "");
                 }
-            }else
+            }
+            else
             {
-                var claimsPrincipal = await CustomizeAuthenticationState.GetClaimAsync();
-                GetToken.Token = claimsPrincipal.FindFirst("token")?.Value;
                 NavigationManager.NavigateTo("/Home");
             }
             // if (model is { Username: "admin", Password: "1234" } || model is { Username: "admin1", Password: "1234" })

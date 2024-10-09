@@ -1,10 +1,9 @@
-
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.ReturnRequest;
+namespace Tri_Wall.Shared.Views.ReturnRequest.MobileAppScreen;
 
-public partial class ReturnRequestMobile
+public partial class ReturnRequestDashboard
 {
     protected override void OnInitialized()
     {
@@ -23,15 +22,15 @@ public partial class ReturnRequestMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchReturnRequest");
+        NavigationManager.NavigateTo("/ReturnRequest/Mobile/ListReturnRequest");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddReturnRequestMobile/");
+        NavigationManager.NavigateTo("/ReturnRequest/Mobile/Add/");
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchDeliveryOrderByReturnRequest");
+        NavigationManager.NavigateTo("/ReturnRequest/Mobile/ListDeliveryOrder");
     }
 }

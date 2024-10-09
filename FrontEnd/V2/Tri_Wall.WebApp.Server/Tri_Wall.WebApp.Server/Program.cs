@@ -17,7 +17,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddFluentUIComponents()
     .AddScoped<IFormFactor, FormFactor>()
     .AddViewModels();
-builder.Services.AddSingleton<ILoadMasterData, LoadMasterData>();
+// builder.Services.AddSingleton<ILoadMasterData, LoadMasterData>();
 // builder.Services.AddHostedService<LoadMasterDataService>();
 builder.Services.AddBlazoredLocalStorage();
 

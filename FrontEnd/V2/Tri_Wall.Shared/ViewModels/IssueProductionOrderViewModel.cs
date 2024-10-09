@@ -8,7 +8,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class IssueProductionOrderViewModel(ApiService apiService) : ViewModelBase //, ILoadMasterData loadMasterData
 {
      #region Data Member
 
@@ -29,8 +29,8 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     [ObservableProperty] ObservableCollection<GetProductionOrderLines> _getProductionOrderLines = new();
 
     [ObservableProperty] Boolean _isView;
-    
-    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehouses = new(); //= loadMasterData.GetWarehouses;
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
@@ -39,33 +39,34 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     [ObservableProperty] ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum> _issueProductionHeaderDetailByDocNums = new();
 
     [ObservableProperty]  ObservableCollection<GoodReceiptPoLineByDocNum> _issueProductionLineByDocNums = new();
+    [ObservableProperty] string _token = string.Empty;
     #endregion 
 
     #region Method
 
-    public override async Task Loaded()
+    [RelayCommand]
+    async Task OnLoading()
     {
-        Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("60")).Data ?? new());
+        // Series = await CheckingValueT(Series, async () =>
+        //     (await apiService.GetSeries("60")).Data ?? new());
         GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
-            (await apiService.GetProductionOrders("GetForIssueProduction")).Data ?? new());
+            (await apiService.GetProductionOrders("GetForIssueProduction",Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-            (await apiService.GetWarehouses()).Data ?? new());
+            (await apiService.GetWarehouses(Token)).Data ?? new());
         await TotalCountIssueForProduction();
         IssueProductionForm.Series = Series.First().Code;
         IsView = true;
     }
-
     [RelayCommand]
     async Task TotalCountIssueForProduction()
     {
-        TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("IssueForProduction",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostIssueProduction(IssueProductionForm);
+        PostResponses = await apiService.PostIssueProduction(IssueProductionForm,Token);
     }
 
     [RelayCommand]
@@ -73,7 +74,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -105,7 +106,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -137,7 +138,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
         try
         {
             GetProductionOrderLines = new();
-            GetProductionOrderLines = (await apiService.GetProductionOrderLines(docEntry)).Data ?? new();
+            GetProductionOrderLines = (await apiService.GetProductionOrderLines(docEntry,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -150,7 +151,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"],Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -161,9 +162,9 @@ public partial class IssueProductionOrderViewModel(ApiService apiService, ILoadM
     [RelayCommand]
     async Task OnIssueForProductionDetailByDocNum(string docEntry)
     {
-        IssueProductionHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum")).Data ?? new();
-        IssueProductionLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialIssueForProduction")).Data ?? new();
+        IssueProductionHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry,"GET_IssueForProduction_Header_Detail_By_DocNum",Token)).Data ?? new();
+        IssueProductionLineByDocNums = (await apiService.GetLineByDocNum("GetIssueForProductionLineDetailByDocEntry",docEntry,Token)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,"GetBatchSerialIssueForProduction",Token)).Data ?? new();
     }
     #endregion
 }

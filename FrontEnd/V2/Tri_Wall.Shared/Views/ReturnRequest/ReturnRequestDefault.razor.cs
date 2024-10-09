@@ -15,6 +15,7 @@ namespace Tri_Wall.Shared.Views.ReturnRequest;
 public partial class ReturnRequestDefault
 {
     [Parameter] public ReturnRequestViewModel ViewModel { get; set; } = default!;
+    [Parameter] public string Token { get; set; } = string.Empty;
     private bool Visible { get; set; }
     protected void OnCloseOverlay() => Visible = true;
 
@@ -28,7 +29,11 @@ public partial class ReturnRequestDefault
     bool _isView;
     
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
-    
+    protected override void OnInitialized()
+    {
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
         Console.WriteLine(JsonSerializer.Serialize(deliveryOrderLine));

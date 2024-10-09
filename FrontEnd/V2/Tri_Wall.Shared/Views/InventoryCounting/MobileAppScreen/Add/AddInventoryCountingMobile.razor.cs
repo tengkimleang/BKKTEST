@@ -27,11 +27,12 @@ public partial class AddInventoryCountingMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/inventorycounting";
         ComponentAttribute.IsBackButton = true;
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)

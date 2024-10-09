@@ -1,6 +1,6 @@
 ﻿@page "/goodreceptpoform"
+@using Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen
 @rendermode InteractiveWebAssembly
-@* @attribute [StreamRendering] *@
 <PageTitle>Good Receipt PO</PageTitle>
 <AuthorizeView Context="another_name">
     <Authorized>
@@ -10,11 +10,11 @@
         {
             @if (_isXs)
             {
-                <GoodsReceiptPoMobile/>
+                <GoodsReceiptPoDashboard />
             }
             else
             {
-                <GoodsReceiptPoDefault/>
+                <GoodsReceiptPoDefault Token="@another_name.User.FindFirst("token")?.Value" />
             }
         }
     </Authorized>

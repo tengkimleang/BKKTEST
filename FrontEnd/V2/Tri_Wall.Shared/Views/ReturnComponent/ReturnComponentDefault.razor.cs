@@ -1,4 +1,3 @@
-
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -28,6 +27,11 @@ public partial class ReturnComponentDefault
         new ObservableCollection<GetProductionOrderLines>();
 
 //ViewModel.IssueProductionLine
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
+
     protected void OnCloseOverlay() => _visible = true;
     private IEnumerable<GetProductionOrder> _getProductionOrder = new List<GetProductionOrder>();
 

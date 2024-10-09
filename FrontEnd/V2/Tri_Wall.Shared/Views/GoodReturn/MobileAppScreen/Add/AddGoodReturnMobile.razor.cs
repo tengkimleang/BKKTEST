@@ -19,6 +19,11 @@ public partial class AddGoodReturnMobile
     bool _isItemLineClickAdd;
     private bool Visible { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
+
     private void UpdateGridSize(GridItemSize size)
     {
         if (size != GridItemSize.Xs)

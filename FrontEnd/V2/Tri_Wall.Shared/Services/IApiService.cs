@@ -18,101 +18,97 @@ public interface IApiService
 {
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Series>>> GetSeries(
-        [Body]GetRequest getRequest);
+        [Body]GetRequest getRequest, [Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Items>>> GetItems(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Vendors>>> GetVendors(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<ContactPersons>>> GetContactPersons(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxPurchases(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<VatGroups>>> GetTaxSales(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<Warehouses>>> GetWarehouses(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<TotalItemCount>>> GetTotalItemCount(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetListData>>> GetListGoodReceiptPo(
-        [Body] GetRequest getRequest);
+        [Body] GetRequest getRequest,[Authorize("Bearer")] string token);
     [Post("/goodReceiptPo")]
     public Task<PostResponse> PostGoodReceptPo(
-        [Body] GoodReceiptPoHeader request);
+        [Body] GoodReceiptPoHeader request,[Authorize("Bearer")] string token);
     [Post("/deliveryOrders")]
     public Task<PostResponse> PostDelveryOrder(
-        [Body] DeliveryOrderHeader request);
+        [Body] DeliveryOrderHeader request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GoodReceiptPoHeaderDeatialByDocNum>>> GoodReceiptPoHeaderDeatialByDocNum(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GoodReceiptPoLineByDocNum>>> GetLineByDocNum(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetBatchOrSerial>>> GetBatchOrSerial(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetGennerateBatchSerial>>> GennerateBatchSerial(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetProductionOrder>>> GetProductionOrders(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetProductionOrderLines>>> GetProductionOrderLines(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetInventoryCountingList>>> GetInventoryCountingLists(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetInventoryCountingLines>>> GetInventoryCountingLines(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/issueForProduction")]
     public Task<PostResponse> PostIssueProduction(
-        [Body] IssueProductionHeader request);
+        [Body] IssueProductionHeader request,[Authorize("Bearer")] string token);
     [Post("/receiptFromProduction/returnComponent")]
     public Task<PostResponse> PostReturnFromProduction(
-        [Body] ReturnComponentProductionHeader request);
+        [Body] ReturnComponentProductionHeader request,[Authorize("Bearer")] string token);
     [Post("/inventoryTransfer")]
     public Task<PostResponse> PostInventoryTransfer(
-        [Body] InventoryTransferHeader request);
+        [Body] InventoryTransferHeader request,[Authorize("Bearer")] string token);
     [Post("/return")]
     public Task<PostResponse> PostReturn(
-        [Body] DeliveryOrderHeader request);
+        [Body] DeliveryOrderHeader request,[Authorize("Bearer")] string token);
     [Post("/goodReturn")]
     public Task<PostResponse> PostGoodReturn(
-        [Body] DeliveryOrderHeader request);
+        [Body] DeliveryOrderHeader request,[Authorize("Bearer")] string token);
     [Post("/arCreditMemo")]
     public Task<PostResponse> PostARCreditMemo(
-        [Body] DeliveryOrderHeader request);
+        [Body] DeliveryOrderHeader request,[Authorize("Bearer")] string token);
     [Post("/inventoryCounting")]
     public Task<PostResponse> PostInventoryCounting(
-        [Body] InventoryCountingHeader request);
+        [Body] InventoryCountingHeader request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingHeaderByDocNum>>> GetDetailInventoryCountingHeaderByDocNum(
-        [Body] GetRequest request);
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetDetailInventoryCountingLineByDocNum>>> GetDetailInventoryCountingLineByDocNum(
-        [Body] GetRequest request);
-    [Post("/api/login")]
-    public Task<Dictionary<string, string>> PostUser(object request);
-    [Get("/api/user")]
-    public Task<GetAuthTest> GetUser();
+        [Body] GetRequest request,[Authorize("Bearer")] string token);
     [Post("/receiptFromProduction/updateProcessProduction")]
     public Task<PostResponse> UpdateProcessProduction(
-        [Body] ProductionProcessHeader request);
+        [Body] ProductionProcessHeader request,[Authorize("Bearer")] string token);
     [Post("/receiptFromProduction/receiptFinishGood")]
     public Task<PostResponse> PostReceiptFinishGood(
-        [Body] ReceiptFinishGoodHeader request);
+        [Body] ReceiptFinishGoodHeader request,[Authorize("Bearer")] string token);
     [Post("/returnRequest")]
     public Task<PostResponse> PostReturnRequest(
-        [Body] DeliveryOrderHeader request);
+        [Body] DeliveryOrderHeader request,[Authorize("Bearer")] string token);
 }
 
 public interface IApiAuthService

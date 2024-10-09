@@ -14,6 +14,7 @@ namespace Tri_Wall.Shared.Views.ReturnRequest.MobileAppScreen.Add;
 public partial class AddReturnRequestMobile
 {
     [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
     Dictionary<string, object> _lineItemContent = new();
@@ -28,13 +29,13 @@ public partial class AddReturnRequestMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/ReturnRequest";
         ComponentAttribute.IsBackButton = true;
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

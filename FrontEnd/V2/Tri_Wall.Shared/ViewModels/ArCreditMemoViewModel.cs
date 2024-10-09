@@ -8,7 +8,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class ArCreditMemoViewModel(ApiService apiService) : ViewModelBase //, ILoadMasterData loadMasterData
 {
     #region Data Member
 
@@ -16,15 +16,15 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
 
     [ObservableProperty] ObservableCollection<Series> _series = new();
 
-    [ObservableProperty] ObservableCollection<Vendors> _customers = loadMasterData.GetCustomers;
+    [ObservableProperty] private ObservableCollection<Vendors> _customers = new(); //= loadMasterData.GetCustomers;
 
-    [ObservableProperty] ObservableCollection<ContactPersons> _contactPeople = loadMasterData.GetContactPersons;
+    [ObservableProperty] private ObservableCollection<ContactPersons> _contactPeople = new(); //= loadMasterData.GetContactPersons;
 
-    [ObservableProperty] ObservableCollection<Items> _items = loadMasterData.GetItems;
+    [ObservableProperty] private ObservableCollection<Items> _items = new(); //= loadMasterData.GetItems;
 
-    [ObservableProperty] ObservableCollection<VatGroups> _taxSales = loadMasterData.GetTaxSales;
+    [ObservableProperty] private ObservableCollection<VatGroups> _taxSales = new(); //= loadMasterData.GetTaxSales;
 
-    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehouses = new(); //= loadMasterData.GetWarehouses;
 
     [ObservableProperty] PostResponse _postResponses = new();
 
@@ -46,7 +46,8 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
     [ObservableProperty] Boolean _isView;
-
+    [ObservableProperty] string _token = string.Empty;
+    
     #endregion
 
     #region Method
@@ -54,18 +55,18 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     public override async Task Loaded()
     {
         Series = await CheckingValueT(Series, async () =>
-            (await apiService.GetSeries("14")).Data ?? new());
+            (await apiService.GetSeries("14",Token)).Data ?? new());
         Customers = await CheckingValueT(Customers, async () =>
-            (await apiService.GetCustomers()).Data ?? new());
+            (await apiService.GetCustomers(Token)).Data ?? new());
         ContactPeople = await CheckingValueT(ContactPeople, async () =>
-            (await apiService.GetContactPersons()).Data ?? new());
+            (await apiService.GetContactPersons(Token)).Data ?? new());
         Items = await CheckingValueT(Items, async () =>
-            (await apiService.GetItems()).Data ?? new());
+            (await apiService.GetItems(Token)).Data ?? new());
         TaxSales = await CheckingValueT(TaxSales, async () =>
-            (await apiService.GetTaxSales()).Data ?? new());
+            (await apiService.GetTaxSales(Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-            (await apiService.GetWarehouses()).Data ?? new());
-        TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
+            (await apiService.GetWarehouses(Token)).Data ?? new());
+        TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo",Token)).Data ?? new();
         await OnTotalItemCountARCreditMemo();
         await OnTotalItemCountARInvoiceOpenStatus();
         ARCreditMemoForm.Series = Series.First().Code;
@@ -75,19 +76,19 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     [RelayCommand]
     async Task OnTotalItemCountARInvoiceOpenStatus()
     {
-        TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus")).Data ?? new();
+        TotalItemCountArInvoice = (await apiService.GetTotalItemCount("ARInvoiceOpenStatus",Token)).Data ?? new();
     }
     [RelayCommand]
     async Task OnTotalItemCountARCreditMemo()
     {
-        TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("ARCreditMemo",Token)).Data ?? new();
     }
     
     [RelayCommand]
     async Task Submit()
     {
         ARCreditMemoForm.ContactPersonCode = string.IsNullOrEmpty(ARCreditMemoForm.ContactPersonCode) ? "0" : ARCreditMemoForm.ContactPersonCode;
-        PostResponses = await apiService.PostArCreditMemo(ARCreditMemoForm);
+        PostResponses = await apiService.PostArCreditMemo(ARCreditMemoForm,Token);
     }
 
     [RelayCommand]
@@ -95,7 +96,7 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetARCreditMemoHeader", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetARCreditMemoHeader", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -113,7 +114,7 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
                 await apiService.GetBatchOrSerialByItemCode(
                     "OnGetBatchOrSerialAvailableByItemCode",
                     dictionary["ItemType"],
-                    dictionary["ItemCode"])
+                    dictionary["ItemCode"],Token)
             ).Data ?? new();
         }
         catch (Exception e)
@@ -128,7 +129,7 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetARInvoiceInCreditMemo", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetARInvoiceInCreditMemo", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -141,18 +142,18 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
     async Task OnGetArCreditMemoHeaderDeatialByDocNum(string docEntry)
     {
         ARCreditMemoHeaderDetailByDocNums =
-            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_AR_Credit_Memo_Header_Detail_By_DocNum"))
+            (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_AR_Credit_Memo_Header_Detail_By_DocNum",Token))
             .Data ?? new();
         ARCreditMemoLineByDocNums =
-            (await apiService.GetLineByDocNum("GetARCreditMemoLineDetailByDocEntry", docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARCreditMemo")).Data ?? new();
+            (await apiService.GetLineByDocNum("GetARCreditMemoLineDetailByDocEntry", docEntry,Token)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARCreditMemo",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetArInvoiceLineByDocNum(string docEntry)
     {
         GetArInvoiceLineByDocNums =
-            (await apiService.GetLineByDocNum("GetARInvoiceLineForARCreditMemoDetailByDocEntry", docEntry)).Data ??
+            (await apiService.GetLineByDocNum("GetARInvoiceLineForARCreditMemoDetailByDocEntry", docEntry,Token)).Data ??
             new();
         foreach (var obj in GetArInvoiceLineByDocNums)
         {
@@ -160,8 +161,9 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
             {
                 obj.Serials = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARInvoiceForARCreditMemo",
-                        obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARInvoiceForARCreditMemo"
+                        ,Token
+                        ,obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objSerial in rs)
                 {
@@ -184,8 +186,9 @@ public partial class ArCreditMemoViewModel(ApiService apiService, ILoadMasterDat
             {
                 obj.Batches = new();
                 var rs =
-                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARInvoiceForARCreditMemo",
-                        obj.BaseLineNumber))
+                    (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialARInvoiceForARCreditMemo"
+                        ,Token
+                        ,obj.BaseLineNumber))
                     .Data ?? new();
                 foreach (var objBatch in rs)
                 {

@@ -25,11 +25,12 @@ public partial class AddReceiptFromProductionMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/ReceiptsFinishedGoods";
         ComponentAttribute.IsBackButton = true;
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     private IEnumerable<GetProductionOrder> SelectedProductionOrder { get; set; } = default!;

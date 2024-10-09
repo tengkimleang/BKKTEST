@@ -1,6 +1,7 @@
 ﻿@page "/counter"
+@using System.Security.Claims
 @rendermode InteractiveWebAssembly
-
+@inject DeliveryOrderViewModel ViewModel
  <PageTitle>Counter</PageTitle>
 
 @*<h1>Counter</h1>
@@ -8,9 +9,9 @@
 <div role="status" style="padding-bottom: 1em;">
     Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge>
 </div> *@
-<AuthorizeView>
+<AuthorizeView Context="another_name">
     <Authorized>
-        <p>Hello, @context.User.FindFirst("id")?.Value</p>
+        <p>@(GetToken.Token=@another_name.User.FindFirst("token")?.Value)</p>
     </Authorized>
     <NotAuthorized>
         <p>You're not authorized.</p>

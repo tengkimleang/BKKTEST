@@ -1,0 +1,9 @@
+﻿@page "/DeliveryOrder/Mobile/ListSalesOrder"
+@using Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen.List
+<PageTitle>List Sales Order</PageTitle>
+
+<AuthorizeView Context="anotherName">
+    <Authorized>
+        <ListSearchSalesOrder Token="@anotherName.User.FindFirst("token")?.Value" />
+    </Authorized>
+</AuthorizeView>

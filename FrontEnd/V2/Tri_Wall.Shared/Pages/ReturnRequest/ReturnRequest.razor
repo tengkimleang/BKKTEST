@@ -1,4 +1,5 @@
 @page "/ReturnRequest"
+@using Tri_Wall.Shared.Views.ReturnRequest.MobileAppScreen
 @inherits MvvmComponentBase<ReturnRequestViewModel>
 @rendermode InteractiveWebAssembly
 @* @attribute [StreamRendering] *@
@@ -11,11 +12,11 @@
         {
             @if (_isXs)
             {
-                <ReturnRequestMobile/>
+                <ReturnRequestDashboard/>
             }
             else
             {
-                <ReturnRequestDefault ViewModel="ViewModel"/>
+                <ReturnRequestDefault Token="@(another_name.User.FindFirst("token")?.Value)" ViewModel="ViewModel"/>
             }
         }
     </Authorized>

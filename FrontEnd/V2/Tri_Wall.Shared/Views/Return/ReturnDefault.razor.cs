@@ -28,6 +28,10 @@ public partial class ReturnDefault
     bool isView;
 
     IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {

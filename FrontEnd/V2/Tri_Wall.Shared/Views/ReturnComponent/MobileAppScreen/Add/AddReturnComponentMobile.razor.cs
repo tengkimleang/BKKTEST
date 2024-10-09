@@ -36,11 +36,17 @@ public partial class AddReturnComponentMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
-        ComponentAttribute.Path = "/issueforproduction";
+        ComponentAttribute.Path = "/ReturnFromComponent";
         ComponentAttribute.IsBackButton = true;
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
+
+    protected override void OnInitialized()
+    {
+        
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)

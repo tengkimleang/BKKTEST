@@ -28,11 +28,17 @@ public partial class AddReturnMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
+        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
+
+    protected override void OnInitialized()
+    {
+        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

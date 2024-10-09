@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
@@ -8,6 +9,7 @@ namespace Tri_Wall.Shared.Views.DeliveryOrder.MobileAppScreen.List;
 
 public partial class ListSearchSalesOrder
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     private int _refreshCount;
     private int _count;
     private string? _searchValue;
@@ -16,6 +18,7 @@ public partial class ListSearchSalesOrder
     protected override async void OnInitialized()
     {
         StateHasChanged();
+        ViewModel.Token = Token;
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/deliveryorder";
         ComponentAttribute.IsBackButton = true;

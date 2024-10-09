@@ -14,6 +14,7 @@ namespace Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen.Add;
 public partial class AddGoodsReceiptPoMobile
 {
     [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<GoodReceiptPoHeader>? Validator { get; init; }
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
     Dictionary<string, object> _lineItemContent = new();
@@ -33,6 +34,7 @@ public partial class AddGoodsReceiptPoMobile
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreceptpoform";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

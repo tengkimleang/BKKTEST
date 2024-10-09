@@ -60,14 +60,17 @@ public partial class AddBatchLine
         OnSelectedType("");
         Console.WriteLine(SelectedBatch.Count());
         if (SelectedBatch.Count() != 0)
+        {
             UpdateItemDetails("");
+            BatchReturnComponentProduction.OnSelectedType = BatchReturnComponent[Index].OnSelectedType;
+        }
     }
 
     private void UpdateGridSize(GridItemSize size)
     {
         if (size != GridItemSize.Xs)
         {
-            NavigationManager.NavigateTo("inventorycounting");
+            NavigationManager.NavigateTo("ReturnFromComponent");
         }
     }
 

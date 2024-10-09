@@ -27,6 +27,10 @@ public partial class InventoryTransferDefault
     protected void OnCloseOverlay() => visible = true;
 
     bool visible = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task OpenDialogAsync(InventoryTransferLine deliveryOrderLine)
     {

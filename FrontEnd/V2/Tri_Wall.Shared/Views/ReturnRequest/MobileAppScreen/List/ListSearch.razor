@@ -1,13 +1,11 @@
-@page "/ListSearchReturnRequest"
-@rendermode InteractiveWebAssembly
 @inherits MvvmComponentBase<ReturnRequestViewModel>
-<PageTitle>List Return Request</PageTitle>
+
 @if (_isViewDetail)
 {
     <ViewDetailReturnRequestMobileForm GoodReceiptPoHeaderDetailByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums"
-                                GoodReceiptPoLineByDocNum="ViewModel.GoodReceiptPoLineByDocNums"
-                                GetBatchOrSerials="ViewModel.GetBatchOrSerials"
-                                IsViewDetail="OnViewDetail"/>
+                                       GoodReceiptPoLineByDocNum="ViewModel.GoodReceiptPoLineByDocNums"
+                                       GetBatchOrSerials="ViewModel.GetBatchOrSerials"
+                                       IsViewDetail="OnViewDetail"/>
 }
 else
 {

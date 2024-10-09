@@ -9,7 +9,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class InventoryTransferViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class InventoryTransferViewModel(ApiService apiService) : ViewModelBase //, ILoadMasterData loadMasterData
 {
     [ObservableProperty]
     InventoryTransferHeader _inventoryTransferForm = new();
@@ -17,14 +17,11 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     [ObservableProperty]
     ObservableCollection<Series> _series = new();
 
-    [ObservableProperty]
-    ObservableCollection<Items> _items = loadMasterData.GetItems;
+    [ObservableProperty] private ObservableCollection<Items> _items = new(); //= loadMasterData.GetItems;
 
-    [ObservableProperty]
-    ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehouses = new(); //= loadMasterData.GetWarehouses;
 
-    [ObservableProperty]
-    ObservableCollection<Warehouses> _warehousesTo = loadMasterData.GetWarehouses;
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehousesTo = new(); //= loadMasterData.GetWarehouses;
 
     [ObservableProperty]
     PostResponse _postResponses = new();
@@ -55,38 +52,41 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
 
     [ObservableProperty]
     Boolean _isView;
-
-    public override async Task Loaded()
+    [ObservableProperty] string _token = string.Empty;
+    
+    [RelayCommand]
+    async Task OnLoading()
     {
         Series = await CheckingValueT(Series, async () =>
-                 (await apiService.GetSeries("67")).Data ?? new());
+                 (await apiService.GetSeries("67",Token)).Data ?? new());
         InventoryTransferForm.Series= Series.First().Code ?? "";
         Items = await CheckingValueT(Items, async () =>
-                    (await apiService.GetItems()).Data ?? new());
+                    (await apiService.GetItems(Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-                    (await apiService.GetWarehouses()).Data ?? new());
+                    (await apiService.GetWarehouses(Token)).Data ?? new());
         WarehousesTo = await CheckingValueT(WarehousesTo, async () =>
-                           (await apiService.GetWarehouses()).Data ?? new());
+                           (await apiService.GetWarehouses(Token)).Data ?? new());
         InventoryTransferForm.FromWarehouse = Warehouses.First().Code ?? "";
         InventoryTransferForm.ToWarehouse = WarehousesTo.First().Code ?? "";
         IsView = true;
     }
+
     [RelayCommand]
     async Task TotalCountInventoryTransferRequest()
     {
-        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest")).Data ?? new();
+        TotalItemCountSalesOrder = (await apiService.GetTotalItemCount("InventoryTransferRequest",Token)).Data ?? new();
     }
     
     [RelayCommand]
     async Task TotalCountInventoryTransfer()
     {
-        TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("InventoryTransfer",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostInventoryTransfer(InventoryTransferForm);
+        PostResponses = await apiService.PostInventoryTransfer(InventoryTransferForm,Token);
     }
 
     [RelayCommand]
@@ -94,7 +94,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetInventoryTransferHeader", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetInventoryTransferHeader", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -107,7 +107,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"], dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"], dictionary["ItemCode"],Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -120,7 +120,7 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -132,15 +132,15 @@ public partial class InventoryTransferViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task OnGetGoodReceiptPoHeaderDeatialByDocNum(string docEntry)
     {
-        InventoryTransferHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_InventoryTransfer_Header_Detail_By_DocNum")).Data ?? new();
-        InventoryTransferLineByDocNums = (await apiService.GetLineByDocNum("GetInventoryTransferLineDetailByDocEntry", docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryTransfer")).Data ?? new();
+        InventoryTransferHeaderDetailByDocNums = (await apiService.GoodReceiptPoHeaderDeatialByDocNum(docEntry, "GET_InventoryTransfer_Header_Detail_By_DocNum",Token)).Data ?? new();
+        InventoryTransferLineByDocNums = (await apiService.GetLineByDocNum("GetInventoryTransferLineDetailByDocEntry", docEntry,Token)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryTransfer",Token)).Data ?? new();
     }
 
     [RelayCommand]
     async Task OnGetPurchaseOrderLineByDocNum(string docEntry)
     {
-        GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry)).Data ?? new();
+        GetPurchaseOrderLineByDocNums = (await apiService.GetLineByDocNum("GetSaleOrderLineDetailByDocEntry", docEntry,Token)).Data ?? new();
     }
     [RelayCommand]
     async Task OnGetGoodReceiptPoBySearch(Dictionary<string, object> data)

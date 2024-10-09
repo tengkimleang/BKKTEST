@@ -8,7 +8,7 @@ using Tri_Wall.Shared.Services;
 
 namespace Tri_Wall.Shared.ViewModels;
 
-public partial class InventoryCountingViewModel(ApiService apiService, ILoadMasterData loadMasterData) : ViewModelBase
+public partial class InventoryCountingViewModel(ApiService apiService) : ViewModelBase //, ILoadMasterData loadMasterData
 {
      #region Data Member
 
@@ -27,8 +27,8 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     [ObservableProperty] ObservableCollection<GetInventoryCountingLines> _getInventoryCountingLines = new();
 
     [ObservableProperty] Boolean _isView;
-    
-    [ObservableProperty] ObservableCollection<Warehouses> _warehouses = loadMasterData.GetWarehouses;
+
+    [ObservableProperty] private ObservableCollection<Warehouses> _warehouses = new(); //= loadMasterData.GetWarehouses;
 
     [ObservableProperty] ObservableCollection<GetBatchOrSerial> _getBatchOrSerialsByItemCode = new();
 
@@ -37,28 +37,31 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     [ObservableProperty] ObservableCollection<GetDetailInventoryCountingHeaderByDocNum> _getDetailInventoryCountingHeaderByDocNums = new();
 
     [ObservableProperty]  ObservableCollection<GetDetailInventoryCountingLineByDocNum> _getDetailInventoryCountingLineByDocNums = new();
+    [ObservableProperty] string _token = string.Empty;
     #endregion 
 
     #region Method
 
-    public override async Task Loaded()
+    [RelayCommand]
+    async Task OnLoading()
     {
         GetInventoryCountingLists = await CheckingValueT(GetInventoryCountingLists, async () =>
-            (await apiService.GetInventoryCountingLists("GetInventoryCountingList")).Data ?? new());
+            (await apiService.GetInventoryCountingLists("GetInventoryCountingList",Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
-            (await apiService.GetWarehouses()).Data ?? new());
+            (await apiService.GetWarehouses(Token)).Data ?? new());
         await TotalCountInventoryCounting();
         IsView = true;
     }
+
     [RelayCommand]
     async Task TotalCountInventoryCounting()
     {
-        TotalItemCount = (await apiService.GetTotalItemCount("InventoryCounting")).Data ?? new();
+        TotalItemCount = (await apiService.GetTotalItemCount("InventoryCounting",Token)).Data ?? new();
     }
     [RelayCommand]
     async Task Submit()
     {
-        PostResponses = await apiService.PostInventoryCounting(InventoryCountingHeader);
+        PostResponses = await apiService.PostInventoryCounting(InventoryCountingHeader,Token);
     }
 
     [RelayCommand]
@@ -66,7 +69,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("InventoryCounting", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("InventoryCounting", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -98,7 +101,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage)).Data ?? new();
+            GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", perPage,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -130,7 +133,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
         try
         {
             GetInventoryCountingLines = new();
-            GetInventoryCountingLines = (await apiService.GetInventoryCountingLines(docEntry)).Data ?? new();
+            GetInventoryCountingLines = (await apiService.GetInventoryCountingLines(docEntry,Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -143,7 +146,7 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     {
         try
         {
-            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"])).Data ?? new();
+            GetBatchOrSerialsByItemCode = (await apiService.GetBatchOrSerialByItemCode("OnGetBatchOrSerialAvailableByItemCode", dictionary["ItemType"],dictionary["ItemCode"],Token)).Data ?? new();
         }
         catch (Exception e)
         {
@@ -154,9 +157,9 @@ public partial class InventoryCountingViewModel(ApiService apiService, ILoadMast
     [RelayCommand]
     async Task OnIssueForProductionDeatialByDocNum(string docEntry)
     {
-        GetDetailInventoryCountingHeaderByDocNums = (await apiService.GetDetailInventoryCountingHeaderByDocNum(docEntry)).Data ?? new();
-        GetDetailInventoryCountingLineByDocNums = (await apiService.GetDetailInventoryCountingLineByDocNum(docEntry)).Data ?? new();
-        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryCounting")).Data ?? new();
+        GetDetailInventoryCountingHeaderByDocNums = (await apiService.GetDetailInventoryCountingHeaderByDocNum(docEntry,Token)).Data ?? new();
+        GetDetailInventoryCountingLineByDocNums = (await apiService.GetDetailInventoryCountingLineByDocNum(docEntry,Token)).Data ?? new();
+        GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry, "GetBatchSerialInventoryCounting",Token)).Data ?? new();
     }
     #endregion
 }

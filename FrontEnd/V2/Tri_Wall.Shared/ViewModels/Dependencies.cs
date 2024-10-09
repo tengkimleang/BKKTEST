@@ -88,19 +88,7 @@ public static class Dependencies
     }
 }
 
-public class GetToken
+public static class GetToken
 {
-    public GetToken(CookieAuthenticationSateProvider cookieManager)
-    {
-        _ = GetTokenStatic(cookieManager);
-    }
-
-    public static string? Token { get; set; } = string.Empty;
-
-    public async Task GetTokenStatic(CookieAuthenticationSateProvider cookieManager)
-    {
-        Token = string.Empty;
-        var tokenCookie = await cookieManager.GetClaimAsync();
-        Token = tokenCookie.FindFirst("token")?.Value;
-    }
+    public static string Token { get; set; } = string.Empty;
 }

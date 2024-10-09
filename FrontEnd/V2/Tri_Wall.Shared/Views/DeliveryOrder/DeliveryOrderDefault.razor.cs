@@ -13,11 +13,13 @@ namespace Tri_Wall.Shared.Views.DeliveryOrder;
 
 public partial class DeliveryOrderDefault
 {
-    
     [Parameter] public DeliveryOrderViewModel ViewModel { get; set; } = default!;
+    [Parameter] public string Token { get; set; } = "";
     public bool Visible { get; set; }
     protected void OnCloseOverlay() => Visible = true;
+
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
+
     // [Inject] public IValidator<DeliveryOrderLine>? ValidatorLine { get; init; }
     private string _stringDisplay = "Delivery Order";
     private string _fromWord = "From";
@@ -26,6 +28,11 @@ public partial class DeliveryOrderDefault
     private bool _isView = false;
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
+    protected override void OnInitialized()
+    {
+        ViewModel.Token = Token;
+        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+    }
 
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
