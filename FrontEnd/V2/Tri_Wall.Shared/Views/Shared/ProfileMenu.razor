@@ -6,10 +6,12 @@
                    @* Style="min-width: 330px;" *@
                    
 @code{
+    [Inject] CookieAuthenticationSateProvider AuthState { get; set; } = default!;
 
-    void OnSignOut()
+    async Task OnSignOut()
     {
         Console.WriteLine("Hello");
+        await AuthState.LogOut();
         NavigationManager.NavigateTo("/");
     }
 
