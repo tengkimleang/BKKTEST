@@ -17,6 +17,7 @@ namespace Tri_Wall.Shared.Views.ReceiptFromProduction;
 
 public partial class ReceiptFromProductionDefault
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<ReceiptFinishGoodHeader>? Validator { get; init; }
     // [Inject] public IValidator<ReceiptFinishGoodLine>? ValidatorLine { get; init; }
 
@@ -24,7 +25,6 @@ public partial class ReceiptFromProductionDefault
     private string _saveWord = "Save";
     private string? _dataGrid = "width: 1600px;height:405px";
     private bool _isView;
-    public FluentTextField _token { get; set; }
 
 //ViewModel.IssueProductionLine
     protected void OnCloseOverlay() => _visible = true;
@@ -57,9 +57,10 @@ public partial class ReceiptFromProductionDefault
     }
 
     bool _visible;
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     private async Task<string> OnGetGenerateBatchOrSerial(Dictionary<string, object> e)

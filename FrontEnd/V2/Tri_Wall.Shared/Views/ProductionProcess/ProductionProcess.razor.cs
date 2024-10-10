@@ -5,10 +5,11 @@ using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.ProductionProcess;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Pages;
+namespace Tri_Wall.Shared.Views.ProductionProcess;
 
 public partial class ProductionProcess
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<ProductionProcessHeader>? Validator { get; init; }
 
     [Inject] public IValidator<ProcessProductionLine>? ValidatorLine { get; init; }
@@ -32,6 +33,7 @@ public partial class ProductionProcess
     {
         ComponentAttribute.Path = "/home";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.Token= Token;
     }
 
     private void OnSearch(OptionsSearchEventArgs<GetProductionOrder> e)

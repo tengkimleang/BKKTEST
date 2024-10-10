@@ -45,12 +45,12 @@ public static class Dependencies
         services.AddScoped<GoodReceptPoViewModel>();
         services.AddScoped<DeliveryOrderViewModel>();
         services.AddScoped<InventoryTransferViewModel>();
-        services.AddTransient<IssueProductionOrderViewModel>();
-        services.AddTransient<ReturnFromComponentViewModel>();
-        services.AddTransient<ReturnViewModel>();
-        services.AddTransient<GoodReturnViewModel>();
-        services.AddTransient<ArCreditMemoViewModel>();
-        services.AddTransient<InventoryCountingViewModel>();
+        services.AddScoped<IssueProductionOrderViewModel>();
+        services.AddScoped<ReturnFromComponentViewModel>();
+        services.AddScoped<ReturnViewModel>();
+        services.AddScoped<GoodReturnViewModel>();
+        services.AddScoped<ArCreditMemoViewModel>();
+        services.AddScoped<InventoryCountingViewModel>();
         services.AddScoped<ProductionProcessViewModel>();
         services.AddScoped<ReceiptsFinishedGoodsViewModel>();
         services.AddScoped<ReturnRequestViewModel>();

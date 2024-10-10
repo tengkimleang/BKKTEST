@@ -15,7 +15,7 @@ namespace Tri_Wall.Shared.Views.ReturnComponent.MobileAppScreen.Add;
 
 public partial class AddReturnComponentMobile
 {
-    [Parameter] public int DocEntry { get; set; }
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<ReturnComponentProductionHeader>? Validator { get; init; }
     Dictionary<string, object> _lineItemContent = new();
 
@@ -36,17 +36,13 @@ public partial class AddReturnComponentMobile
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/ReturnFromComponent";
         ComponentAttribute.IsBackButton = true;
-        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
-    }
-
-    protected override void OnInitialized()
-    {
-        
+        ViewModel.Token = Token;
+        ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
@@ -160,7 +156,7 @@ public partial class AddReturnComponentMobile
         }
         else
         {
-            var index = ViewModel.ReceiptFromProductionOrderForm.Lines.FindIndex(i =>
+            var index = ViewModel.IssueProductionLine.ToList().FindIndex(i =>
                 i.LineNum == returnComponentProductionLine.LineNum);
             ViewModel.IssueProductionLine[index] = returnComponentProductionLine;
         }

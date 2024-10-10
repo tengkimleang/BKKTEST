@@ -28,14 +28,13 @@ public partial class AddGoodReturnMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreturn";
         ComponentAttribute.IsBackButton = true;
         ViewModel.Token = Token;
-        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
-
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -43,6 +42,7 @@ public partial class AddGoodReturnMobile
         if (firstRender)
             if (DocEntry != 0)
             {
+                ViewModel.Token = Token;
                 await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(DocEntry.ToString())
                     .ConfigureAwait(false);
                 ViewModel.GoodReturnForm = new()
@@ -51,11 +51,12 @@ public partial class AddGoodReturnMobile
                     DocDate = DateTime.Now,
                     TaxDate = DateTime.Now,
                     NumAtCard = ViewModel.GoodReturnHeaderDetailByDocNums.FirstOrDefault()?.RefInv ?? "",
-                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select(x => new DeliveryOrderLine
+                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select((x, index) => new DeliveryOrderLine
                     {
                         ItemCode = x.ItemCode,
                         ItemName = x.ItemName,
-                        LineNum = ViewModel.GoodReturnForm.Lines?.MaxBy(l => l.LineNum)?.LineNum + 1 ?? 1,
+                        LineNum = index + 1,
+                        ManageItem = x.ManageItem,
                         Qty = Convert.ToDouble(x.Qty),
                         Price = Convert.ToDouble(x.Price),
                         VatCode = x.VatCode,
@@ -164,7 +165,8 @@ public partial class AddGoodReturnMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        ViewModel.GoodReturnForm.Lines?.RemoveAll(x => x.LineNum == (int)dictionary["Index"]);
+        ViewModel.GoodReturnForm.Lines?.RemoveAt(
+            ViewModel.GoodReturnForm.Lines.FindIndex(x => x.LineNum == (int)dictionary["Index"]));
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();

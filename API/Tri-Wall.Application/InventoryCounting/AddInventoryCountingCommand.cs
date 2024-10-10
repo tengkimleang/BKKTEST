@@ -34,7 +34,7 @@ public record InventoryCountingBatch(
     TypeSerial ConditionBatch,
     string BatchCode,
     double Qty,
-    DateTime ExpireDate,
+    DateTime? ExpireDate,
     DateTime ManfectureDate,
     DateTime AdmissionDate,
     string LotNo,

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
@@ -15,16 +14,17 @@ public partial class ListSearchSalesOrder
     private string? _searchValue;
     private readonly ObservableCollection<GetListData> _scrollingData = new();
     public bool IsViewDetail;
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         StateHasChanged();
-        ViewModel.Token = Token;
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/deliveryorder";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.Token = Token;
         await OnRefreshAsync();
         IsViewDetail = false;
     }
+
     private void UpdateGridSize(GridItemSize size)
     {
         if (size != GridItemSize.Xs)
@@ -32,6 +32,7 @@ public partial class ListSearchSalesOrder
             NavigationManager.NavigateTo("deliveryorder");
         }
     }
+
     private async Task OnSearch()
     {
         if (!string.IsNullOrWhiteSpace(_searchValue))
@@ -39,12 +40,14 @@ public partial class ListSearchSalesOrder
             _scrollingData.Clear();
             _count = 0;
             _refreshCount = 0;
-            var dataSearch = new Dictionary<string, object> { { "docNum", _searchValue },{"dateFrom",""},{"dateTo",""} };
+            var dataSearch = new Dictionary<string, object>
+                { { "docNum", _searchValue }, { "dateFrom", "" }, { "dateTo", "" } };
             await ViewModel.GetSaleOrderBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
             foreach (var item in ViewModel.GetListData)
             {
                 _scrollingData.Add(item);
             }
+
             StateHasChanged();
         }
         else
@@ -56,24 +59,26 @@ public partial class ListSearchSalesOrder
     public async Task<bool> OnRefreshAsync()
     {
         await ViewModel.TotalItemCountSaleOrderCommand.ExecuteAsync(null).ConfigureAwait(false);
-        if(Convert.ToInt32(ViewModel.TotalItemCountSalesOrder.FirstOrDefault()?.AllItem??"0")<=_count)
+        if (Convert.ToInt32(ViewModel.TotalItemCountSalesOrder.FirstOrDefault()?.AllItem ?? "0") <= _count)
         {
             return false;
         }
+
         await ViewModel.GetPurchaseOrderCommand.ExecuteAsync(_refreshCount.ToString()).ConfigureAwait(false);
         foreach (var item in ViewModel.GetListData)
         {
             _scrollingData.Add(item);
         }
+
         _refreshCount++;
-        _count = + _scrollingData.Count;
+        _count = +_scrollingData.Count;
         StateHasChanged();
         return true;
     }
 
     private Task OnClickCopy(string docEntry)
     {
-        NavigationManager.NavigateTo($"/addDeliveryOrderMobile/{docEntry}");
+        NavigationManager.NavigateTo($"/DeliveryOrder/Mobile/Add/{docEntry}");
         return Task.CompletedTask;
     }
 }

@@ -175,6 +175,7 @@ public partial class DeliveryOrderViewModel(
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetDeliveryOrderHeader", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -193,6 +194,7 @@ public partial class DeliveryOrderViewModel(
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetSaleOrder", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

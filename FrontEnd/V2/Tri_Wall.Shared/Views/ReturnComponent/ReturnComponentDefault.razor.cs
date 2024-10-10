@@ -15,6 +15,7 @@ namespace Tri_Wall.Shared.Views.ReturnComponent;
 
 public partial class ReturnComponentDefault
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<ReturnComponentProductionHeader>? Validator { get; init; }
     [Inject] public IValidator<ReturnComponentProductionLine>? ValidatorLine { get; init; }
 
@@ -26,10 +27,10 @@ public partial class ReturnComponentDefault
     private ObservableCollection<GetProductionOrderLines> _tmpGetProductionOrderLinesList =
         new ObservableCollection<GetProductionOrderLines>();
 
-//ViewModel.IssueProductionLine
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     protected void OnCloseOverlay() => _visible = true;

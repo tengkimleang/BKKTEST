@@ -1,10 +1,9 @@
-
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.ReceiptFromProduction;
+namespace Tri_Wall.Shared.Views.ReceiptFromProduction.MobileAppScreen;
 
-public partial class ReceiptFromProductionMobile
+public partial class ReceiptFromProductionDashboard
 {
     protected override void OnInitialized()
     {
@@ -38,16 +37,11 @@ public partial class ReceiptFromProductionMobile
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchReceiptsFinishedGoodsMobile");
+        NavigationManager.NavigateTo("/ReceiptFinishGoods/Mobile/ListReceiptFinishGood");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddReceiptsFinishedGoodsMobile");
-    }
-
-    private void OnClickListSearchSalesOrder()
-    {
-        NavigationManager.NavigateTo("/ListSearchSalesOrder");
+        NavigationManager.NavigateTo("/ReceiptFinishGoods/Mobile/Add/");
     }
 }

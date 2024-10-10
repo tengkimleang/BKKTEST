@@ -1,8 +1,9 @@
 ﻿@page "/ReturnFromComponent"
+@using Tri_Wall.Shared.Views.ReturnComponent.MobileAppScreen
 <PageTitle>Return From Component</PageTitle>
 @rendermode InteractiveWebAssembly
 
-<AuthorizeView Context="another_name">
+<AuthorizeView Context="anotherName">
     <Authorized>
         <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
         </FluentGrid>
@@ -10,11 +11,11 @@
         {
             @if (_isXs)
             {
-                <ReturnComponentMobile/>
+                <ReturnComponentDashboard/>
             }
             else
             {
-                <ReturnComponentDefault/>
+                <ReturnComponentDefault Token="@(anotherName.User.FindFirst("token")?.Value)"/>
             }
             @* <ReturnComponentDefault /> *@
         }

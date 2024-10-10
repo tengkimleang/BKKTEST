@@ -1,9 +1,8 @@
-﻿@* @page "/return" *@
-@inherits MvvmComponentBase<ReturnViewModel>
+﻿@page "/ReceiptsFinishedGoods"
+@using Tri_Wall.Shared.Views.ReceiptFromProduction.MobileAppScreen
 @rendermode InteractiveWebAssembly
-@* @attribute [StreamRendering] *@
-<PageTitle>Return</PageTitle>
-<AuthorizeView Context="another_name">
+<PageTitle>Receipts Finished Goods</PageTitle>
+<AuthorizeView Context="anotherName">
     <Authorized>
         <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
         </FluentGrid>
@@ -11,11 +10,11 @@
         {
             @if (_isXs)
             {
-                <ReturnMobile/>
+                <ReceiptFromProductionDashboard/>
             }
             else
             {
-                <ReturnDefault ViewModel="ViewModel"/>
+                <ReceiptFromProductionDefault Token="@(anotherName.User.FindFirst("token")?.Value)" />
             }
         }
     </Authorized>

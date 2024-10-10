@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
@@ -34,13 +33,16 @@ public partial class AddReturnRequestMobile
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/ReturnRequest";
         ComponentAttribute.IsBackButton = true;
-        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
             if (DocEntry != 0)
             {
+                ViewModel.Token = Token;
                 await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(DocEntry.ToString())
                     .ConfigureAwait(false);
                 ViewModel.DeliveryOrderForm = new()
@@ -49,17 +51,18 @@ public partial class AddReturnRequestMobile
                     DocDate = DateTime.Now,
                     TaxDate = DateTime.Now,
                     NumAtCard = ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.RefInv ?? "",
-                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select(x => new DeliveryOrderLine
+                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select((x, index) => new DeliveryOrderLine
                     {
                         ItemCode = x.ItemCode,
                         ItemName = x.ItemName,
-                        LineNum = ViewModel.DeliveryOrderForm.Lines?.MaxBy(l => l.LineNum)?.LineNum + 1 ?? 1,
+                        LineNum = index + 1,
                         Qty = Convert.ToDouble(x.Qty),
                         Price = Convert.ToDouble(x.Price),
                         VatCode = x.VatCode,
                         WarehouseCode = x.WarehouseCode,
                         BaseLine = Convert.ToInt32(x.BaseLineNumber),
                         BaseEntry = Convert.ToInt32(x.DocEntry),
+                        ManageItem = x.ManageItem,
                         Batches = x.Batches.Select(b => new BatchDeliveryOrder
                         {
                             BatchCode = b.BatchCode,
@@ -162,7 +165,8 @@ public partial class AddReturnRequestMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        ViewModel.DeliveryOrderForm.Lines?.RemoveAll(x => x.LineNum == (int)dictionary["Index"]);
+        ViewModel.DeliveryOrderForm.Lines?.RemoveAt(ViewModel.DeliveryOrderForm.Lines.FindIndex(x =>
+            x.LineNum == (int)dictionary["Index"]));
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();

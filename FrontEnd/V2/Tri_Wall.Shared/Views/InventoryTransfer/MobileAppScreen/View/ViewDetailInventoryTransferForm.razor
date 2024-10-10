@@ -103,7 +103,7 @@
 }
 else
 {
-<ViewItemDetailDeliveryOrder
+<ViewItemDetailInventoryTransferForm
     ItemDetail="@GoodReceiptPoLineByDocNum.FirstOrDefault(x => x.ItemCode == _itemCode && x.BaseLineNumber == _lineNum)"
     GetBatchOrSerials="@GetBatchOrSerials.Where(x => x.ItemCode == _itemCode).ToList()"
     IsViewDetailBack="OnViewItemDetail"/>

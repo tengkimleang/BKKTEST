@@ -110,6 +110,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService) : ViewModelBas
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPoHeader", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -142,6 +143,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService) : ViewModelBas
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

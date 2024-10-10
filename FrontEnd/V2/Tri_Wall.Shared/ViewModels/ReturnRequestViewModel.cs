@@ -104,6 +104,24 @@ public partial class ReturnRequestViewModel(ApiService apiService) : ViewModelBa
             throw;
         }
     }
+    [RelayCommand]
+    async Task OnGetGoodReturnBySearch(Dictionary<string, object> data)
+    {
+        try
+        {
+            GetListData = (await apiService.GetListGoodReceiptPo("GetReturnRequestHeader", ""
+                ,Token
+                , "condition"
+                , data["dateFrom"].ToString() ?? ""
+                , data["dateTo"].ToString() ?? ""
+                , data["docNum"].ToString() ?? "")).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     [RelayCommand]
     async Task OnGetBatchOrSerialByItemCode(Dictionary<string, string> dictionary)
@@ -216,6 +234,7 @@ public partial class ReturnRequestViewModel(ApiService apiService) : ViewModelBa
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("ReturnRequestDoHeader", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

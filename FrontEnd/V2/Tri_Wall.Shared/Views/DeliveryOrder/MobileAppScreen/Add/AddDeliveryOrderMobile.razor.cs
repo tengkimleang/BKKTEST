@@ -14,7 +14,7 @@ public partial class AddDeliveryOrderMobile
 {
     [Parameter] public int DocEntry { get; set; }
     [Parameter] public string Token { get; set; } = string.Empty;
-    
+
     [Inject] public IValidator<DeliveryOrderHeader>? Validator { get; init; }
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
     Dictionary<string, object> _lineItemContent = new();
@@ -51,11 +51,11 @@ public partial class AddDeliveryOrderMobile
                     DocDate = DateTime.Now,
                     TaxDate = DateTime.Now,
                     NumAtCard = ViewModel.GoodReceiptPoHeaderDeatialByDocNums.FirstOrDefault()?.RefInv ?? "",
-                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select(x => new DeliveryOrderLine
+                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select((x, index) => new DeliveryOrderLine
                     {
                         ItemCode = x.ItemCode,
                         ItemName = x.ItemName,
-                        LineNum = ViewModel.DeliveryOrderForm.Lines?.MaxBy(l => l.LineNum)?.LineNum + 1 ?? 1,
+                        LineNum = index + 1,
                         Qty = Convert.ToDouble(x.Qty),
                         Price = Convert.ToDouble(x.Price),
                         VatCode = x.VatCode,
@@ -109,6 +109,7 @@ public partial class AddDeliveryOrderMobile
 
     private Task OnDeleteItem(int lineNum)
     {
+        Console.WriteLine(lineNum);
         ToastService.ShowToast<ToastCustom, Dictionary<string, object>>(
             new ToastParameters<Dictionary<string, object>>()
             {
@@ -144,7 +145,8 @@ public partial class AddDeliveryOrderMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        ViewModel.DeliveryOrderForm.Lines?.RemoveAll(x => x.LineNum == (int)dictionary["Index"]);
+        ViewModel.DeliveryOrderForm.Lines?.RemoveAt(ViewModel.DeliveryOrderForm.Lines.FindIndex(x =>
+            x.LineNum == Convert.ToInt32(dictionary["Index"])));
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();

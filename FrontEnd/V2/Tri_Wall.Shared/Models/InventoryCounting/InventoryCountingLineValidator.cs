@@ -23,7 +23,7 @@ public class InventoryCountingLineValidator : AbstractValidator<InventoryCountin
             }));
         RuleFor(x => x.Batches).Must((x, batches) => x.ManageItem == "B" ? batches?.Count > 0 : true)
             .WithMessage("Batch is Require")
-            .Must((x, batches) => x.ManageItem == "B" ? batches?.Sum(b => b.Qty) == x.Qty : true)
+            .Must((x, batches) => x.ManageItem == "B" ? batches?.Sum(b => b.Qty) == x.QtyCounted : true)
             .WithMessage("Batch Qty must be equal to Qty")
             .ForEach(rule => rule.ChildRules(item =>
             {

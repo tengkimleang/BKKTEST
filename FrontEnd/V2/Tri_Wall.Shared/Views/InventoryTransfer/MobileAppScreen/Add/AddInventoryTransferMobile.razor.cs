@@ -1,4 +1,3 @@
-
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using FluentValidation;
@@ -20,18 +19,21 @@ public partial class AddInventoryTransferMobile
     Dictionary<string, object> _lineItemContent = new();
     bool _isItemLineClickAdd;
     private bool Visible { get; set; }
+
     private void OnSearchWarehousesFrom(OptionsSearchEventArgs<Warehouses> e)
     {
         e.Items = ViewModel.Warehouses.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
-                                         i.Code.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(i => i.Code);
-    }
-    private void OnSearchWarehousesTo(OptionsSearchEventArgs<Warehouses> e)
-    {
-        e.Items = ViewModel.WarehousesTo.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
                                                   i.Code.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
             .OrderBy(i => i.Code);
     }
+
+    private void OnSearchWarehousesTo(OptionsSearchEventArgs<Warehouses> e)
+    {
+        e.Items = ViewModel.WarehousesTo.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase) ||
+                                                    i.Code.Contains(e.Text, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.Code);
+    }
+
     private Task UpdateWarehousesFrom(string newValue)
     {
         Console.WriteLine(newValue);
@@ -44,6 +46,7 @@ public partial class AddInventoryTransferMobile
 
         return Task.CompletedTask;
     }
+
     private Task UpdateWarehousesTo(string newValue)
     {
         Console.WriteLine(newValue);
@@ -56,6 +59,7 @@ public partial class AddInventoryTransferMobile
 
         return Task.CompletedTask;
     }
+
     private void UpdateGridSize(GridItemSize size)
     {
         if (size != GridItemSize.Xs)
@@ -137,7 +141,8 @@ public partial class AddInventoryTransferMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        ViewModel.InventoryTransferForm.Lines.RemoveAll(x => x.LineNum == (int)dictionary["Index"]);
+        ViewModel.InventoryTransferForm.Lines.RemoveAt(
+            ViewModel.InventoryTransferForm.Lines.FindIndex(x => x.LineNum == (int)dictionary["Index"]));
         FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();
@@ -155,7 +160,8 @@ public partial class AddInventoryTransferMobile
     {
         if (inventoryTransferLine.LineNum == 0)
         {
-            inventoryTransferLine.LineNum = ViewModel.InventoryTransferForm.Lines.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
+            inventoryTransferLine.LineNum =
+                ViewModel.InventoryTransferForm.Lines.MaxBy(x => x.LineNum)?.LineNum + 1 ?? 1;
             Console.WriteLine(JsonSerializer.Serialize(inventoryTransferLine));
             // ViewModel.InventoryTransferForm.Lines ??= [];
             ViewModel.InventoryTransferForm.Lines.Add(inventoryTransferLine);
@@ -163,7 +169,8 @@ public partial class AddInventoryTransferMobile
         }
         else
         {
-            var index = ViewModel.InventoryTransferForm.Lines.FindIndex(i => i.LineNum == inventoryTransferLine.LineNum);
+            var index = ViewModel.InventoryTransferForm.Lines.FindIndex(i =>
+                i.LineNum == inventoryTransferLine.LineNum);
             ViewModel.InventoryTransferForm.Lines[index] = inventoryTransferLine;
         }
 

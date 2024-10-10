@@ -148,6 +148,7 @@ public partial class InventoryTransferViewModel(ApiService apiService) : ViewMod
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetInventoryTransferHeader", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

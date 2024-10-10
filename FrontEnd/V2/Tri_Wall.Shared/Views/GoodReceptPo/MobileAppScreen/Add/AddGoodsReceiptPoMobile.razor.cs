@@ -34,6 +34,7 @@ public partial class AddGoodsReceiptPoMobile
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreceptpoform";
         ComponentAttribute.IsBackButton = true;
+        ViewModel.Token = Token;
         ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
@@ -44,6 +45,7 @@ public partial class AddGoodsReceiptPoMobile
             ViewModel.GoodReceiptPoForm = new GoodReceiptPoHeader();
             if (DocEntry != 0)
             {
+                ViewModel.Token = Token;
                 await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(DocEntry.ToString())
                     .ConfigureAwait(false);
                 ViewModel.GoodReceiptPoForm = new()
@@ -52,11 +54,12 @@ public partial class AddGoodsReceiptPoMobile
                     DocDate = DateTime.Now,
                     TaxDate = DateTime.Now,
                     Remarks = ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.RefInv ?? "",
-                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select(x => new GoodReceiptPoLine()
+                    Lines = ViewModel.GetPurchaseOrderLineByDocNums.Select((x,index) => new GoodReceiptPoLine()
                     {
                         ItemCode = x.ItemCode,
                         ItemName = x.ItemName,
-                        LineNum = ViewModel.GoodReceiptPoForm.Lines?.MaxBy(l => l.LineNum)?.LineNum + 1 ?? 1,
+                        LineNum = index+1,
+                        ManageItem = x.ManageItem,
                         Qty = Convert.ToDouble(x.Qty),
                         Price = Convert.ToDouble(x.Price),
                         VatCode = x.VatCode,

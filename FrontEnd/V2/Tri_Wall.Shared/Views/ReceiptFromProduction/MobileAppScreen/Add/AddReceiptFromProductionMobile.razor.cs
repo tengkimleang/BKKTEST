@@ -12,6 +12,7 @@ namespace Tri_Wall.Shared.Views.ReceiptFromProduction.MobileAppScreen.Add;
 
 public partial class AddReceiptFromProductionMobile
 {
+    [Parameter] public string Token { get; set; } = string.Empty;
     [Inject] public IValidator<ReceiptFinishGoodHeader>? Validator { get; init; }
     Dictionary<string, object> _lineItemContent = new();
     bool _isItemLineClickAdd;
@@ -25,12 +26,13 @@ public partial class AddReceiptFromProductionMobile
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/ReceiptsFinishedGoods";
         ComponentAttribute.IsBackButton = true;
-        await ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
+        ViewModel.Token = Token;
+        ViewModel.LoadedCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     private IEnumerable<GetProductionOrder> SelectedProductionOrder { get; set; } = default!;

@@ -79,7 +79,7 @@ public partial class ListSearchGoodReceiptPo
 
     private Task OnClickCopy(string docEntry)
     {
-        NavigationManager.NavigateTo($"/AddGoodReturnMobile/{docEntry}");
+        NavigationManager.NavigateTo($"/GoodReturn/Mobile/Add/{docEntry}");
         return Task.CompletedTask;
     }
 }

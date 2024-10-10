@@ -47,14 +47,14 @@ public partial class IssueProductionOrderViewModel(ApiService apiService) : View
     [RelayCommand]
     async Task OnLoading()
     {
-        // Series = await CheckingValueT(Series, async () =>
-        //     (await apiService.GetSeries("60")).Data ?? new());
+        Series = await CheckingValueT(Series, async () =>
+            (await apiService.GetSeries("60",Token)).Data ?? new());
+        IssueProductionForm.Series = Series.First().Code;
         GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
             (await apiService.GetProductionOrders("GetForIssueProduction",Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>
             (await apiService.GetWarehouses(Token)).Data ?? new());
         await TotalCountIssueForProduction();
-        IssueProductionForm.Series = Series.First().Code;
         IsView = true;
     }
     [RelayCommand]

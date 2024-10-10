@@ -46,8 +46,8 @@ public partial class ReceiptsFinishedGoodsViewModel(ApiService apiService) //, I
 
     public override async Task Loaded()
     {
-        // Series = await CheckingValueT(Series, async () =>
-        //     (await apiService.GetSeries("59")).Data ?? new());
+        Series = await CheckingValueT(Series, async () =>
+            (await apiService.GetSeries("59",Token)).Data ?? new());
         GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
             (await apiService.GetProductionOrders("GetProductionForFinishGoods",Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>

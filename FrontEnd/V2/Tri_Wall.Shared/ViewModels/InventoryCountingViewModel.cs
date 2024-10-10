@@ -84,6 +84,7 @@ public partial class InventoryCountingViewModel(ApiService apiService) : ViewMod
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("InventoryCounting", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

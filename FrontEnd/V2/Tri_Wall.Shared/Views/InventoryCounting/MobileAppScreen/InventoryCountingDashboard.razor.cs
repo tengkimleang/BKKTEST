@@ -37,16 +37,11 @@ public partial class InventoryCountingDashboard
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchInventoryTransfer");
+        NavigationManager.NavigateTo("/InventoryCounting/Mobile/ListInventoryCounting");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddInventoryCountingMobile/");
-    }
-
-    private void OnClickListSearchSalesOrder()
-    {
-        NavigationManager.NavigateTo("/ListSearchSalesOrder");
+        NavigationManager.NavigateTo("/InventoryCounting/Mobile/Add/");
     }
 }

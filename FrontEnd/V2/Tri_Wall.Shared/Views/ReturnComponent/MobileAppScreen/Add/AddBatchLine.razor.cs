@@ -63,6 +63,10 @@ public partial class AddBatchLine
         {
             UpdateItemDetails("");
             BatchReturnComponentProduction.OnSelectedType = BatchReturnComponent[Index].OnSelectedType;
+            BatchReturnComponentProduction.OnSelectedProductionOrder =
+                BatchReturnComponent[Index].OnSelectedProductionOrder;
+            BatchReturnComponentProduction.QtyLost = BatchReturnComponent[Index].QtyLost;
+            BatchReturnComponentProduction.QtyManual = BatchReturnComponent[Index].QtyManual;
         }
     }
 
@@ -122,11 +126,13 @@ public partial class AddBatchLine
         if (double.TryParse(e.Value?.ToString(), out double qty))
         {
             obj.QtyLost = qty;
-            DataResult.QtyManual =
-                BatchReturnComponent.Sum(x => x.QtyLost) + BatchReturnComponentProduction.QtyLost;
-            Console.WriteLine((DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty));
-            Console.WriteLine(BatchReturnComponent.Sum(x => x.QtyLost));
-            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) - DataResult.QtyManual;
+            DataResult.QtyManual = (BatchReturnComponent.Where(x => x.BatchCode != obj.BatchCode)
+                .Sum(x => x.QtyLost) + BatchReturnComponentProduction.QtyLost);
+            Console.WriteLine(DataResult.QtyManual);
+            DataResult.QtyLost = (DataResult.QtyRequire - DataResult.QtyPlan - DataResult.Qty) -
+                                 (BatchReturnComponent.Where(x => x.BatchCode != obj.BatchCode)
+                                      .Sum(x => x.QtyLost) +
+                                  BatchReturnComponentProduction.QtyLost);
             //BatchReturnComponent.Sum(x => x.QtyLost);
         }
     }

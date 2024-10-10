@@ -115,6 +115,7 @@ public partial class AddItemLineComponent
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.ManageItem = firstItem?.ItemType ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
+        DataResult.Qty = Convert.ToDouble(firstItem?.Qty ?? "0");
         DataResult.Uom = firstItem?.Uom ?? "";
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";

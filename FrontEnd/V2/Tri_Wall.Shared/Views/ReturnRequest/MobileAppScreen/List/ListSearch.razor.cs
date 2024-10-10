@@ -44,7 +44,7 @@ public partial class ListSearch
             _refreshCount = 0;
             var dataSearch = new Dictionary<string, object>
                 { { "docNum", _searchValue }, { "dateFrom", "" }, { "dateTo", "" } };
-            await ViewModel.GetGoodReceiptPoBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
+            await ViewModel.GetGoodReturnBySearchCommand.ExecuteAsync(dataSearch).ConfigureAwait(false);
             foreach (var item in ViewModel.GetListData)
             {
                 _scrollingData.Add(item);

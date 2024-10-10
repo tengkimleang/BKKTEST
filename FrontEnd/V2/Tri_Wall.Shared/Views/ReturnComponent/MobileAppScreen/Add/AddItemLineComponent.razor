@@ -184,7 +184,14 @@
                                             <FluentLabel Typo="Typography.Body">@obj.BatchCode</FluentLabel>
                                         </FluentGridItem>
                                         <FluentGridItem xs="6" sm="6">
-                                            <FluentLabel Typo="Typography.Body">@obj.Qty</FluentLabel>
+                                            @if(obj.OnSelectedType.FirstOrDefault()?.Name == "Manual")
+                                            {
+                                                <FluentLabel Typo="Typography.Body">@obj.QtyManual</FluentLabel>
+                                            }
+                                            else
+                                            {
+                                                <FluentLabel Typo="Typography.Body">@obj.Qty</FluentLabel>
+                                            }
                                         </FluentGridItem>
                                         <FluentGridItem xs="6" sm="6">
                                             <FluentLabel Typo="Typography.Subject">Mfr Date</FluentLabel>

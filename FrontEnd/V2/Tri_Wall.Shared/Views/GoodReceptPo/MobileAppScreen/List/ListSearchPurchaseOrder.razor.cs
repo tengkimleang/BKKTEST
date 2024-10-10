@@ -79,7 +79,7 @@ public partial class ListSearchPurchaseOrder
 
     private Task OnClickCopy(string docEntry)
     {
-        NavigationManager.NavigateTo($"/AddGoodsReceiptPoMobile/{docEntry}");
+        NavigationManager.NavigateTo($"/GoodReceiptPo/Mobile/Add/{docEntry}");
         return Task.CompletedTask;
     }
 }

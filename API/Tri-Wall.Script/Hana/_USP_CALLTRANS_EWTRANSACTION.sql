@@ -3071,7 +3071,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OPDN" 
 			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -3096,14 +3096,13 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			SELECT 
 				 "DocEntry" AS "DocEntry"
 				,"DocNum" AS "DocumentNumber"
-				,"DocDate" AS "DocDate"
 				,TO_VARCHAR("DocDate",'yyyy-MM-dd') AS "DocDate"
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
 				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
 			FROM TRIWALL_TRAINKEY."OPOR" 
 			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -3211,7 +3210,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,B."OpenQty" AS "Qty"
 			,B."Price" AS "Price"
 			,B."LineTotal" AS "LineTotal"
-			,B."TaxCode" AS "VatCode"
+			,B."VatGroup" AS "VatCode"
 			,B."WhsCode" AS "WarehouseCode"
 			,E."CodeBars" AS "BarCode"
 			,CASE WHEN E."ManBtchNum"='Y' THEN
@@ -4579,7 +4578,8 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			WHERE
 			--AND B."BaseType"='1470000065'
 			--AND 
-			A."CountDate" BETWEEN :par3 AND :par4
+			--A."CountDate" BETWEEN :par3 AND :par4
+			A."CountDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND A."DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 		END IF;
@@ -4757,7 +4757,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,B."OpenQty" AS "Qty"
 			,B."Price" AS "Price"
 			,B."LineTotal" AS "LineTotal"
-			,B."TaxCode" AS "VatCode"
+			,B."VatGroup" AS "VatCode"
 			,B."WhsCode" AS "WarehouseCode"
 			,E."CodeBars" AS "BarCode"
 			,CASE WHEN E."ManBtchNum"='Y' THEN
@@ -4786,7 +4786,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
 				,"TaxDate" AS "TaxDate"
-			FROM TRIWALL_TRAINKEY."ORDN" 
+			FROM TRIWALL_TRAINKEY."ODLN" 
 			ORDER BY "DocEntry" LIMIT 10 OFFSET :offset;
 			
 		ELSE IF :par2='condition' THEN
@@ -4798,9 +4798,10 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 				,"CardCode" AS "VendorCode"
 				,"Comments" AS "Remarks"
 				,TO_VARCHAR("TaxDate",'yyyy-MM-dd') AS "TaxDate"
-			FROM TRIWALL_TRAINKEY."ORDN" 
+			FROM TRIWALL_TRAINKEY."ODLN" 
 			WHERE "DocStatus"='O'
-			AND "DocDate" BETWEEN :par3 AND :par4
+			--AND "DocDate" BETWEEN :par3 AND :par4
+			AND "DocDate" BETWEEN CASE WHEN :par3='' THEN '1999-01-01' ELSE :par3 END AND CASE WHEN :par4='' THEN '2100-01-01' ELSE :par4 END
 			AND "DocNum" LIKE CASE WHEN :par5='' OR :par5='0' THEN "DocNum" ELSE '%'||:par5||'%' END
 			ORDER BY "DocEntry";
 			

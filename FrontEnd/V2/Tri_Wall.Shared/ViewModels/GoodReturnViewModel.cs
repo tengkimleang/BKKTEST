@@ -110,6 +110,7 @@ public partial class GoodReturnViewModel(ApiService apiService) : ViewModelBase 
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GetGoodReturnHeader", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -244,6 +245,7 @@ public partial class GoodReturnViewModel(ApiService apiService) : ViewModelBase 
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GoodReceiptPOHeaderByReturn", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

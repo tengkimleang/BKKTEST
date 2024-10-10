@@ -79,7 +79,7 @@ public partial class ListSearchDeliveryOrderReturnRequest
 
     private Task OnClickCopy(string docEntry)
     {
-        NavigationManager.NavigateTo($"/AddReturnRequestMobile/{docEntry}");
+        NavigationManager.NavigateTo($"/ReturnRequest/Mobile/Add/{docEntry}");
         return Task.CompletedTask;
     }
 }

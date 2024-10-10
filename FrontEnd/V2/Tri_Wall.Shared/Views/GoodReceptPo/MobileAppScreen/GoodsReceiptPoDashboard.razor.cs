@@ -35,7 +35,7 @@ public partial class GoodsReceiptPoDashboard
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListGoodsReceiptPo");
+        NavigationManager.NavigateTo("/GoodReceiptPo/Mobile/ListGoodsReceiptPo");
     }
 
     private void OnClickAddDeliveryOrderMobile()
@@ -44,6 +44,6 @@ public partial class GoodsReceiptPoDashboard
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/DeliveryOrder/Mobile/ListPurchaseOrder");
+        NavigationManager.NavigateTo("/GoodReceiptPo/Mobile/ListPurchaseOrder");
     }
 }

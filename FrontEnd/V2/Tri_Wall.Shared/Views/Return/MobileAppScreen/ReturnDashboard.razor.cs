@@ -1,9 +1,9 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Services;
 
-namespace Tri_Wall.Shared.Views.Return;
+namespace Tri_Wall.Shared.Views.Return.MobileAppScreen;
 
-public partial class ReturnMobile 
+public partial class ReturnDashboard 
 {
     protected override void OnInitialized()
     {

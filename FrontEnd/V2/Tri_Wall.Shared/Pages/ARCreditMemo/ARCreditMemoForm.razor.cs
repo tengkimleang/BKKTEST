@@ -1,16 +1,15 @@
-﻿
+﻿using System.Collections.ObjectModel;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Tri_Wall.Shared.Services;
-using System.Collections.ObjectModel;
-using System.Text.Json;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
 using Tri_Wall.Shared.Views.Return;
 
-namespace Tri_Wall.Shared.Pages;
+namespace Tri_Wall.Shared.Pages.ARCreditMemo;
 
 public partial class ARCreditMemoForm
 {

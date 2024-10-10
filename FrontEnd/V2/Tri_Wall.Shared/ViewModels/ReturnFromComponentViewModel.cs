@@ -45,8 +45,8 @@ public partial class ReturnFromComponentViewModel(ApiService apiService) : ViewM
 
     public override async Task Loaded()
     {
-        // Series = await CheckingValueT(Series, async () =>
-        //     (await apiService.GetSeries("59")).Data ?? new());
+        Series = await CheckingValueT(Series, async () =>
+            (await apiService.GetSeries("59",Token)).Data ?? new());
         GetProductionOrder = await CheckingValueT(GetProductionOrder, async () =>
             (await apiService.GetProductionOrders("GetForReceiptProduction",Token)).Data ?? new());
         Warehouses = await CheckingValueT(Warehouses, async () =>

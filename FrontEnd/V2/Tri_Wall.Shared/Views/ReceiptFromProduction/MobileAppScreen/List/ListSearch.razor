@@ -1,55 +1,48 @@
-﻿@page "/ListSearchReceiptsFinishedGoodsMobile"
-@rendermode InteractiveWebAssembly
-@inherits MvvmComponentBase<ReceiptsFinishedGoodsViewModel>
-<PageTitle>List Receipt Finished Good</PageTitle>
+﻿@inherits MvvmComponentBase<ReceiptsFinishedGoodsViewModel>
 
-<AuthorizeView Context="another_name">
-    <Authorized>
-        @(ViewModel.Token = another_name.User.FindFirst("token")?.Value??"")
-        @if (_isViewDetail)
-        {
-
-        <ViewDetailReceiptFromProductionMobileForm GoodReceiptPoHeaderDeatialByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums"
-                                                   GoodReceiptPoLineByDocNum="ViewModel.GoodReceiptPoLineByDocNums"
-                                                   GetBatchOrSerials="ViewModel.GetBatchOrSerials"
-                                                   IsViewDetail="OnViewDetail"/>
-        }
-        else
-        {
-        <SectionContent SectionName="Is-BackButton">
-            <BackButtonAction/>
-            @(new MarkupString($@"&nbsp;&nbsp;List Good Receipt PO"))
-        </SectionContent>
-        <FluentLayout Style="margin-top: 0;">
-            <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
-                <FluentBodyContent Class="body-content" Style="height:90% !important;">
-                    <div class="content-xs" id="top-nav">
-                        <div class="search-container">
-                            <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-                                <FluentGridItem xs="12" sm="12" md="6" lg="4" xl="4">
-                                    <FluentSearch @bind-Value="_searchValue"
-                                                  @bind-Value:after="OnSearch"
-                                                  Immediate="true"
-                                                  ImmediateDelay="500"
-                                                  Placeholder="Search for name"
-                                                  style="width: 100%;"
-                                                  Id="FluentSearch"/>
-                                </FluentGridItem>
-                            </FluentGrid>
-                        </div>
-                        <!-- #endregion -->
-                        <!-- #region For Each CardBox -->
-                        <div class="pull-up-demo">
-                            <FluentPullToRefresh Id="main-menu"
-                                                 Direction="@PullDirection.Up"
-                                                 OnRefreshAsync="OnRefreshAsync"
-                                                 TipHeight="30"
-                                                 DragDistance="75"
-                                                 ShowStaticTip="false">
-                                <ChildContent>
-                                    <div class="pull-content">
-                                        @foreach (var obj in _scrollingData)
-                                        {
+@if (_isViewDetail)
+{
+    <ViewDetailReceiptFromProductionMobileForm GoodReceiptPoHeaderDeatialByDocNum="ViewModel.GoodReceiptPoHeaderDetailByDocNums"
+                                               GoodReceiptPoLineByDocNum="ViewModel.GoodReceiptPoLineByDocNums"
+                                               GetBatchOrSerials="ViewModel.GetBatchOrSerials"
+                                               IsViewDetail="OnViewDetail"/>
+}
+else
+{
+    <SectionContent SectionName="Is-BackButton">
+        <BackButtonAction/>
+        @(new MarkupString($@"&nbsp;&nbsp;List Good Receipt PO"))
+    </SectionContent>
+    <FluentLayout Style="margin-top: 0;">
+        <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+            <FluentBodyContent Class="body-content" Style="height:90% !important;">
+                <div class="content-xs" id="top-nav">
+                    <div class="search-container">
+                        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
+                            <FluentGridItem xs="12" sm="12" md="6" lg="4" xl="4">
+                                <FluentSearch @bind-Value="_searchValue"
+                                              @bind-Value:after="OnSearch"
+                                              Immediate="true"
+                                              ImmediateDelay="500"
+                                              Placeholder="Search for name"
+                                              style="width: 100%;"
+                                              Id="FluentSearch"/>
+                            </FluentGridItem>
+                        </FluentGrid>
+                    </div>
+                    <!-- #endregion -->
+                    <!-- #region For Each CardBox -->
+                    <div class="pull-up-demo">
+                        <FluentPullToRefresh Id="main-menu"
+                                             Direction="@PullDirection.Up"
+                                             OnRefreshAsync="OnRefreshAsync"
+                                             TipHeight="30"
+                                             DragDistance="75"
+                                             ShowStaticTip="false">
+                            <ChildContent>
+                                <div class="pull-content">
+                                    @foreach (var obj in _scrollingData)
+                                    {
                                         <FluentCard MinimalStyle="true" Style="width: 100%; margin-bottom: 10px;" @onclick="(e) => OnClickCopy(obj.DocEntry)">
                                             <FluentGrid Spacing="2" AdaptiveRendering="true">
                                                 <FluentGridItem xs="6" sm="6">
@@ -66,18 +59,15 @@
                                                 </FluentGridItem>
                                             </FluentGrid>
                                         </FluentCard>
-                                        }
-                                    </div>
-                                </ChildContent>
-                            </FluentPullToRefresh>
-                        </div>
-                        <!-- #endregion -->
+                                    }
+                                </div>
+                            </ChildContent>
+                        </FluentPullToRefresh>
                     </div>
-                </FluentBodyContent>
-            </FluentStack>
-            <AnchorNavigation Url="ListSearchReceiptsFinishedGoods/#top-nav"/>
-        </FluentLayout>
-        }
-    </Authorized>
-</AuthorizeView>
-
+                    <!-- #endregion -->
+                </div>
+            </FluentBodyContent>
+        </FluentStack>
+        <AnchorNavigation Url="/ReceiptFinishGoods/Mobile/ListReceiptFinishGood/#top-nav"/>
+    </FluentLayout>
+}

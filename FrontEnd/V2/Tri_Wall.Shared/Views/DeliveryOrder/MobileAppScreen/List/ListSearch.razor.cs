@@ -14,7 +14,7 @@ public partial class ListSearch
     private string? _searchValue;
     private readonly ObservableCollection<GetListData> _scrollingData = new();
     private bool _isViewDetail;
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         StateHasChanged();
         ComponentAttribute.Title = "List Search";

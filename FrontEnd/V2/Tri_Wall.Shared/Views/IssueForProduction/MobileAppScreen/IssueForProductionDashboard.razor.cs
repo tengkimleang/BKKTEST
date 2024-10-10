@@ -37,16 +37,11 @@ public partial class IssueForProductionDashboard
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/ListSearchIssueForProductionMobile");
+        NavigationManager.NavigateTo("/IssueForProduction/Mobile/ListIssueForProduction");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddIssueForProductionMobile");
-    }
-
-    private void OnClickListSearchSalesOrder()
-    {
-        NavigationManager.NavigateTo("/ListSearchSalesOrder");
+        NavigationManager.NavigateTo("/IssueForProduction/Mobile/Add/");
     }
 }

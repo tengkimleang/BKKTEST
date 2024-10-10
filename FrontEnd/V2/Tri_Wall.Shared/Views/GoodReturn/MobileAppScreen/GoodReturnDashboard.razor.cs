@@ -35,15 +35,15 @@ public partial class GoodReturnDashboard
 
     private void OnClickList()
     {
-        NavigationManager.NavigateTo("/listgoodreturn");
+        NavigationManager.NavigateTo("/GoodReturn/Mobile/ListGoodReturn");
     }
 
     private void OnClickAddDeliveryOrderMobile()
     {
-        NavigationManager.NavigateTo("/AddGoodReturnMobile/");
+        NavigationManager.NavigateTo("/GoodReturn/Mobile/Add/");
     }
     private void OnClickListSearchSalesOrder()
     {
-        NavigationManager.NavigateTo("/ListSearchGoodReceiptPo");
+        NavigationManager.NavigateTo("/GoodReturn/Mobile/ListGoodReceiptPo");
     }
 }
