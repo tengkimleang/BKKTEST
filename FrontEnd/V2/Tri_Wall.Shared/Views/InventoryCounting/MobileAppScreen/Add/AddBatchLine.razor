@@ -10,7 +10,21 @@
         <FluentBodyContent Class="body-content" Style="overflow: auto">
             <div class="content">
                 <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-
+                    <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+                        <FluentAutocomplete Required
+                                            TOption="ItemType"
+                                            Width="100%"
+                                            Placeholder="Serial Code"
+                                            OnOptionsSearch="OnSearchType"
+                                            MaximumOptionsSearch="1"
+                                            Virtualize="true"
+                                            Items="_type"
+                                            MaximumSelectedOptions="1"
+                                            OptionValue="@(item => item.Id.ToString())"
+                                            OptionText="@(item => $"{item.Name}")"
+                                            @bind-SelectedOptions="@SelectedType"
+                                            ValueChanged="@(e => OnSelectedType(e))"/>
+                    </FluentGridItem>
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                         <FluentAutocomplete Required
                                             TOption="GetBatchOrSerial"

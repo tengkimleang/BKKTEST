@@ -22,6 +22,23 @@ public partial class AddBatchLine
 
     [Parameter] public IEnumerable<GetBatchOrSerial> SelectedBatch { get; set; } = Array.Empty<GetBatchOrSerial>();
     private InventoryCountingBatch InventoryCountingBatch { get; set; } = new();
+    
+    private IEnumerable<ItemType> _type = new List<ItemType>
+    {
+        new ItemType
+        {
+            Id = 1,
+            Name = "New"
+        },
+        new ItemType
+        {
+            Id = 2,
+            Name = "Existing"
+        }
+    };
+
+    private IEnumerable<ItemType> SelectedType { get; set; } = new List<ItemType> { new ItemType { Id = 2, Name = "Existing" } };
+    public bool DisplayNoneOrShow;
 
     protected override void OnInitialized()
     {
@@ -63,5 +80,14 @@ public partial class AddBatchLine
             : InventoryCountingBatch.AdmissionDate;
         InventoryCountingBatch.QtyAvailable = Convert.ToDouble(firstItem.Qty);
         return Task.CompletedTask;
+    }
+    private void OnSearchType(OptionsSearchEventArgs<ItemType> e)
+    {
+        e.Items = _type.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase));
+    }
+    private void OnSelectedType(string newValue)
+    {
+        DisplayNoneOrShow = SelectedType.FirstOrDefault()?.Id == 1;
+        StateHasChanged();
     }
 }

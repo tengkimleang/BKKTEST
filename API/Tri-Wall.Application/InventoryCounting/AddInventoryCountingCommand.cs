@@ -35,8 +35,8 @@ public record InventoryCountingBatch(
     string BatchCode,
     double Qty,
     DateTime? ExpireDate,
-    DateTime ManfectureDate,
-    DateTime AdmissionDate,
+    DateTime? ManfectureDate,
+    DateTime? AdmissionDate,
     string LotNo,
     int BinEntry);
 
@@ -46,10 +46,10 @@ public record InventoryCountingSerial(
     string SerialCode,
     int SystemSerialNumber,
     string MfrNo,
-    DateTime MfrDate,
-    DateTime ExpDate,
+    DateTime? MfrDate,
+    DateTime? ExpDate,
     string Location,
-    DateTime ReceiptDate,
+    DateTime? ReceiptDate,
     int BinEntry);
     
     
