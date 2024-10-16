@@ -136,8 +136,9 @@ public class AddInventoryCountingCommandHandler(IUnitOfWork unitOfWork)
                     }
                     else if (line.ManageItem.Contains("B") == true)
                     {
-                        for (var i = 0; oInventoryCountingLine.InventoryCountingBatchNumbers.Count >= i; i++)
-                            oInventoryCountingLine.InventoryCountingBatchNumbers.Remove(0);
+                        if (oInventoryCountingLine.InventoryCountingBatchNumbers.Count > 0)
+                            for (var i = 0; oInventoryCountingLine.InventoryCountingBatchNumbers.Count >= i; i++)
+                                oInventoryCountingLine.InventoryCountingBatchNumbers.Remove(0);
                         foreach (var batch in line.Batches)
                         {
                             if (batch.ItemCode == line.ItemCode && batch.BinEntry == line.BinEntry &&

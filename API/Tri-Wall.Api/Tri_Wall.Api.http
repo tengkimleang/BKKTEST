@@ -1,4 +1,4 @@
-﻿@API_HostAddress = http://192.168.20.2:8082
+﻿@API_HostAddress = http://localhost:5253
 # @API_HostAddress = http://192.168.10.107:8429/ApiTriWall/ http://192.168.20.2:8082
 
 
@@ -385,46 +385,46 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImMzMmU5Yjk3LTA5YTYtNDQ2ZS1hNzY3LTI1MTc3OGQ0Y2VhMyIsImlkIjoiYWRtaW4xMC8xMC8yMDI0IDA4OjU3OjM2IiwibmJmIjoxNzI4NTUwNjU2LCJleHAiOjE3MjkxNTU0NTYsImlhdCI6MTcyODU1MDY1Nn0.LDkCBkie3VRThQ2KOxsDHz6AOGa3DlpeCWlJ5KiNlUo
 
 {
-    "docEntry": 54,
-    "createTime": "16:49",
-    "createDate": "2024-10-16T15:41:05.012+07:00",
-    "otherRemark": "",
-    "ref2": "",
-    "series": "241000001",
-    "inventoryCountingType": "Single Count",
-    "counterId": 0,
-    "lines": [
+  "docEntry": 54,
+  "createTime": "16:49",
+  "createDate": "2024-10-16T16:05:54.108+07:00",
+  "otherRemark": "",
+  "ref2": "",
+  "series": "241000001",
+  "inventoryCountingType": "Single Count",
+  "counterId": 0,
+  "lines": [
+    {
+      "itemCode": "BATCH-TEST",
+      "itemName": "123",
+      "whsCode": "AS01",
+      "qty": 12,
+      "qtyCounted": 1,
+      "counted": "",
+      "lineNum": 0,
+      "manageItem": "B",
+      "countId": 0,
+      "binEntry": 0,
+      "uom": "Manual",
+      "batches": [
         {
-            "itemCode": "BATCH-TEST",
-            "itemName": "123",
-            "whsCode": "AS01",
-            "qty": 12,
-            "qtyCounted": 1,
-            "counted": "",
-            "lineNum": 1,
-            "manageItem": "B",
-            "countId": 0,
-            "binEntry": 0,
-            "uom": "Manual",
-            "batches": [
-                {
-                    "itemCode": "BATCH-TEST",
-                    "conditionBatch": 0,
-                    "batchCode": "123",
-                    "qty": 1,
-                    "qtyAvailable": 0,
-                    "expireDate": "2024-10-16T00:00:00",
-                    "manufactureDate": "2024-10-16T00:00:00",
-                    "admissionDate": "2024-10-16T00:00:00",
-                    "lotNo": "",
-                    "binEntry": 0,
-                    "isBatchNew": "",
-                    "onSelectedBatchOrSerial": []
-                }
-            ],
-            "serials": []
+          "itemCode": "BATCH-TEST",
+          "conditionBatch": "new",
+          "batchCode": "123",
+          "qty": 1,
+          "qtyAvailable": 0,
+          "expireDate": "2024-10-16T00:00:00",
+          "manufactureDate": "2024-10-16T00:00:00",
+          "admissionDate": "2024-10-16T00:00:00",
+          "lotNo": "",
+          "binEntry": 0,
+          "isBatchNew": "",
+          "onSelectedBatchOrSerial": []
         }
-    ]
+      ],
+      "serials": []
+    }
+  ]
 }
 
 
