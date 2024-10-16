@@ -100,8 +100,9 @@ public partial class AddInventoryCountingMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
-        ViewModel.InventoryCountingLines.RemoveAt((int)dictionary["Index"]);
-        FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
+        ViewModel.InventoryCountingLines.RemoveAt(ViewModel.InventoryCountingHeader.Lines.FindIndex(i =>
+            i.LineNum == Convert.ToInt32(dictionary["Index"])));
+        var fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();
         return Task.CompletedTask;

@@ -11,7 +11,7 @@ public partial class AddBatchLine
 {
     [Parameter] public Func<Task> IsViewDetail { get; set; } = default!;
     [Parameter] public Func<InventoryCountingBatch, Task> SaveBatch { get; set; } = default!;
-    [Parameter] public Func<int,Task> DeleteBatch { get; set; } = default!;
+    [Parameter] public Func<int, Task> DeleteBatch { get; set; } = default!;
 
     [Parameter]
     public IEnumerable<GetBatchOrSerial> SerialBatchDeliveryOrders { get; set; } = new List<GetBatchOrSerial>();
@@ -21,8 +21,9 @@ public partial class AddBatchLine
     [Parameter] public bool IsUpdate { get; set; }
 
     [Parameter] public IEnumerable<GetBatchOrSerial> SelectedBatch { get; set; } = Array.Empty<GetBatchOrSerial>();
+    // [Parameter] public Func<Task<string>> GetGenerateBatchSerial { get; set; } = default!;
     private InventoryCountingBatch InventoryCountingBatch { get; set; } = new();
-    
+
     private IEnumerable<ItemType> _type = new List<ItemType>
     {
         new ItemType
@@ -37,14 +38,17 @@ public partial class AddBatchLine
         }
     };
 
-    private IEnumerable<ItemType> SelectedType { get; set; } = new List<ItemType> { new ItemType { Id = 2, Name = "Existing" } };
+    private IEnumerable<ItemType> SelectedType { get; set; } =
+        new List<ItemType> { new ItemType { Id = 2, Name = "Existing" } };
+
     public bool DisplayNoneOrShow;
 
     protected override void OnInitialized()
     {
-        Console.WriteLine(SelectedBatch.Count());
         if (SelectedBatch.Count() != 0)
             UpdateItemDetails("");
+        else
+            OnSelectedType("");
     }
 
     private void UpdateGridSize(GridItemSize size)
@@ -68,7 +72,8 @@ public partial class AddBatchLine
         if (firstItem == null) return Task.CompletedTask;
         Console.WriteLine(JsonSerializer.Serialize(firstItem));
         InventoryCountingBatch.BatchCode = firstItem.SerialBatch;
-        InventoryCountingBatch.Qty = (string.IsNullOrEmpty(firstItem.InputQty)) ? 0 : Convert.ToDouble(firstItem.InputQty);
+        InventoryCountingBatch.Qty =
+            (string.IsNullOrEmpty(firstItem.InputQty)) ? 0 : Convert.ToDouble(firstItem.InputQty);
         InventoryCountingBatch.ExpireDate = (!string.IsNullOrEmpty(firstItem.ExpDate))
             ? DateTime.Parse(firstItem.ExpDate)
             : InventoryCountingBatch.ExpireDate;
@@ -79,15 +84,29 @@ public partial class AddBatchLine
             ? DateTime.Parse(firstItem.MrfDate)
             : InventoryCountingBatch.AdmissionDate;
         InventoryCountingBatch.QtyAvailable = Convert.ToDouble(firstItem.Qty);
+        InventoryCountingBatch.ConditionBatch = SelectedType.FirstOrDefault()?.Id==1? TypeSerial.NEW : TypeSerial.OLD;
         return Task.CompletedTask;
     }
+
     private void OnSearchType(OptionsSearchEventArgs<ItemType> e)
     {
         e.Items = _type.Where(i => i.Name.Contains(e.Text, StringComparison.OrdinalIgnoreCase));
     }
+
     private void OnSelectedType(string newValue)
     {
-        DisplayNoneOrShow = SelectedType.FirstOrDefault()?.Id == 1;
+        DisplayNoneOrShow = SelectedType.FirstOrDefault()?.Id != 1;
+        InventoryCountingBatch.BatchCode = "";
+        InventoryCountingBatch.Qty = 0;
+        InventoryCountingBatch.ExpireDate = null;
+        InventoryCountingBatch.ManufactureDate = null;
+        InventoryCountingBatch.AdmissionDate = null;
+        InventoryCountingBatch.ConditionBatch = SelectedType.FirstOrDefault()?.Id==1? TypeSerial.NEW : TypeSerial.OLD;
         StateHasChanged();
     }
+
+    // private async Task OnClickGenerateBatchSerial()
+    // {
+    //     InventoryCountingBatch.BatchCode = (await GetGenerateBatchSerial());
+    // }
 }

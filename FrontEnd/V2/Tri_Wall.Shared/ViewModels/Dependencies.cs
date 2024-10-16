@@ -22,8 +22,6 @@ public static class Dependencies
                 // client.BaseAddress = new Uri("http://localhost:5253");
                 //client.BaseAddress = new Uri("http://localhost:8082");
                 client.BaseAddress = new Uri("http://192.168.20.2:8082");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImZlMmZmZDc2LWJjOWUtNDFmZi05YmJjLTBmNTViNjJhOWUzNiIsImlkIjoiYWRtaW4xMC8wMi8yMDI0IDAyOjU0OjIwIiwibmJmIjoxNzI3ODM3NjYwLCJleHAiOjE3Mjg0NDI0NjAsImlhdCI6MTcyNzgzNzY2MH0.vkMAIEdI6AiPGJpLxR_8RA-p6nqnE-pM3XvBXuyalVY");
             }).AddStandardResilienceHandler(static options =>
                 options.Retry = new WebOrMobileHttpRetryStrategyOptions());
 
@@ -77,6 +75,7 @@ public static class Dependencies
         services.AddScoped(sp => new HttpClient
         {
             BaseAddress = new Uri("http://localhost:5121"),
+            // BaseAddress = new Uri("http://192.168.20.2:8081"),
         });
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();

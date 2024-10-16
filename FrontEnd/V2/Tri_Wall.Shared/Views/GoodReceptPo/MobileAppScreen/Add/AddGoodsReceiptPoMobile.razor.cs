@@ -146,9 +146,10 @@ public partial class AddGoodsReceiptPoMobile
 
     Task OnDeleteItemByLineNum(Dictionary<string, object> dictionary)
     {
+        Console.WriteLine(Convert.ToInt32(dictionary["Index"]));
         ViewModel.GoodReceiptPoForm.Lines?.RemoveAt(ViewModel.GoodReceiptPoForm.Lines.FindIndex(x =>
             x.LineNum == Convert.ToInt32(dictionary["Index"])));
-        FluentToast fluentToast = (FluentToast)dictionary["FluentToast"];
+        var fluentToast = (FluentToast)dictionary["FluentToast"];
         fluentToast.Close();
         OnAddItemLineBack();
         return Task.CompletedTask;

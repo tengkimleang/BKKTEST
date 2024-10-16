@@ -7,14 +7,21 @@ public class InventoryCountingBatchValidator : AbstractValidator<InventoryCounti
     public InventoryCountingBatchValidator()
     {
         RuleFor(x => x.Qty).NotEmpty().WithMessage("Item Code is Require");
-        RuleFor(x => x.BatchCode).NotEmpty().WithMessage("Batch Code is Require");
-        RuleFor(x=>x).Custom((x,context)=>
+        RuleFor(x => x).Custom((x, context) =>
         {
-            if (x.QtyAvailable < x.Qty)
+            if (x.BatchCode == "")
             {
-                context.AddFailure("Qty","Qty is not available");
+                context.AddFailure("BatchCode","Batch Code is Require");
             }
         });
-        
+        // RuleFor(x => x.BatchCode).NotEmpty().WithMessage("Batch Code is Require");
+        // RuleFor(x=>x).Custom((x,context)=>
+        // {
+        //     if (x.QtyAvailable < x.Qty)
+        //     {
+        //         context.AddFailure("Qty","Qty is not available");
+        //     }
+        // });
+
     }
 }

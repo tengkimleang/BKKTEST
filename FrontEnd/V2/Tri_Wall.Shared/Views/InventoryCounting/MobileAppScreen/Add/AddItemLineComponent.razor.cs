@@ -238,6 +238,7 @@ public partial class AddItemLineComponent
 
     private async Task OnAddBatchLine(InventoryCountingBatch inventoryCountingBatch)
     {
+        Console.WriteLine(JsonSerializer.Serialize(inventoryCountingBatch));
         var result = await ValidatorBatch!.ValidateAsync(inventoryCountingBatch).ConfigureAwait(false);
         if (!result.IsValid)
         {
@@ -381,6 +382,8 @@ public partial class AddItemLineComponent
 
     private async Task OnConfirmLine()
     {
+        _inventoryCountingBatches.ForEach(x=>x.ItemCode = DataResult.ItemCode);
+        _inventoryCountingSerials.ForEach(x=>x.ItemCode = DataResult.ItemCode);
         DataResult.Batches = _inventoryCountingBatches;
         DataResult.Serials = _inventoryCountingSerials;
         var result = await Validator!.ValidateAsync(DataResult).ConfigureAwait(false);

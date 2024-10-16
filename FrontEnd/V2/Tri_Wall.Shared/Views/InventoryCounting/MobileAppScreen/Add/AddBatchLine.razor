@@ -14,7 +14,7 @@
                         <FluentAutocomplete Required
                                             TOption="ItemType"
                                             Width="100%"
-                                            Placeholder="Serial Code"
+                                            Placeholder="Batch Type"
                                             OnOptionsSearch="OnSearchType"
                                             MaximumOptionsSearch="1"
                                             Virtualize="true"
@@ -25,50 +25,69 @@
                                             @bind-SelectedOptions="@SelectedType"
                                             ValueChanged="@(e => OnSelectedType(e))"/>
                     </FluentGridItem>
-                    <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-                        <FluentAutocomplete Required
-                                            TOption="GetBatchOrSerial"
-                                            Width="100%"
-                                            Placeholder="Batch Search"
-                                            OnOptionsSearch="OnSearchBatch"
-                                            MaximumOptionsSearch="1"
-                                            Label="Batch Code"
-                                            Virtualize="true"
-                                            Items="SerialBatchDeliveryOrders"
-                                            MaximumSelectedOptions="1"
-                                            OptionText="@(item => $"{item.SerialBatch}")"
-                                            @bind-SelectedOptions="@SelectedBatch"
-                                            ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
-                    </FluentGridItem>
+                    @if (!DisplayNoneOrShow)
+                    {
+                        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+                            <div style="display:flex">
+                                <FluentTextField @bind-Value="@InventoryCountingBatch.BatchCode"
+                                                 style="width: 100%;"
+                                                 AutoComplete="off"/>
+                                <FluentButton IconEnd="@(new Icons.Filled.Size20.QrCode())"
+                                              Appearance="Appearance.Accent"/>
+                            </div>
+                        </FluentGridItem>
+                    }
+                    else
+                    {
+                        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+                            <FluentAutocomplete Required
+                                                TOption="GetBatchOrSerial"
+                                                Width="100%"
+                                                Placeholder="Batch Search"
+                                                OnOptionsSearch="OnSearchBatch"
+                                                MaximumOptionsSearch="1"
+                                                Label="Batch Code"
+                                                Virtualize="true"
+                                                Items="SerialBatchDeliveryOrders"
+                                                MaximumSelectedOptions="1"
+                                                OptionText="@(item => $"{item.SerialBatch}")"
+                                                @bind-SelectedOptions="@SelectedBatch"
+                                                ValueChanged="@(e => UpdateItemDetails(e ?? ""))"/>
+                        </FluentGridItem>
+                    }
+
                     <FluentGridItem xs="12">
-                        <FluentNumberField Label="Qty" 
-                                           @bind-Value="@InventoryCountingBatch.Qty" 
+                        <FluentNumberField Label="Qty"
+                                           @bind-Value="@InventoryCountingBatch.Qty"
                                            style="width: 100%;">
                         </FluentNumberField>
                     </FluentGridItem>
+                    @if (DisplayNoneOrShow)
+                    {
+                        <FluentGridItem xs="12">
+                            <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
+                                             Disabled="@DisplayNoneOrShow"
+                                             Label="Qty Available"
+                                             style="width: 100%;"/>
+                        </FluentGridItem>
+                    }
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@SelectedBatch.FirstOrDefault()?.Qty"
-                                         Disabled="true"
-                                         Label="Qty Available"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker @bind-Value=@InventoryCountingBatch.ExpireDate
+                                          Disabled="@DisplayNoneOrShow"
+                                          Label="Expire Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(InventoryCountingBatch.ExpireDate.HasValue ? InventoryCountingBatch.ExpireDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         Disabled="true"
-                                         Label="Expire Date"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker @bind-Value=@InventoryCountingBatch.ManufactureDate
+                                          Disabled="@DisplayNoneOrShow"
+                                          Label="Manufacturer Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(InventoryCountingBatch.ManufactureDate.HasValue ? InventoryCountingBatch.ManufactureDate.Value.ToShortDateString() : "")}")"
-                                         Disabled="true"
-                                         Label="Manufacturer Date"
-                                         style="width: 100%;"/>
-                    </FluentGridItem>
-                    <FluentGridItem xs="12">
-                        <FluentTextField Value="@($"{(InventoryCountingBatch.AdmissionDate.HasValue ? InventoryCountingBatch.AdmissionDate.Value.ToString("dd/MM/yyyy") : "")}")"
-                                         Disabled="true"
-                                         Label="Admission Date"
-                                         style="width: 100%;"/>
+                        <FluentDatePicker @bind-Value=@InventoryCountingBatch.AdmissionDate
+                                          Disabled="@DisplayNoneOrShow"
+                                          Label="Admission Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                 </FluentGrid>
             </div>
@@ -85,5 +104,5 @@
                            Position="FloatActionButton.PositionEnum.Left"
                            ColorButton="Color.Error"/>
     }
-    
+
 </FluentLayout>
