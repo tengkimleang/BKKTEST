@@ -191,6 +191,7 @@ public partial class AddInventoryCountingMobile
 
             Visible = true;
             StateHasChanged();
+            ViewModel.InventoryCountingHeader.Lines.ForEach(x => x.LineNum = x.LineNum - 1);
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
             if (ViewModel.PostResponses.ErrorCode == "")
@@ -205,6 +206,7 @@ public partial class AddInventoryCountingMobile
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
         Visible = false;
+        ViewModel.InventoryCountingHeader.Lines.ForEach(x => x.LineNum = x.LineNum + 1);
         StateHasChanged();
     }
 

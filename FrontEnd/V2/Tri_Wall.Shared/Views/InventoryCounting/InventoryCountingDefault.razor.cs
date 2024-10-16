@@ -29,7 +29,7 @@ public partial class InventoryCountingDefault
         new List<GetInventoryCountingList>();
 
     bool _visible;
-    
+
     protected override void OnInitialized()
     {
         ViewModel.Token = Token;
@@ -137,8 +137,10 @@ public partial class InventoryCountingDefault
             }
 
             _visible = true;
+            ViewModel.InventoryCountingHeader.Lines.ForEach(x => x.LineNum = x.LineNum - 1);
             await SubmitTransaction(type);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
+        ViewModel.InventoryCountingHeader.Lines.ForEach(x => x.LineNum = x.LineNum + 1);
         _visible = false;
     }
 
@@ -193,13 +195,12 @@ public partial class InventoryCountingDefault
         }
     }
 
-    Task OnSeleted(string e)
+    async Task OnSeleted(string e)
     {
         // Console.WriteLine(e);
-        ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        await ViewModel.IssueForProductionDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         _isView = true;
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
     Task OnDelete(string e)
