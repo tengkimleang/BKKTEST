@@ -13,7 +13,7 @@
 
                     <FluentGridItem xs="12" sm="4" lg="6" xl="6">
                         <div style="display:flex">
-                            <FluentTextField Value="@BatchReceiptPo.BatchCode" 
+                            <FluentTextField @bind-Value="@BatchReceiptPo.BatchCode"
                                              style="width: 100%;"
                                              AutoComplete="off"/>
                             <FluentButton IconEnd="@(new Icons.Filled.Size20.QrCode())"
@@ -32,13 +32,13 @@
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentDatePicker Value="@BatchReceiptPo.ManfectureDate"
-                                         Label="Manufacturer Date"
-                                         style="width: 100%;"/>
+                                          Label="Manufacturer Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                     <FluentGridItem xs="12">
                         <FluentDatePicker Value="@BatchReceiptPo.AdmissionDate"
-                                         Label="Admission Date"
-                                         style="width: 100%;"/>
+                                          Label="Admission Date"
+                                          style="width: 100%;"/>
                     </FluentGridItem>
                 </FluentGrid>
             </div>

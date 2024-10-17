@@ -92,6 +92,7 @@ public partial class ReturnFromComponentViewModel(ApiService apiService) : ViewM
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("ReceiptForProduction", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

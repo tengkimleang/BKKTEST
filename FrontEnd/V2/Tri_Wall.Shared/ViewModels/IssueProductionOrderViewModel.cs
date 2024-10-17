@@ -89,6 +89,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService) : View
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("IssueForProduction", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""
@@ -121,6 +122,7 @@ public partial class IssueProductionOrderViewModel(ApiService apiService) : View
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("GET_PURCHASE_ORDER", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

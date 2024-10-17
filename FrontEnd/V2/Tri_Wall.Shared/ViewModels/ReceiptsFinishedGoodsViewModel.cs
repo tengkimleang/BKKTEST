@@ -94,6 +94,7 @@ public partial class ReceiptsFinishedGoodsViewModel(ApiService apiService) //, I
         try
         {
             GetListData = (await apiService.GetListGoodReceiptPo("ReceiptForProduction", ""
+                ,Token
                 , "condition"
                 , data["dateFrom"].ToString() ?? ""
                 , data["dateTo"].ToString() ?? ""

@@ -54,10 +54,11 @@ public partial class IssueForProductionDefault
     }
 
     bool _visible;
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
         ViewModel.Token = Token;
-        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     async Task<ObservableCollection<GetBatchOrSerial>> GetSerialBatch(Dictionary<string, string> dictionary)
