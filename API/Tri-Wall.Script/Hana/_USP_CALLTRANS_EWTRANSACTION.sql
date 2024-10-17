@@ -4809,13 +4809,14 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 		END IF;
 	ELSE IF :DTYPE='JwtCheckAccount' THEN
 		IF :par1='admin' AND :par2='1234' THEN
-		
 			SELECT 
-				 'Hello' AS "Account"
-				,'123' AS "Password"
+				 :par1 AS "Account"
+				,:par2 AS "Password"
 			From DUMMY;
-		
 		END IF;
+	ELSE IF :DTYPE='LayoutPrinter' THEN
+		SELECT "Code","Name" FROM TRIWALL_TRAINKEY."@TBREPORT" WHERE "U_LAYOUTMODULE"=:par1;
+	END IF;
 	END IF;
 	END IF;
 	END IF;

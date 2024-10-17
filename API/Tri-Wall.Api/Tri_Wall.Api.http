@@ -1,4 +1,4 @@
-﻿@API_HostAddress = http://localhost:5253
+﻿@API_HostAddress = http://192.168.20.2:8082
 # @API_HostAddress = http://192.168.10.107:8429/ApiTriWall/ http://192.168.20.2:8082
 
 
@@ -16,12 +16,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsI
 
 {
     "storeName": "_USP_CALLTRANS_EWTRANSACTION",
-    "dbType": "GET_PURCHASE_ORDER",
-    "par1": "",
-    "par2": "condition",
+    "dbType": "LayoutPrinter",
+    "par1": "GOODRECEIPTPO",
+    "par2": "",
     "par3": "",
     "par4": "",
-    "par5": "1241000001"
+    "par5": ""
 }
 
 ###
