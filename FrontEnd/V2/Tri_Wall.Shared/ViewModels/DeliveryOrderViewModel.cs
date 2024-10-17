@@ -10,9 +10,7 @@ using Tri_Wall.Shared.Services;
 namespace Tri_Wall.Shared.ViewModels;
 
 public partial class DeliveryOrderViewModel(
-    ApiService apiService,
-    // ILoadMasterData loadMasterData,
-    CookieAuthenticationSateProvider authenticationSateProvider) : ViewModelBase
+    ApiService apiService) : ViewModelBase
 {
     #region Data Member
 

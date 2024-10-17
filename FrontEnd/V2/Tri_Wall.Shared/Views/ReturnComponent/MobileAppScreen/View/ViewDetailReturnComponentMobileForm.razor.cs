@@ -38,8 +38,8 @@ public partial class ViewDetailReturnComponentMobileForm
         _isShowBatchSerial = true;
         StateHasChanged();
     }
-    private async Task HandleOnMenuChanged(MenuChangeEventArgs args)
+    private Task HandleOnMenuChanged(MenuChangeEventArgs args)
     {
-        
+        return Task.CompletedTask;
     }
 }

@@ -45,7 +45,7 @@ public partial class AddItemLineComponent
     private IEnumerable<GetInventoryCountingLines> ListGetProductionOrderLines =>
         Content["item"] as IEnumerable<GetInventoryCountingLines> ?? new List<GetInventoryCountingLines>();
 
-    string? _dataGrid = "width: 1600px;overflow-x:scroll;";
+    // string? _dataGrid = "width: 1600px;overflow-x:scroll;";
 
     protected override async void OnInitialized()
     {

@@ -23,8 +23,8 @@ public partial class AddItemLineComponent
 
 
     private ReturnComponentProductionLine DataResult { get; set; } = new();
-    private List<BatchReturnComponentProduction>? _batchReturnComponent = new();
-    private List<SerialReturnComponentProduction>? _serialReturnComponent = new();
+    private List<BatchReturnComponentProduction> _batchReturnComponent = new();
+    private List<SerialReturnComponentProduction> _serialReturnComponent = new();
     private IEnumerable<GetBatchOrSerial> _serialBatchInventoryCounting = new List<GetBatchOrSerial>();
     private IEnumerable<GetProductionOrderLines> _selectedItem = Array.Empty<GetProductionOrderLines>();
     private IEnumerable<Warehouses>? _selectedWarehouses = Array.Empty<Warehouses>();
@@ -64,7 +64,7 @@ public partial class AddItemLineComponent
     private IEnumerable<GetProductionOrderLines> ListGetProductionOrderLines =>
         Content["item"] as IEnumerable<GetProductionOrderLines> ?? new List<GetProductionOrderLines>();
 
-    string? _dataGrid = "width: 1600px;overflow-x:scroll;";
+    // string? _dataGrid = "width: 1600px;overflow-x:scroll;";
 
     protected override async void OnInitialized()
     {

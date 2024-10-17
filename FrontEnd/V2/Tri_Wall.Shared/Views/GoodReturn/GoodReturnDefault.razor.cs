@@ -25,11 +25,11 @@ public partial class GoodReturnDefault
     private string _saveWord = "Save";
     string? _dataGrid = "width: 1600px;height:405px";
     bool _isView;
-    protected void OnCloseOverlay() => _visible = true;
+    // protected void OnCloseOverlay() => _visible = true;
 
     IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
-    bool _visible;
+    // bool _visible;
 
     protected override void OnInitialized()
     {
@@ -116,7 +116,7 @@ public partial class GoodReturnDefault
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            _visible = false;
+            // _visible = false;
             ViewModel.GoodReturnForm.CustomerCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.GoodReturnForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.GoodReturnForm).ConfigureAwait(false);
@@ -128,7 +128,7 @@ public partial class GoodReturnDefault
                 }
                 return;
             }
-            _visible = true;
+            // _visible = true;
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.GoodReturnForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
@@ -142,7 +142,7 @@ public partial class GoodReturnDefault
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        _visible = false;
+        // _visible = false;
     }
 
     Task OnSeleted(string e)

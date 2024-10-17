@@ -44,7 +44,7 @@ public partial class AddItemLineComponent
 
     private IEnumerable<VatGroups>? VatGroup => Content["taxPurchase"] as IEnumerable<VatGroups>;
     private IEnumerable<Warehouses>? Warehouses => Content["warehouse"] as IEnumerable<Warehouses>;
-    string? _dataGrid = "width: 1600px;overflow-x:scroll;";
+    // string? _dataGrid = "width: 1600px;overflow-x:scroll;";
 
     protected override async void OnInitialized()
     {

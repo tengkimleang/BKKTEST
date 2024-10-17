@@ -4,7 +4,7 @@ namespace Tri_Wall.Shared.Models.ReturnComponentProduction;
 
 public class ReturnComponentProductionLine
 {
-    private double _qty;
+    // private double _qty;
     public string DocNum { get; set; } = string.Empty;
     public int LineNum { get; set; }
     public int BaseLineNum { get; set; }
@@ -28,8 +28,8 @@ public class ReturnComponentProductionLine
     public string UomName { get; set; } = string.Empty;
     public string? ManageItem { get; set; }
     public int Type { get; set; }
-    public List<BatchReturnComponentProduction>? Batches { get; set; }
-    public List<SerialReturnComponentProduction>? Serials { get; set; }
+    public List<BatchReturnComponentProduction> Batches { get; set; } = new();
+    public List<SerialReturnComponentProduction> Serials { get; set; } = new();
     public List<ItemNoneReturnComponentProduction>? ItemNones { get; set; }
 }
 

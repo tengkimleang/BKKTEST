@@ -25,8 +25,8 @@ public partial class AddItemLineComponent
 
 
     private IssueProductionLine DataResult { get; set; } = new();
-    private List<BatchIssueProduction>? _batchIssueProductions = new();
-    private List<SerialIssueProduction>? _serialIssueProductions = new();
+    private List<BatchIssueProduction> _batchIssueProductions = new();
+    private List<SerialIssueProduction> _serialIssueProductions = new();
     private IEnumerable<GetBatchOrSerial> _serialBatchInventoryCounting = new List<GetBatchOrSerial>();
     private bool _isItemBatch;
     private bool _isItemSerial;
@@ -46,7 +46,7 @@ public partial class AddItemLineComponent
     private IEnumerable<GetProductionOrderLines> ListGetProductionOrderLines =>
         Content["item"] as IEnumerable<GetProductionOrderLines> ?? new List<GetProductionOrderLines>();
 
-    string? _dataGrid = "width: 1600px;overflow-x:scroll;";
+    // string? _dataGrid = "width: 1600px;overflow-x:scroll;";
 
     protected override async void OnInitialized()
     {

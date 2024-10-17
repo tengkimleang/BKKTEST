@@ -1,5 +1,4 @@
-﻿
-@if (_isBackFromBatch is false)
+﻿@if (_isBackFromBatch is false)
 {
     <SectionContent SectionName="Is-BackButton">
         <FluentButton IconEnd="@(new Icons.Regular.Size20.ArrowCircleLeft())"
@@ -13,57 +12,57 @@
     <FluentBodyContent Class="body-content" Style="overflow: auto">
     <div class="content">
 
-        <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
-            
-            <FluentGridItem xs="12" sm="4" lg="6" xl="6">
-                <FluentAutocomplete Required
-                                    TOption="GetProductionOrderLines"
-                                    Width="100%"
-                                    Placeholder="Item Master Data"
-                                    OnOptionsSearch="OnSearch"
-                                    MaximumOptionsSearch="1"
-                                    Label="Item Code"
-                                    Virtualize="true"
-                                    Items="ListGetProductionOrderLines"
-                                    MaximumSelectedOptions="1"
-                                    OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
-                                    @bind-SelectedOptions="@_selectedItem"
-                                    ValueChanged="@(UpdateItemDetails)"/>
-            </FluentGridItem>
-            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                <FluentTextField ReadOnly="true" Label="Item Name" @bind-Value="@DataResult.ItemName" style="width: 100%;">
-                </FluentTextField>
-            </FluentGridItem>
-            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                <FluentNumberField ReadOnly="true" @bind-Value="@DataResult.QtyRequire" Label="Qty Require" style="width: 100%;">
-                </FluentNumberField>
-            </FluentGridItem>
-            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                <FluentNumberField @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
-                </FluentNumberField>
-            </FluentGridItem>
-            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                <FluentTextField ReadOnly="true" @bind-Value="@DataResult.UomName" Label="Uom" style="width: 100%;">
-                </FluentTextField>
-            </FluentGridItem>
-            <FluentGridItem xs="12" sm="4" lg="3" xl="3">
-                <FluentAutocomplete Required
-                                    TOption="Warehouses"
-                                    Width="100%"
-                                    Placeholder="Warehouse"
-                                    OnOptionsSearch="OnSearchWarehouses"
-                                    MaximumOptionsSearch="1"
-                                    Label="Warehouse"
-                                    Virtualize="true"
-                                    Items="Warehouses"
-                                    OptionValue="@(i => i.Code)"
-                                    MaximumSelectedOptions="1"
-                                    OptionText="@(item => $"{item.Name}")"
-                                    @bind-SelectedOptions="@_selectedWarehouses"
-                                    ValueChanged="@(e => UpdateWarehouses(e ?? ""))"/>
-            </FluentGridItem>
+    <FluentGrid Spacing="2" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
 
-        </FluentGrid>
+        <FluentGridItem xs="12" sm="4" lg="6" xl="6">
+            <FluentAutocomplete Required
+                                TOption="GetProductionOrderLines"
+                                Width="100%"
+                                Placeholder="Item Master Data"
+                                OnOptionsSearch="OnSearch"
+                                MaximumOptionsSearch="1"
+                                Label="Item Code"
+                                Virtualize="true"
+                                Items="ListGetProductionOrderLines"
+                                MaximumSelectedOptions="1"
+                                OptionText="@(item => $"{item.ItemCode} - {item.ItemName}")"
+                                @bind-SelectedOptions="@_selectedItem"
+                                ValueChanged="@((value) => UpdateItemDetails(value ?? ""))"/>
+        </FluentGridItem>
+        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+            <FluentTextField ReadOnly="true" Label="Item Name" @bind-Value="@DataResult.ItemName" style="width: 100%;">
+            </FluentTextField>
+        </FluentGridItem>
+        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+            <FluentNumberField ReadOnly="true" @bind-Value="@DataResult.QtyRequire" Label="Qty Require" style="width: 100%;">
+            </FluentNumberField>
+        </FluentGridItem>
+        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+            <FluentNumberField @bind-Value="@DataResult.Qty" Label="Qty" style="width: 100%;">
+            </FluentNumberField>
+        </FluentGridItem>
+        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+            <FluentTextField ReadOnly="true" @bind-Value="@DataResult.UomName" Label="Uom" style="width: 100%;">
+            </FluentTextField>
+        </FluentGridItem>
+        <FluentGridItem xs="12" sm="4" lg="3" xl="3">
+            <FluentAutocomplete Required
+                                TOption="Warehouses"
+                                Width="100%"
+                                Placeholder="Warehouse"
+                                OnOptionsSearch="OnSearchWarehouses"
+                                MaximumOptionsSearch="1"
+                                Label="Warehouse"
+                                Virtualize="true"
+                                Items="Warehouses"
+                                OptionValue="@(i => i.Code)"
+                                MaximumSelectedOptions="1"
+                                OptionText="@(item => $"{item.Name}")"
+                                @bind-SelectedOptions="@_selectedWarehouses"
+                                ValueChanged="@(e => UpdateWarehouses(e ?? ""))"/>
+        </FluentGridItem>
+
+    </FluentGrid>
     @if (_isItemBatch)
     {
         <FluentButton Style="margin-top:20px" OnClick="@(e => AddLineToBatch(null))" IconEnd="@(new Icons.Regular.Size24.AddCircle().WithColor(Color.Success))">

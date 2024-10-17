@@ -111,8 +111,8 @@
                                                             Items="_serialBatchDeliveryOrders"
                                                             MaximumSelectedOptions="1"
                                                             OptionText="@(item => $"{item.SerialBatch}")"
-                                                            @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                            ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))" />
+                                                            @bind-SelectedOptions="@context!.OnSelectedBatchOrSerial"
+                                                            ValueChanged="@(e => OnSelectedSerialOrBatch(e??"", _batchReceiptPo.IndexOf(context??new()), "Batch"))" />
                                     }
                                     else
                                     {
@@ -129,7 +129,7 @@
                                 <TemplateColumn Tooltip="true" Title="Expire Date">
                                     @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                     {
-                                        <FluentTextField ReadOnly Value="@(context.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Expire Date">
+                                        <FluentTextField ReadOnly Value="@(context!.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Expire Date">
                                         </FluentTextField>
                                     }
                                     else
@@ -141,7 +141,7 @@
                                 <TemplateColumn Tooltip="true" Title="Manfecture Date">
                                     @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                     {
-                                        <FluentTextField ReadOnly Value="@(context.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Manfecture Date"></FluentTextField>
+                                        <FluentTextField ReadOnly Value="@(context!.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Manfecture Date"></FluentTextField>
                                     }
                                     else
                                     {
@@ -151,7 +151,7 @@
                                 <TemplateColumn Tooltip="true" Title="Admission Date">
                                     @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                     {
-                                        <FluentTextField ReadOnly Value="@(context.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Admission Date"></FluentTextField>
+                                        <FluentTextField ReadOnly Value="@(context!.ExpDate.HasValue ? context.ExpDate.Value.ToShortDateString() : "")" Placeholder="Admission Date"></FluentTextField>
                                     }
                                     else
                                     {
@@ -188,8 +188,8 @@
                                                         Items="_serialBatchDeliveryOrders"
                                                         MaximumSelectedOptions="1"
                                                         OptionText="@(item => $"{item.SerialBatch}")"
-                                                        @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                                        ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))" />
+                                                        @bind-SelectedOptions="@context!.OnSelectedBatchOrSerial"
+                                                        ValueChanged="@((e) => OnSelectedSerialOrBatch(e??"", _serialReceiptPo.IndexOf(context??new()), "Serial"))" />
                                 }
                                 else
                                 {
@@ -204,7 +204,7 @@
                             <TemplateColumn Tooltip="true" Title="Manfecture Code">
                                 @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                 {
-                                    <FluentTextField @bind-Value=@context.MfrNo Placeholder="MfrNo" ReadOnly></FluentTextField>
+                                    <FluentTextField @bind-Value=@context!.MfrNo Placeholder="MfrNo" ReadOnly></FluentTextField>
                                 }
                                 else
                                 {
@@ -214,7 +214,7 @@
                             <TemplateColumn Tooltip="true" Title="Expire Date">
                                 @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                 {
-                                    <FluentDatePicker @bind-Value="context.ExpDate" Placeholder="Expire Date" ReadOnly>
+                                    <FluentDatePicker @bind-Value="context!.ExpDate" Placeholder="Expire Date" ReadOnly>
                                     </FluentDatePicker>
                                 }
                                 else
@@ -226,7 +226,7 @@
                             <TemplateColumn Tooltip="true" Title="Manfecture Date">
                                 @if (context?.OnSelectedBatchOrSerial.Count() != 0)
                                 {
-                                    <FluentDatePicker @bind-Value=@context.MfrDate Placeholder="Manfecture Date" ReadOnly></FluentDatePicker>
+                                    <FluentDatePicker @bind-Value=@context!.MfrDate Placeholder="Manfecture Date" ReadOnly></FluentDatePicker>
                                 }
                                 else
                                 {

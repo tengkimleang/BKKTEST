@@ -89,7 +89,7 @@ public partial class DialogAddLineInventoryCounting
         DataResult.ItemName = firstItem?.ItemName ?? "";
         DataResult.WhsCode = firstItem?.WarehouseCode ?? "";
         DataResult.Uom = firstItem?.Uom ?? "";
-        DataResult.ManageItem = firstItem?.ItemType;
+        DataResult.ManageItem = firstItem?.ItemType??"N";
         DataResult.Qty = Convert.ToDouble(firstItem?.Qty ?? "0");
         IsItemBatch = firstItem?.ItemType == "B";
         IsItemSerial = firstItem?.ItemType == "S";

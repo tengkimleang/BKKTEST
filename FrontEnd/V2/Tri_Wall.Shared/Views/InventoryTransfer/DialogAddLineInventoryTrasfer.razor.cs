@@ -86,7 +86,7 @@ public partial class DialogAddLineInventoryTrasfer
         var firstItem = _selectedItem.FirstOrDefault();
         DataResult.ItemCode = firstItem?.ItemCode ?? "";
         DataResult.ItemName = firstItem?.ItemName ?? "";
-        DataResult.ManageItem = firstItem?.ItemType;
+        DataResult.ManageItem = firstItem?.ItemType??"N";
         _isItemBatch = firstItem?.ItemType == "B";
         _isItemSerial = firstItem?.ItemType == "S";
         if (firstItem?.ItemType != "N")

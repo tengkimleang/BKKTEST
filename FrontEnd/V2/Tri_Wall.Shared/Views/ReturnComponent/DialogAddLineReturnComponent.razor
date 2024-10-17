@@ -116,7 +116,7 @@
                                     MaximumSelectedOptions="1"
                                     OptionText="@(item => $"{item.SerialBatch}")"
                                     @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                    ValueChanged="@(e => OnSelectedSerialOrBatch(e, _batchReceiptPo.IndexOf(context), "Batch"))"/>
+                                    ValueChanged="@(e => OnSelectedSerialOrBatch(e??"", _batchReceiptPo.IndexOf(context), "Batch"))"/>
             </TemplateColumn>
             <TemplateColumn Tooltip="true" Title="Type">
                 <FluentAutocomplete Required
@@ -131,12 +131,12 @@
                                     OptionValue="@(item => item.Name)"
                                     OptionText="@(item => $"{item.Name}")"
                                     @bind-SelectedOptions="@context.OnSelectedType"
-                                    ValueChanged="@(e => OnSelectedType(e))"/>
+                                    ValueChanged="@(e => OnSelectedType(e??""))"/>
             </TemplateColumn>
-            @if (displayNoneOrShow == true)
+            @if (displayNoneOrShow)
             {
                 <TemplateColumn Tooltip="true" Title="DocNum">
-                    @if (context.OnSelectedType.FirstOrDefault().Id == 2)
+                    @if (context.OnSelectedType.FirstOrDefault()?.Id == 2)
                     {
                         <FluentAutocomplete Required
                                             TOption="GetProductionOrder"
@@ -149,11 +149,11 @@
                                             MaximumSelectedOptions="1"
                                             OptionText="@(item => $"{item.DocNum}")"
                                             @bind-SelectedOptions="@context.OnSelectedProductionOrder"
-                                            ValueChanged="@((e) => OnSelectedDocument(e, _batchReceiptPo.IndexOf(context)))"/>
+                                            ValueChanged="@((e) => OnSelectedDocument(e??"", _batchReceiptPo.IndexOf(context)))"/>
                     }
                 </TemplateColumn>
                 <TemplateColumn Tooltip="true" Title="Qty Lost">
-                    @if (context.OnSelectedType.FirstOrDefault().Id == 2)
+                    @if (context.OnSelectedType.FirstOrDefault()?.Id == 2)
                     {
                         <FluentNumberField @bind-Value=@context.QtyLost @onchange="@(e => OnChangeQtyManual(e, context))" Placeholder="Qty" TValue="double"/>
                     }
@@ -213,7 +213,7 @@
                                     MaximumSelectedOptions="1"
                                     OptionText="@(item => $"{item.SerialBatch}")"
                                     @bind-SelectedOptions="@context.OnSelectedBatchOrSerial"
-                                    ValueChanged="@((e) => OnSelectedSerialOrBatch(e, _serialReceiptPo.IndexOf(context), "Serial"))"/>
+                                    ValueChanged="@((e) => OnSelectedSerialOrBatch(e??"", _serialReceiptPo.IndexOf(context), "Serial"))"/>
             </TemplateColumn>
             <TemplateColumn Tooltip="true" Title="Qty">
                 <FluentNumberField ReadOnly @bind-Value=@context.Qty Placeholder="Qty">
@@ -260,7 +260,7 @@
                                     MaximumSelectedOptions="1"
                                     OptionText="@(item => $"{item.DocNum}")"
                                     @bind-SelectedOptions="@context.OnSelectedProductionOrder"
-                                    ValueChanged="@((e) => OnSelectedDocument(e, _productionOrderNumber.IndexOf(context)))"/>
+                                    ValueChanged="@((e) => OnSelectedDocument(e??"", _productionOrderNumber.IndexOf(context)))"/>
             </TemplateColumn>
             <TemplateColumn Tooltip="true" Title="Qty">
                 <FluentNumberField @bind-Value=@context.Qty Placeholder="Qty">

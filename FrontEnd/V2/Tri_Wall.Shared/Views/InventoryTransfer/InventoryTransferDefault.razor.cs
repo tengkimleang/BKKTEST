@@ -20,7 +20,7 @@ public partial class InventoryTransferDefault
     // public IValidator<InventoryTransferLine>? ValidatorLine { get; init; }
 
     private string _stringDisplay = "Inventory Transfer";
-    private string _fromWord = "From";
+    // private string _fromWord = "From";
     private string _saveWord = "Save";
     string? _dataGrid = "width: 1600px;height:405px";
     bool _isView = false;
@@ -85,13 +85,13 @@ public partial class InventoryTransferDefault
         {
             _stringDisplay = "";
             _dataGrid = "width: 1600px;height:205px";
-            _fromWord = "";
+            // _fromWord = "";
             _saveWord = "S-";
         }
         else
         {
             _stringDisplay = "Inventory Transfer";
-            _fromWord = "From";
+            // _fromWord = "From";
             _saveWord = "Save";
             _dataGrid = "width: 1600px;height:405px";
         }
