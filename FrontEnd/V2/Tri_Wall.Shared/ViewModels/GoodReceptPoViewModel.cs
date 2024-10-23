@@ -47,6 +47,7 @@ public partial class GoodReceptPoViewModel(ApiService apiService) : ViewModelBas
 
     [ObservableProperty] Boolean _isView;
     [ObservableProperty] string _token = string.Empty;
+    [ObservableProperty] ObservableCollection<GetLayout> _getLayouts = new();
     #endregion
 
     #region Method
@@ -191,6 +192,18 @@ public partial class GoodReceptPoViewModel(ApiService apiService) : ViewModelBas
             throw;
         }
     }
-
+    [RelayCommand]
+    async Task OnGetLayoutPrint()
+    {
+        try
+        {
+            GetLayouts = (await apiService.GetLayoutPrinter("GOODRECEIPTPO", Token)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     #endregion
 }

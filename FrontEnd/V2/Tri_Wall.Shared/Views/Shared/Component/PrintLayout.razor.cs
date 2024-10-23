@@ -16,6 +16,5 @@ public partial class PrintLayout
     public Dictionary<string, object> Content { get; set; } = default!;
 
     private ObservableCollection<GetLayout> GetListData => Content["getLayout"] as ObservableCollection<GetLayout> ?? default!;
-    
 
 }

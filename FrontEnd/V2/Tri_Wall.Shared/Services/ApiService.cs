@@ -129,7 +129,7 @@ public class ApiService(IApiService apiService)
         => apiService.PostGoodReturn(deliveryOrderHeader,token);
 
     public Task<PostResponse> PostArCreditMemo(DeliveryOrderHeader deliveryOrderHeader,string token)
-        => apiService.PostARCreditMemo(deliveryOrderHeader,token);
+        => apiService.PostArCreditMemo(deliveryOrderHeader,token);
 
     public Task<PostResponse> PostInventoryCounting(InventoryCountingHeader deliveryOrderHeader,string token)
         => apiService.PostInventoryCounting(deliveryOrderHeader,token);
@@ -154,6 +154,9 @@ public class ApiService(IApiService apiService)
 
     public Task<PostResponse> PostReceiptFinishGood(ReceiptFinishGoodHeader receiptFinishGoodHeader,string token)
         => apiService.PostReceiptFinishGood(receiptFinishGoodHeader,token);
+    public Task<ResponseData<ObservableCollection<GetLayout>>> GetLayoutPrinter(string layoutType,string token)
+        => apiService.GetLayoutPrinter(new GetRequest(
+            "_USP_CALLTRANS_EWTRANSACTION", "LayoutPrinter",layoutType),token);
 }
 
 public class ApiAuthService(IApiAuthService apiService)

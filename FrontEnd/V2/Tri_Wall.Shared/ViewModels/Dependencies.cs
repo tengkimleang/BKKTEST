@@ -74,8 +74,8 @@ public static class Dependencies
 
         services.AddScoped(sp => new HttpClient
         {
-            // BaseAddress = new Uri("http://localhost:5121"),
-            BaseAddress = new Uri("http://192.168.20.2:8081"),
+            BaseAddress = new Uri("http://localhost:5121"),
+            // BaseAddress = new Uri("http://192.168.20.2:8081"),
         });
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();
