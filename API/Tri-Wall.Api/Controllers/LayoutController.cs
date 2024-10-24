@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mime;
 using Tri_Wall.Application.Layout;
 using Tri_Wall.Domain.Common;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tri_Wall.API.Controllers;
 
@@ -16,6 +15,7 @@ public class LayoutController(
     : ApiController
 {
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Create(string docEntry, string layoutCode)
     {
         LayoutCommand command = new()
