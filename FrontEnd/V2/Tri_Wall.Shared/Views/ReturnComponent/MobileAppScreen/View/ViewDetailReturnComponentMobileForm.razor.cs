@@ -13,7 +13,7 @@ public partial class ViewDetailReturnComponentMobileForm
     [Parameter] public Func<Task> IsViewDetail { get; set; }=default!;
     [Parameter] public ObservableCollection<GoodReceiptPoLineByDocNum> GetDetailInventoryCountingLineByDocNum { get; set; } = new();
     [Parameter] public ObservableCollection<GetBatchOrSerial> GetBatchOrSerials { get; set; } = new();
-    
+    [Parameter] public ObservableCollection<GetLayout> PrintLayouts { get; set; } = new();
     bool _isShowBatchSerial=false;
     private string _itemCode=string.Empty;
     private string _lineNum=string.Empty;

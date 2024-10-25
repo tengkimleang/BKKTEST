@@ -16,13 +16,13 @@ public partial class ListSearch
     private bool _isViewDetail;
     protected override async Task OnInitializedAsync()
     {
-        StateHasChanged();
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/deliveryorder";
         ComponentAttribute.IsBackButton = true;
         ViewModel.Token = Token;
         await OnRefreshAsync();
         _isViewDetail = false;
+        StateHasChanged();
     }
     private void UpdateGridSize(GridItemSize size)
     {

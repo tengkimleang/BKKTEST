@@ -18,10 +18,8 @@
                 <div class="content-xs" id="top-nav-1">
                     <FluentGrid Spacing="1" OnBreakpointEnter="@UpdateGridSize" AdaptiveRendering="true">
                         <FluentGridItem xs="12">
-                            <FluentMenuButton Text="Print"
-                                              OnMenuChanged="HandleOnMenuChanged">
-                                <FluentMenuItem Id="0078D4">Raw Material</FluentMenuItem>
-                            </FluentMenuButton>
+                            <MobileButtonPrint DocEntry="@GoodReceiptPoHeaderDeatialByDocNum.FirstOrDefault()?.DocEntry"
+                                               GetLayouts="PrintLayouts"/>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="4" lg="3" xl="3">
                             <FluentTextField

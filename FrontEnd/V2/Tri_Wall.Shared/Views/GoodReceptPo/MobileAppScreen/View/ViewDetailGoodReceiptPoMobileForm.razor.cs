@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
+using Tri_Wall.Shared.Views.Shared.Component;
 
 namespace Tri_Wall.Shared.Views.GoodReceptPo.MobileAppScreen.View;
 
@@ -13,7 +14,7 @@ public partial class ViewDetailGoodReceiptPoMobileForm
     [Parameter] public Func<Task> IsViewDetail { get; set; }=default!;
     [Parameter] public ObservableCollection<GoodReceiptPoLineByDocNum> GoodReceiptPoLineByDocNum { get; set; } = new();
     [Parameter] public ObservableCollection<GetBatchOrSerial> GetBatchOrSerials { get; set; } = new();
-    
+    [Parameter] public ObservableCollection<GetLayout> PrintLayouts { get; set; } = new();
     bool _isShowBatchSerial=false;
     private string _itemCode=string.Empty;
     private string _lineNum=string.Empty;
@@ -37,9 +38,5 @@ public partial class ViewDetailGoodReceiptPoMobileForm
         this._lineNum = lineNum;
         _isShowBatchSerial = true;
         StateHasChanged();
-    }
-    private Task HandleOnMenuChanged(MenuChangeEventArgs args)
-    {
-        return Task.CompletedTask;
     }
 }

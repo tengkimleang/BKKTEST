@@ -88,6 +88,7 @@ public partial class ListSearch
 
     private async Task OnClickCopy(string docEntry)
     {
+        await ViewModel.GetLayoutPrintCommand.ExecuteAsync("").ConfigureAwait(false);
         await ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(docEntry).ConfigureAwait(false);
         _isViewDetail=true;
     }
