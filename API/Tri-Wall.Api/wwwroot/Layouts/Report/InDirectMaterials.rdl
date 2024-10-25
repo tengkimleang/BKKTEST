@@ -204,7 +204,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>RAW DIRECT MATERIALS</Value>
+                                      <Value>IN DIRECT MATERIALS</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
                                         <FontSize>4pt</FontSize>
@@ -281,7 +281,7 @@
                                       <Value>=Fields!ItemCode.Value</Value>
                                       <Style>
                                         <FontFamily>Free 3 of 9 Extended</FontFamily>
-                                        <FontSize>14pt</FontSize>
+                                        <FontSize>16pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -345,7 +345,7 @@
                             </Textbox>
                             <Image Name="Image3">
                               <Source>External</Source>
-                              <Value>="http://quickchart.io/chart?cht=qr&amp;chs=100x100&amp;chl="&amp;Fields!LotNo.Value</Value>
+                              <Value>="http://quickchart.io/chart?cht=qr&amp;chs=200x200&amp;chl="&amp;Fields!LotNo.Value</Value>
                               <Sizing>FitProportional</Sizing>
                               <ActionInfo>
                                 <Actions>
@@ -354,10 +354,10 @@
                                   </Action>
                                 </Actions>
                               </ActionInfo>
-                              <Top>34.60847mm</Top>
-                              <Left>22.93522mm</Left>
-                              <Height>18.15507mm</Height>
-                              <Width>14.22997mm</Width>
+                              <Top>30.85037mm</Top>
+                              <Left>19.96845mm</Left>
+                              <Height>21.91317mm</Height>
+                              <Width>17.19674mm</Width>
                               <ZIndex>8</ZIndex>
                               <Style>
                                 <Border>
@@ -449,8 +449,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>37.46774mm</Top>
-                              <Left>1.10454mm</Left>
+                              <Top>35.70385mm</Top>
+                              <Left>1.11125mm</Left>
                               <Height>3.16014mm</Height>
                               <Width>18.15164mm</Width>
                               <ZIndex>11</ZIndex>
@@ -470,7 +470,7 @@
                                       <Value>REC.DATE</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>4pt</FontSize>
+                                        <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -480,9 +480,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>47.14251mm</Top>
-                              <Left>0.93212mm</Left>
-                              <Height>3.27616mm</Height>
+                              <Top>44.95529mm</Top>
+                              <Left>1.11125mm</Left>
+                              <Height>2.4295mm</Height>
                               <Width>10.84473mm</Width>
                               <ZIndex>12</ZIndex>
                               <Style>
@@ -490,10 +490,6 @@
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox14">
@@ -506,7 +502,7 @@
                                       <Value>=Fields!RECDate.Value</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>4pt</FontSize>
+                                        <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -516,9 +512,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>47.14251mm</Top>
-                              <Left>11.77686mm</Left>
-                              <Height>3.32908mm</Height>
+                              <Top>44.95529mm</Top>
+                              <Left>11.95599mm</Left>
+                              <Height>2.48242mm</Height>
                               <Width>9.62731mm</Width>
                               <ZIndex>13</ZIndex>
                               <Style>
@@ -526,10 +522,6 @@
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox16">
@@ -542,7 +534,7 @@
                                       <Value>MFG.DATE</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>4pt</FontSize>
+                                        <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -552,20 +544,16 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>49.79555mm</Top>
-                              <Left>0.9525mm</Left>
-                              <Height>2.90575mm</Height>
-                              <Width>10.84473mm</Width>
+                              <Top>47.73756mm</Top>
+                              <Left>1.10454mm</Left>
+                              <Height>2.37658mm</Height>
+                              <Width>10.85144mm</Width>
                               <ZIndex>14</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                             <Line Name="Line2">
@@ -626,30 +614,27 @@
                                     <TextRun>
                                       <Value>=Fields!MFGDate.Value</Value>
                                       <Style>
-                                        <FontSize>4pt</FontSize>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
                                   <Style>
-                                    <TextAlign>Center</TextAlign>
+                                    <TextAlign>Left</TextAlign>
                                   </Style>
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>MFGDate</rd:DefaultName>
-                              <Top>49.79555mm</Top>
-                              <Left>11.77685mm</Left>
-                              <Height>2.90575mm</Height>
-                              <Width>9.39448mm</Width>
+                              <Top>47.73756mm</Top>
+                              <Left>11.95599mm</Left>
+                              <Height>2.37658mm</Height>
+                              <Width>9.62731mm</Width>
                               <ZIndex>17</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox8">
@@ -810,7 +795,15 @@
                                       <Value>=Fields!Quantity.Value</Value>
                                       <Style>
                                         <FontFamily>Free 3 of 9 Extended</FontFamily>
-                                        <FontSize>6pt</FontSize>
+                                        <FontSize>16pt</FontSize>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                    <TextRun>
+                                      <Value xml:space="preserve">   </Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>12pt</FontSize>
                                         <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -827,9 +820,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>40.98066mm</Top>
+                              <Top>38.86399mm</Top>
                               <Left>1.11125mm</Left>
-                              <Height>5.4563mm</Height>
+                              <Height>4.1863mm</Height>
                               <Width>21.82397mm</Width>
                               <ZIndex>23</ZIndex>
                               <Style>
@@ -876,7 +869,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>6.06044cm</Height>
+        <Height>5.83289cm</Height>
         <Style>
           <Border>
             <Style>None</Style>

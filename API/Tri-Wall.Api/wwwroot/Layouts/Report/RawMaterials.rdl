@@ -82,7 +82,7 @@
                               <Source>Embedded</Source>
                               <Value>logo</Value>
                               <Sizing>FitProportional</Sizing>
-                              <Top>1.11532mm</Top>
+                              <Top>0.8331mm</Top>
                               <Left>1.42204mm</Left>
                               <Height>4.8412mm</Height>
                               <Width>10.93611mm</Width>
@@ -177,7 +177,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox1</rd:DefaultName>
-                              <Top>0.74084mm</Top>
+                              <Top>0.45862mm</Top>
                               <Left>17.72036mm</Left>
                               <Height>4.6355mm</Height>
                               <Width>20.00583mm</Width>
@@ -214,7 +214,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox1</rd:DefaultName>
-                              <Top>3.25499mm</Top>
+                              <Top>2.97277mm</Top>
                               <Left>17.72036mm</Left>
                               <Height>4.51833mm</Height>
                               <Width>20.10372mm</Width>
@@ -876,14 +876,14 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>6.06044cm</Height>
+        <Height>5.83289cm</Height>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Body>
-      <Width>4cm</Width>
+      <Width>3.873cm</Width>
       <Page>
         <PageHeight>6cm</PageHeight>
         <PageWidth>4cm</PageWidth>
