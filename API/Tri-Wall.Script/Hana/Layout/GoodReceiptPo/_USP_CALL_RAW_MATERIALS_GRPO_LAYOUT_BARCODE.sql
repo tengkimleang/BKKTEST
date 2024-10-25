@@ -19,6 +19,7 @@ BEGIN
 			 ,C."U_Length" AS "Length"
 			 ,TO_VARCHAR(A."DocDate",'DD-MM-YYYY') AS "RECDate"
 			 ,TO_VARCHAR(E."MnfDate",'DD-MM-YYYY') AS "MFGDate"
+			 ,AA."Quantity" AS "Quantity"
 		FROM TRIWALL_TRAINKEY."OPDN" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."PDN1" AS AA ON AA."DocEntry"=A."DocEntry"
 		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS C ON C."ItemCode"=AA."ItemCode"

@@ -10,6 +10,7 @@ using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Models.ReturnComponentProduction;
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
+using Tri_Wall.Shared.Views.Shared.Component;
 
 namespace Tri_Wall.Shared.Views.ReturnComponent;
 
@@ -312,6 +313,23 @@ public partial class ReturnComponentDefault
             PreventScroll = false,
             Width = "80%",
             Height = "80%"
+        }).ConfigureAwait(false);
+    }
+    async Task OnPrintLayout()
+    {
+        await ViewModel.GetLayoutPrintCommand.ExecuteAsync(null).ConfigureAwait(false);
+        var dictionary = new Dictionary<string, object>
+        {
+            { "getLayout", ViewModel.GetLayouts },
+            { "docEntry", ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.DocEntry ?? "" },
+        };
+        await DialogService!.ShowDialogAsync<PrintLayout>(dictionary, new DialogParameters
+        {
+            Title = "Print Layout",
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = false,
+            Width = "40%",
+            Height = "45%"
         }).ConfigureAwait(false);
     }
 

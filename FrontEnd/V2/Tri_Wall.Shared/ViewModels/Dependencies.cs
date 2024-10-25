@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
@@ -19,27 +18,14 @@ public static class Dependencies
             .ConfigureHttpClient(static client =>
             {
                 client.Timeout = TimeSpan.FromMinutes(10);
-                // client.BaseAddress = new Uri("http://localhost:5253");
-                //client.BaseAddress = new Uri("http://localhost:8082");
-                client.BaseAddress = new Uri("http://192.168.20.2:8082");
+                client.BaseAddress = new Uri(ApiConstant.ApiUrl);
             }).AddStandardResilienceHandler(static options =>
                 options.Retry = new WebOrMobileHttpRetryStrategyOptions());
-
-        services.AddRefitClient<IApiAuthService>()
-            .ConfigureHttpClient(static client =>
-            {
-                client.Timeout = TimeSpan.FromMinutes(10);
-                // client.BaseAddress = new Uri("http://localhost:5253");
-                client.BaseAddress = new Uri("http://192.168.20.2:8082");
-            })
-            .AddStandardResilienceHandler(static options => options.Retry = new WebOrMobileHttpRetryStrategyOptions());
-
         #endregion
 
         #region Add ViewModel
 
         services.AddSingleton<ApiService>();
-        services.AddSingleton<ApiAuthService>();
         services.AddScoped<GoodReceptPoViewModel>();
         services.AddScoped<DeliveryOrderViewModel>();
         services.AddScoped<InventoryTransferViewModel>();
@@ -74,8 +60,7 @@ public static class Dependencies
 
         services.AddScoped(sp => new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5121"),
-            // BaseAddress = new Uri("http://192.168.20.2:8081"),
+            BaseAddress = new Uri(ApiConstant.ApiBase),
         });
         services.AddCascadingAuthenticationState();
         services.AddAuthorizationCore();

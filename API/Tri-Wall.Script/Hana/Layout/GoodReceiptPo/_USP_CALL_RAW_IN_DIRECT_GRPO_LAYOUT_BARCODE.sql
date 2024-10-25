@@ -19,7 +19,7 @@ BEGIN
 			 ,F."ItmsGrpNam" AS "ItemCategory"
 			 ,C."U_Model" AS "Model"
 			 ,D."BatchNum" AS "LotNo"
-			 ,D."Quantity" AS "Quantity"
+			 ,IFNULL(D."Quantity",AA."Quantity") AS "Quantity"
 		FROM TRIWALL_TRAINKEY."OPDN" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."PDN1" AS AA ON AA."DocEntry"=A."DocEntry"
 		LEFT JOIN TRIWALL_TRAINKEY."OITM" AS C ON C."ItemCode"=AA."ItemCode"

@@ -112,10 +112,6 @@ public interface IApiService
     [Post("/getQuery")]
     public Task<ResponseData<ObservableCollection<GetLayout>>> GetLayoutPrinter(
         [Body] GetRequest getRequest,[Authorize()] string token);
-}
-
-public interface IApiAuthService
-{
     [Post("/auth")]
     public Task<CheckUserResponse> CheckingUser(
         [Body] CreateUser getRequest);

@@ -40,6 +40,7 @@ public partial class ReceiptsFinishedGoodsViewModel(ApiService apiService) //, I
     [ObservableProperty] ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
     [ObservableProperty] ObservableCollection<GetGennerateBatchSerial> _getGenerateBatchSerial = new();
     [ObservableProperty] string _token = string.Empty;
+    [ObservableProperty] ObservableCollection<GetLayout> _getLayouts = new();
     #endregion
 
     #region Method
@@ -147,6 +148,18 @@ public partial class ReceiptsFinishedGoodsViewModel(ApiService apiService) //, I
             throw;
         }
     }
-
+    [RelayCommand]
+    async Task OnGetLayoutPrint()
+    {
+        try
+        {
+            GetLayouts = (await apiService.GetLayoutPrinter("RECEIPTFINISHEDGOODS", Token)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     #endregion
 }

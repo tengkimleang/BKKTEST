@@ -21,7 +21,7 @@ BEGIN
 			 ,C."U_Pap_Grade" AS "Grade"
 			 ,C."U_Flute" AS "FluteType"
 			 ,A."CardName" AS "Customer"
-			 ,D."Quantity" AS "Quantity"
+			 ,IFNULL(D."Quantity",AA."Quantity") AS "Quantity"
 			 ,G."UomCode" AS "UomCode"
 			 ,'' AS "RouteStage" -- need p wut to ask customer (note date 01 10 2024)
 			 ,A."DocNum" AS "OrderNo"

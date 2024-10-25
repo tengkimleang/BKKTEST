@@ -27,7 +27,7 @@ var api = app.MapGroup("api");
 // api.MapGet("/user", (ClaimsPrincipal user)
 //     => user.Claims.ToDictionary(x => x.Type, x => x.Value));
 api.MapPost("/login",
-    async (Dictionary<string, string> user, ApiAuthService apiAuthService, ClaimsPrincipal userClaimsPrincipal) =>
+    async (Dictionary<string, string> user, ApiService apiAuthService, ClaimsPrincipal userClaimsPrincipal) =>
     {
         if (user is not { Count: > 0 })
         {

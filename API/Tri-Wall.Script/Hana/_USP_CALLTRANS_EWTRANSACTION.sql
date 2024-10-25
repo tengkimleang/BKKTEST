@@ -84,6 +84,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,A."CardCode"|| ' - ' || A."CardName" AS "Vendor"
 			,IFNULL(C."Name",'') AS "ContactPerson"
 			,IFNULL(A."NumAtCard",'') AS "RefInv"
+			,A."DocEntry" AS "DocEntry"
 		FROM TRIWALL_TRAINKEY."OPDN" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
 		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"
@@ -3539,6 +3540,7 @@ USING SQLSCRIPT_STRING AS LIBRARY;
 			,A."CardCode"|| ' - ' || A."CardName" AS "Vendor"
 			,IFNULL(C."Name",'') AS "ContactPerson"
 			,IFNULL(A."NumAtCard",'') AS "RefInv"
+			,A."DocEntry" AS "DocEntry"
 		FROM TRIWALL_TRAINKEY."OIGN" AS A
 		LEFT JOIN TRIWALL_TRAINKEY."OCPR" AS C ON A."CardCode"=C."CardCode" AND A."CntctCode"=C."CntctCode"
 		LEFT JOIN TRIWALL_TRAINKEY."NNM1" AS F ON F."Series"=A."Series"

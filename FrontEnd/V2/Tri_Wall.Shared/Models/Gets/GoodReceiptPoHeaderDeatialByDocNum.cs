@@ -10,5 +10,6 @@ public record GoodReceiptPoHeaderDeatialByDocNum(
     string ContactPerson,
     string RefInv,
     string WhsFrom,
-    string WhsTo
+    string WhsTo,
+    string DocEntry
     );

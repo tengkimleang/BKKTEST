@@ -2,7 +2,6 @@
 using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Tri_Wall.Shared.Models.Gets;
@@ -20,14 +19,14 @@ public partial class GoodsReceiptPoDefault
     // [Inject]
     // public IValidator<GoodReceiptPoLine>? ValidatorLine { init; get; }
 
-    private string stringDisplay = "Good Receipt PO";
-    private string fromWord = "From";
-    private string saveWord = "Save";
-    string? dataGrid = "width: 1600px;height:405px";
-    bool isView;
+    private string _stringDisplay = "Good Receipt PO";
+    private string _fromWord = "From";
+    private string _saveWord = "Save";
+    string? _dataGrid = "width: 1600px;height:405px";
+    bool _isView;
     protected void OnCloseOverlay() => _visible = true;
 
-    IEnumerable<Vendors> selectedVendor = Array.Empty<Vendors>();
+    IEnumerable<Vendors> _selectedVendor = Array.Empty<Vendors>();
 
     bool _visible;
 
@@ -95,17 +94,17 @@ public partial class GoodsReceiptPoDefault
     {
         if (size == GridItemSize.Xs)
         {
-            stringDisplay = "";
-            dataGrid = "width: 1600px;height:205px";
-            fromWord = "";
-            saveWord = "S-";
+            _stringDisplay = "";
+            _dataGrid = "width: 1600px;height:205px";
+            _fromWord = "";
+            _saveWord = "S-";
         }
         else
         {
-            stringDisplay = "Good Receipt PO";
-            fromWord = "From";
-            saveWord = "Save";
-            dataGrid = "width: 1600px;height:405px";
+            _stringDisplay = "Good Receipt PO";
+            _fromWord = "From";
+            _saveWord = "Save";
+            _dataGrid = "width: 1600px;height:405px";
         }
     }
 
@@ -118,7 +117,7 @@ public partial class GoodsReceiptPoDefault
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            ViewModel.GoodReceiptPoForm.VendorCode = selectedVendor.FirstOrDefault()?.VendorCode ?? "";
+            ViewModel.GoodReceiptPoForm.VendorCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.GoodReceiptPoForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.GoodReceiptPoForm).ConfigureAwait(false);
             if (!result.IsValid)
@@ -136,7 +135,7 @@ public partial class GoodsReceiptPoDefault
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.PostResponses));
             if (ViewModel.PostResponses.ErrorCode == "")
             {
-                selectedVendor = new List<Vendors>();
+                _selectedVendor = new List<Vendors>();
                 ViewModel.GoodReceiptPoForm = new GoodReceiptPoHeader();
                 ToastService.ShowSuccess("Success");
                 if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
@@ -151,7 +150,7 @@ public partial class GoodsReceiptPoDefault
     {
         Console.WriteLine(e);
         ViewModel.GetGoodReceiptPoHeaderDeatialByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
-        isView = true;
+        _isView = true;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -163,7 +162,7 @@ public partial class GoodsReceiptPoDefault
     // }
     Task OnView()
     {
-        isView = false;
+        _isView = false;
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -268,7 +267,7 @@ public partial class GoodsReceiptPoDefault
         var objData = ViewModel.GetListData.FirstOrDefault(x => x.DocEntry.ToString() == e);
         ViewModel.GoodReceiptPoForm.DocDate = Convert.ToDateTime(objData?.DocDate);
         ViewModel.GoodReceiptPoForm.TaxDate = Convert.ToDateTime(objData?.TaxDate);
-        selectedVendor = ViewModel.Vendors.Where(x => x.VendorCode == objData?.VendorCode);
+        _selectedVendor = ViewModel.Vendors.Where(x => x.VendorCode == objData?.VendorCode);
         await ViewModel.GetPurchaseOrderLineByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         ViewModel.GoodReceiptPoForm.Lines = new List<GoodReceiptPoLine>();
         var i = 1;
@@ -292,13 +291,14 @@ public partial class GoodsReceiptPoDefault
 
         StateHasChanged();
     }
+
     async Task OnPrintLayout()
     {
         await ViewModel.GetLayoutPrintCommand.ExecuteAsync(null).ConfigureAwait(false);
         var dictionary = new Dictionary<string, object>
         {
             { "getLayout", ViewModel.GetLayouts },
-            // { "docEntry","" },
+            { "docEntry", ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.DocEntry ?? "" },
         };
         await DialogService!.ShowDialogAsync<PrintLayout>(dictionary, new DialogParameters
         {

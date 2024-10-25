@@ -30,7 +30,8 @@
                                             ResizableColumns="true"
                                             GridTemplateColumns="2fr 3fr ">
                                 <TemplateColumn Tooltip="true" Title="Action">
-                                    <FluentButton IconEnd="@(new Icons.Regular.Size24.ApprovalsApp())">
+                                    <FluentButton OnClick="@(async () => await OnPrint(context.Code))"
+                                                  IconEnd="@(new Icons.Regular.Size24.ApprovalsApp())">
                                         Print
                                     </FluentButton>
                                 </TemplateColumn>

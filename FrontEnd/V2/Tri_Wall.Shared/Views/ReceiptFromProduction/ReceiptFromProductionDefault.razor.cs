@@ -12,6 +12,7 @@ using Tri_Wall.Shared.Models.IssueForProduction;
 using Tri_Wall.Shared.Models.ReceiptFinishGood;
 using Tri_Wall.Shared.Services;
 using Tri_Wall.Shared.Views.GoodReceptPo;
+using Tri_Wall.Shared.Views.Shared.Component;
 
 namespace Tri_Wall.Shared.Views.ReceiptFromProduction;
 
@@ -172,12 +173,12 @@ public partial class ReceiptFromProductionDefault
         _visible = false;
     }
 
-    Task OnSeleted(string e)
+    async Task OnSeleted(string e)
     {
-        ViewModel.IssueForProductionDetailByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+        await ViewModel.IssueForProductionDetailByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         _isView = true;
         StateHasChanged();
-        return Task.CompletedTask;
+        // return Task.CompletedTask;
     }
 
     // Task OnDelete(string e)
@@ -245,6 +246,23 @@ public partial class ReceiptFromProductionDefault
             PreventScroll = false,
             Width = "80%",
             Height = "80%"
+        }).ConfigureAwait(false);
+    }
+    async Task OnPrintLayout()
+    {
+        await ViewModel.GetLayoutPrintCommand.ExecuteAsync(null).ConfigureAwait(false);
+        var dictionary = new Dictionary<string, object>
+        {
+            { "getLayout", ViewModel.GetLayouts },
+            { "docEntry", ViewModel.GoodReceiptPoHeaderDetailByDocNums.FirstOrDefault()?.DocEntry ?? "" },
+        };
+        await DialogService!.ShowDialogAsync<PrintLayout>(dictionary, new DialogParameters
+        {
+            Title = "Print Layout",
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = false,
+            Width = "40%",
+            Height = "45%"
         }).ConfigureAwait(false);
     }
 }

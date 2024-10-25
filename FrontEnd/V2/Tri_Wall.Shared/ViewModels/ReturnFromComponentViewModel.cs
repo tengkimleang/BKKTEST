@@ -39,6 +39,7 @@ public partial class ReturnFromComponentViewModel(ApiService apiService) : ViewM
     [ObservableProperty]
     ObservableCollection<GoodReceiptPoLineByDocNum> _goodReceiptPoLineByDocNums = new();
     [ObservableProperty] string _token = string.Empty;
+    [ObservableProperty] ObservableCollection<GetLayout> _getLayouts = new();
     #endregion 
 
     #region Method
@@ -145,6 +146,19 @@ public partial class ReturnFromComponentViewModel(ApiService apiService) : ViewM
             docEntry,Token)).Data ?? new();
         GetBatchOrSerials = (await apiService.GetBatchOrSerial(docEntry,
             "GetBatchSerialReceiptForProduction",Token)).Data ?? new();
+    }
+    [RelayCommand]
+    async Task OnGetLayoutPrint()
+    {
+        try
+        {
+            GetLayouts = (await apiService.GetLayoutPrinter("RETURNCOMPONENT", Token)).Data ?? new();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
     #endregion
 }

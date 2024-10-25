@@ -26,9 +26,9 @@ BEGIN
 			 ,D."Quantity" AS "Quantity"
 			 ,G."UomCode" AS "UomCode"
 			 ,'' AS "RefNo"
-			 ,C."U_Model" AS "Model"
-			 ,C."U_Cust_PN" AS "CustomerPN"
-			 ,'' AS "OrderNo"
+			 --,C."U_Model" AS "Model"
+			-- ,C."U_Cust_PN" AS "CustomerPN"
+			-- ,'' AS "OrderNo"
 			 ,H."RefSONo" AS "RefSO"
 			 ,H."ProductionNumber" AS "OrderNo"
 			 ,'' AS "RouteStage" -- P wut need to ask customer about this Routestage
