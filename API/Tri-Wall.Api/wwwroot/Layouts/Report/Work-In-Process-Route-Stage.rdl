@@ -72,12 +72,24 @@
           <DataField>UomCode</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
-        <Field Name="RouteStage">
-          <DataField>RouteStage</DataField>
+        <Field Name="RefSO">
+          <DataField>RefSO</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="Model">
+          <DataField>Model</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="CustomerPN">
+          <DataField>CustomerPN</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
         <Field Name="OrderNo">
           <DataField>OrderNo</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="RouteStage">
+          <DataField>RouteStage</DataField>
           <rd:UserDefined>true</rd:UserDefined>
         </Field>
       </Fields>
@@ -96,7 +108,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>58.32894mm</Height>
+                  <Height>58.21433mm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -203,7 +215,7 @@
                               <rd:DefaultName>Textbox1</rd:DefaultName>
                               <Top>0.74084mm</Top>
                               <Left>17.72036mm</Left>
-                              <Height>3.53483mm</Height>
+                              <Height>4.6355mm</Height>
                               <Width>20.00583mm</Width>
                               <ZIndex>3</ZIndex>
                               <Style>
@@ -211,6 +223,10 @@
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Middle</VerticalAlign>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox3">
@@ -220,7 +236,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>MATERIALS  PHASE2</Value>
+                                      <Value>WORK IN PROCESS</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
                                         <FontSize>6pt</FontSize>
@@ -234,16 +250,16 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox1</rd:DefaultName>
-                              <Top>4.44032mm</Top>
-                              <Left>16.58643mm</Left>
-                              <Height>4.94166mm</Height>
-                              <Width>22.03141mm</Width>
+                              <Top>3.25499mm</Top>
+                              <Left>16.47157mm</Left>
+                              <Height>4.51833mm</Height>
+                              <Width>22.14627mm</Width>
                               <ZIndex>4</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                                <VerticalAlign>Top</VerticalAlign>
+                                <VerticalAlign>Middle</VerticalAlign>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox4">
@@ -269,7 +285,7 @@
                               <rd:DefaultName>Textbox1</rd:DefaultName>
                               <Top>7.36763mm</Top>
                               <Left>1.18014mm</Left>
-                              <Height>1.92037mm</Height>
+                              <Height>1.52349mm</Height>
                               <Width>12.1133mm</Width>
                               <ZIndex>5</ZIndex>
                               <Style>
@@ -299,7 +315,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>ItemCode</rd:DefaultName>
-                              <Top>9.51454mm</Top>
+                              <Top>9.05152mm</Top>
                               <Left>1.19733mm</Left>
                               <Height>4.46542mm</Height>
                               <Width>36.62675mm</Width>
@@ -322,9 +338,9 @@
                                   </Action>
                                 </Actions>
                               </ActionInfo>
-                              <Top>36.5069mm</Top>
-                              <Left>24.79563mm</Left>
-                              <Height>16.84363mm</Height>
+                              <Top>42.07543mm</Top>
+                              <Left>24.81679mm</Left>
+                              <Height>16.06834mm</Height>
                               <Width>13.04564mm</Width>
                               <ZIndex>7</ZIndex>
                               <Style>
@@ -343,7 +359,7 @@
                                       <Value>PRODUCT NAME</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>3pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -351,9 +367,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>16.77976mm</Top>
+                              <Top>16.25059mm</Top>
                               <Left>1.18014mm</Left>
-                              <Height>2.31348mm</Height>
+                              <Height>1.85046mm</Height>
                               <Width>20.06679mm</Width>
                               <ZIndex>8</ZIndex>
                               <Style>
@@ -372,7 +388,7 @@
                                       <Value>Customer</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>3pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -380,9 +396,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>31.35078mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.32859mm</Height>
+                              <Top>37.75412mm</Top>
+                              <Left>1.16692mm</Left>
+                              <Height>1.66713mm</Height>
                               <Width>18.13977mm</Width>
                               <ZIndex>9</ZIndex>
                               <Style>
@@ -398,7 +414,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>ORDER NO</Value>
+                                      <Value>REC.DATE</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
                                         <FontSize>4pt</FontSize>
@@ -411,10 +427,10 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>46.01085mm</Top>
-                              <Left>1.15976mm</Left>
-                              <Height>2.29342mm</Height>
-                              <Width>10.84473mm</Width>
+                              <Top>51.24506mm</Top>
+                              <Left>1.16692mm</Left>
+                              <Height>2.0112mm</Height>
+                              <Width>10.90646mm</Width>
                               <ZIndex>10</ZIndex>
                               <Style>
                                 <Border>
@@ -430,7 +446,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!OrderNo.Value</Value>
+                                      <Value>=Fields!RECDate.Value</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
                                         <FontSize>4pt</FontSize>
@@ -443,9 +459,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>46.01085mm</Top>
-                              <Left>12.0045mm</Left>
-                              <Height>2.34634mm</Height>
+                              <Top>51.17451mm</Top>
+                              <Left>12.07339mm</Left>
+                              <Height>2.06412mm</Height>
                               <Width>9.62731mm</Width>
                               <ZIndex>11</ZIndex>
                               <Style>
@@ -475,61 +491,16 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>48.48712mm</Top>
-                              <Left>1.18014mm</Left>
-                              <Height>2.37658mm</Height>
-                              <Width>10.84473mm</Width>
+                              <Top>53.36855mm</Top>
+                              <Left>1.17847mm</Left>
+                              <Height>2.09436mm</Height>
+                              <Width>10.91529mm</Width>
                               <ZIndex>12</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
                                 <VerticalAlign>Top</VerticalAlign>
-                              </Style>
-                            </Textbox>
-                            <Line Name="Line2">
-                              <Top>54.30993mm</Top>
-                              <Left>1.24387mm</Left>
-                              <Height>0mm</Height>
-                              <Width>36.14213mm</Width>
-                              <ZIndex>13</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>Solid</Style>
-                                </Border>
-                              </Style>
-                            </Line>
-                            <Textbox Name="Textbox17">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>TRI-WALL PACKAGE (THAI) LDT.</Value>
-                                      <Style>
-                                        <FontFamily>Arial</FontFamily>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>54.49123mm</Top>
-                              <Left>1.11125mm</Left>
-                              <Height>3.3177mm</Height>
-                              <Width>36.05394mm</Width>
-                              <ZIndex>14</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
                               </Style>
                             </Textbox>
                             <Textbox Name="MFGDate">
@@ -541,6 +512,7 @@
                                     <TextRun>
                                       <Value>=Fields!MFGDate.Value</Value>
                                       <Style>
+                                        <FontFamily>Arial</FontFamily>
                                         <FontSize>4pt</FontSize>
                                       </Style>
                                     </TextRun>
@@ -551,11 +523,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>MFGDate</rd:DefaultName>
-                              <Top>48.48712mm</Top>
-                              <Left>12.00449mm</Left>
-                              <Height>2.37658mm</Height>
+                              <Top>53.36855mm</Top>
+                              <Left>12.07338mm</Left>
+                              <Height>2.09436mm</Height>
                               <Width>9.62732mm</Width>
-                              <ZIndex>15</ZIndex>
+                              <ZIndex>13</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -573,7 +545,7 @@
                                       <Value>PRODUCT SIZE</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>3pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -583,11 +555,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>21.83984mm</Top>
+                              <Top>20.9138mm</Top>
                               <Left>1.19733mm</Left>
-                              <Height>2.24796mm</Height>
-                              <Width>20.06679mm</Width>
-                              <ZIndex>16</ZIndex>
+                              <Height>1.56446mm</Height>
+                              <Width>22.96686mm</Width>
+                              <ZIndex>14</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -605,7 +577,7 @@
                                       <Value>=Fields!ItemCode.Value</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>6pt</FontSize>
+                                        <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -615,11 +587,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>13.97996mm</Top>
+                              <Top>13.58308mm</Top>
                               <Left>1.19733mm</Left>
-                              <Height>2.7998mm</Height>
+                              <Height>2.53522mm</Height>
                               <Width>36.64394mm</Width>
-                              <ZIndex>17</ZIndex>
+                              <ZIndex>15</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -646,11 +618,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>19.24918mm</Top>
+                              <Top>18.25699mm</Top>
                               <Left>1.19733mm</Left>
                               <Height>2.59066mm</Height>
                               <Width>36.64394mm</Width>
-                              <ZIndex>18</ZIndex>
+                              <ZIndex>16</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -675,143 +647,15 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>24.08781mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.76705mm</Height>
-                              <Width>36.69048mm</Width>
-                              <ZIndex>19</ZIndex>
+                              <Top>22.6326mm</Top>
+                              <Left>1.19733mm</Left>
+                              <Height>2.50247mm</Height>
+                              <Width>36.64394mm</Width>
+                              <ZIndex>17</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox12">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>GRADE</Value>
-                                      <Style>
-                                        <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>26.85486mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.24796mm</Height>
-                              <Width>18.12258mm</Width>
-                              <ZIndex>20</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Top</VerticalAlign>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox15">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>FLUTE TYPE</Value>
-                                      <Style>
-                                        <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>26.85486mm</Top>
-                              <Left>19.79962mm</Left>
-                              <Height>2.24796mm</Height>
-                              <Width>18.05885mm</Width>
-                              <ZIndex>21</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Top</VerticalAlign>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox20">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!Grade.Value</Value>
-                                      <Style>
-                                        <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>29.10282mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.24796mm</Height>
-                              <Width>18.10539mm</Width>
-                              <ZIndex>22</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Top</VerticalAlign>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox21">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!FluteType.Value</Value>
-                                      <Style>
-                                        <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>29.10282mm</Top>
-                              <Left>19.78242mm</Left>
-                              <Height>2.24796mm</Height>
-                              <Width>18.05885mm</Width>
-                              <ZIndex>23</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Top</VerticalAlign>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox22">
@@ -834,11 +678,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>33.67938mm</Top>
-                              <Left>1.15079mm</Left>
+                              <Top>39.55356mm</Top>
+                              <Left>1.16692mm</Left>
                               <Height>2.47475mm</Height>
                               <Width>36.70767mm</Width>
-                              <ZIndex>24</ZIndex>
+                              <ZIndex>18</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -866,11 +710,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>50.97395mm</Top>
-                              <Left>1.18014mm</Left>
-                              <Height>2.37658mm</Height>
-                              <Width>10.84473mm</Width>
-                              <ZIndex>25</ZIndex>
+                              <Top>55.50261mm</Top>
+                              <Left>1.17847mm</Left>
+                              <Height>2.09436mm</Height>
+                              <Width>10.91529mm</Width>
+                              <ZIndex>19</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -898,11 +742,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>50.97395mm</Top>
-                              <Left>12.00449mm</Left>
-                              <Height>2.37658mm</Height>
+                              <Top>55.50261mm</Top>
+                              <Left>12.07338mm</Left>
+                              <Height>2.09436mm</Height>
                               <Width>9.62732mm</Width>
-                              <ZIndex>26</ZIndex>
+                              <ZIndex>20</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -920,7 +764,7 @@
                                       <Value>QUANTITY</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>3pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -928,11 +772,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>40.95495mm</Top>
-                              <Left>1.15976mm</Left>
-                              <Height>2.12965mm</Height>
+                              <Top>42.07543mm</Top>
+                              <Left>1.13241mm</Left>
+                              <Height>1.66663mm</Height>
                               <Width>18.07604mm</Width>
-                              <ZIndex>27</ZIndex>
+                              <ZIndex>21</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -958,16 +802,16 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>43.08461mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.74699mm</Height>
-                              <Width>10.87408mm</Width>
-                              <ZIndex>28</ZIndex>
+                              <Top>43.87435mm</Top>
+                              <Left>1.13241mm</Left>
+                              <Height>2.88945mm</Height>
+                              <Width>10.89246mm</Width>
+                              <ZIndex>22</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
+                                <VerticalAlign>Top</VerticalAlign>
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox26">
@@ -1004,11 +848,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>43.08461mm</Top>
-                              <Left>12.00449mm</Left>
-                              <Height>2.74699mm</Height>
-                              <Width>12.24864mm</Width>
-                              <ZIndex>29</ZIndex>
+                              <Top>43.87435mm</Top>
+                              <Left>12.37765mm</Left>
+                              <Height>2.88945mm</Height>
+                              <Width>11.8571mm</Width>
+                              <ZIndex>23</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1023,29 +867,352 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>Route Stage</Value>
+                                      <Value>REF. S/O NO</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>4pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>49.11039mm</Top>
+                              <Left>1.18014mm</Left>
+                              <Height>2.0112mm</Height>
+                              <Width>10.84473mm</Width>
+                              <ZIndex>24</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox28">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!RefSO.Value</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>4pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>49.11039mm</Top>
+                              <Left>12.07339mm</Left>
+                              <Height>1.99356mm</Height>
+                              <Width>9.62731mm</Width>
+                              <ZIndex>25</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox29">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>PAPAER GRADE</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>3pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>29.35167mm</Top>
+                              <Left>1.13074mm</Left>
+                              <Height>1.71879mm</Height>
+                              <Width>18.12258mm</Width>
+                              <ZIndex>26</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox30">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>FLUTE TYPE</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>3pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>29.35167mm</Top>
+                              <Left>19.83182mm</Left>
+                              <Height>1.71879mm</Height>
+                              <Width>17.96005mm</Width>
+                              <ZIndex>27</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox31">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Grade.Value</Value>
                                       <Style>
                                         <FontFamily>Arial</FontFamily>
                                         <FontSize>5pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
-                                  <Style />
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>36.21275mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.32859mm</Height>
-                              <Width>18.13977mm</Width>
+                              <Top>31.16627mm</Top>
+                              <Left>1.13074mm</Left>
+                              <Height>2.24796mm</Height>
+                              <Width>18.10539mm</Width>
+                              <ZIndex>28</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox32">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!FluteType.Value</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>5pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>31.16627mm</Top>
+                              <Left>19.83182mm</Left>
+                              <Height>2.24796mm</Height>
+                              <Width>18.00945mm</Width>
+                              <ZIndex>29</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox33">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>MODEL</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>3pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>25.16207mm</Top>
+                              <Left>1.13074mm</Left>
+                              <Height>1.71879mm</Height>
+                              <Width>18.10539mm</Width>
                               <ZIndex>30</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
+                                <VerticalAlign>Top</VerticalAlign>
                               </Style>
                             </Textbox>
-                            <Textbox Name="Textbox28">
+                            <Textbox Name="Textbox34">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>CUSTOMER P/N</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>3pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>25.16207mm</Top>
+                              <Left>19.83182mm</Left>
+                              <Height>1.71879mm</Height>
+                              <Width>18.00945mm</Width>
+                              <ZIndex>31</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox35">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Model.Value</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>5pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>26.97667mm</Top>
+                              <Left>1.13074mm</Left>
+                              <Height>2.24796mm</Height>
+                              <Width>18.12258mm</Width>
+                              <ZIndex>32</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox36">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!CustomerPN.Value</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>5pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>26.97667mm</Top>
+                              <Left>19.79705mm</Left>
+                              <Height>2.24796mm</Height>
+                              <Width>17.99482mm</Width>
+                              <ZIndex>33</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox37">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Route Stage</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>3pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>33.55045mm</Top>
+                              <Left>1.14793mm</Left>
+                              <Height>1.71879mm</Height>
+                              <Width>18.12258mm</Width>
+                              <ZIndex>34</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox38">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -1059,19 +1226,86 @@
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
-                                  <Style />
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox7</rd:DefaultName>
-                              <Top>38.54134mm</Top>
-                              <Left>1.15079mm</Left>
-                              <Height>2.32859mm</Height>
-                              <Width>23.29207mm</Width>
-                              <ZIndex>31</ZIndex>
+                              <Top>35.50616mm</Top>
+                              <Left>1.14793mm</Left>
+                              <Height>2.24796mm</Height>
+                              <Width>36.57826mm</Width>
+                              <ZIndex>35</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox39">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>ORDER NO</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>4pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>47.11658mm</Top>
+                              <Left>1.17847mm</Left>
+                              <Height>2.0112mm</Height>
+                              <Width>10.8464mm</Width>
+                              <ZIndex>36</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Top</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                            <Textbox Name="Textbox40">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>order</Value>
+                                      <Style>
+                                        <FontFamily>Arial</FontFamily>
+                                        <FontSize>4pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Left</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox7</rd:DefaultName>
+                              <Top>47.11658mm</Top>
+                              <Left>12.07339mm</Left>
+                              <Height>1.99356mm</Height>
+                              <Width>9.62731mm</Width>
+                              <ZIndex>37</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Middle</VerticalAlign>
                               </Style>
                             </Textbox>
                           </ReportItems>
@@ -1103,7 +1337,7 @@
             <DataSetName>Header</DataSetName>
             <Top>0mm</Top>
             <Left>0.5355mm</Left>
-            <Height>58.32894mm</Height>
+            <Height>58.21433mm</Height>
             <Width>38.61784mm</Width>
             <Style>
               <Border>
@@ -1112,7 +1346,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>5.84348cm</Height>
+        <Height>5.87523cm</Height>
         <Style>
           <Border>
             <Style>None</Style>
