@@ -57,6 +57,8 @@ public partial class AddItemLineComponent
             _selectedItem = Item.Where(i => i.ItemCode == DataResult.ItemCode);
             _selectedWarehouses = Warehouses?.Where(i => i.Code == DataResult.WarehouseCode);
             await UpdateItemDetails(DataResult.ItemCode);
+            if (string.IsNullOrEmpty(DataResult.ItemCode))
+                DataResult.VatCode = VatGroup?.FirstOrDefault()?.Code ?? "";
         }
     }
 

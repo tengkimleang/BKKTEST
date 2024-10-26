@@ -8,7 +8,6 @@ public partial class GoodReturn
     private bool _isXs = false;
     bool _visible = false;
     private bool _init = false;
-    protected void OnCloseOverlay() => _visible = true;
     private void UpdateGridSize(GridItemSize size)
     {
         _init=true;

@@ -29,7 +29,7 @@ public partial class ListGoodReceiptPo
     
     private IEnumerable<GetListData> _goodReceiptPoHeaders= new List<GetListData>();
     
-    PaginationState pagination = new();
+    PaginationState pagination = new() { ItemsPerPage = 10};
 
     private DateTime? dateFrom;
     private DateTime? dateTo;
@@ -37,9 +37,10 @@ public partial class ListGoodReceiptPo
 
     protected override async Task OnInitializedAsync()
     {
-        await pagination.SetTotalItemCountAsync(Convert.ToInt32(TotalItemCounts.FirstOrDefault()?.AllItem)).ConfigureAwait(false);
+        int totalCount = Convert.ToInt32(TotalItemCounts.FirstOrDefault()?.AllItem ?? "0");
+        await pagination.SetTotalItemCountAsync(totalCount).ConfigureAwait(false);
         await pagination.SetCurrentPageIndexAsync(0).ConfigureAwait(false);
-        _goodReceiptPoHeaders =await GetListData(0);
+        _goodReceiptPoHeaders = await GetListData(0);
     }
 
     private async Task LoadData(int page)

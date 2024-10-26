@@ -29,13 +29,13 @@ public partial class AddGoodsReceiptPoMobile
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         ComponentAttribute.Title = "List Search";
         ComponentAttribute.Path = "/goodreceptpoform";
         ComponentAttribute.IsBackButton = true;
         ViewModel.Token = Token;
-        ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
+        await ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -116,7 +116,7 @@ public partial class GoodReturnDefault
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
         {
-            // _visible = false;
+            Visible = false;
             ViewModel.GoodReturnForm.CustomerCode = _selectedVendor.FirstOrDefault()?.VendorCode ?? "";
             ViewModel.GoodReturnForm.DocDate = DateTime.Now;
             var result = await Validator!.ValidateAsync(ViewModel.GoodReturnForm).ConfigureAwait(false);
@@ -128,7 +128,7 @@ public partial class GoodReturnDefault
                 }
                 return;
             }
-            // _visible = true;
+            Visible = true;
             Console.WriteLine(JsonSerializer.Serialize(ViewModel.GoodReturnForm));
             await ViewModel.SubmitCommand.ExecuteAsync(null).ConfigureAwait(false);
 
@@ -142,7 +142,7 @@ public partial class GoodReturnDefault
             else
                 ToastService.ShowError(ViewModel.PostResponses.ErrorMsg);
         }, ViewModel.PostResponses, ToastService).ConfigureAwait(false);
-        // _visible = false;
+        Visible = false;
     }
 
     Task OnSeleted(string e)
@@ -318,4 +318,5 @@ public partial class GoodReturnDefault
 
         StateHasChanged();
     }
+    protected void OnCloseOverlay() => Visible = true;
 }

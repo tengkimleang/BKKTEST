@@ -199,7 +199,7 @@ public partial class DialogAddLineGoodReturn
     private void UpdateGridSize(GridItemSize size)
     {
         dataGrid = size == GridItemSize.Xs
-            ? "width: 1600px;height:205px"
-            : "width: 1600px;overflow-x:scroll;max-height: 400px;";
+            ? "width: 1600px;height:200px"
+            : "width: 1600px;overflow-x:scroll;height: 400px;";
     }
 }

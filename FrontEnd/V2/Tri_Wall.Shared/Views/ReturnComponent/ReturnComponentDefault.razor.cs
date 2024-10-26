@@ -240,12 +240,11 @@ public partial class ReturnComponentDefault
         _visible = false;
     }
 
-    Task OnSeleted(string e)
+    async Task OnSeleted(string e)
     {
-        ViewModel.IssueForProductionDetailByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
+       await ViewModel.IssueForProductionDetailByDocNumCommand.ExecuteAsync(e).ConfigureAwait(false);
         _isView = true;
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
     // Task OnDelete(string e)
