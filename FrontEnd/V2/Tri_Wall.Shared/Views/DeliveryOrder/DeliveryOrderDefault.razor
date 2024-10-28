@@ -20,11 +20,11 @@
                 Search
             </FluentButton>
             &nbsp;&nbsp;
-            <FluentButton OnClick="(e) => OnSaveTransaction()" IconEnd="@(new Icons.Filled.Size24.Save())">
+            <FluentButton OnClick="HandleSaveTransactionClick" IconEnd="@(new Icons.Filled.Size24.Save())">
                 Save
             </FluentButton>
             &nbsp;&nbsp;
-            <FluentButton OnClick="@((e) => OnSaveTransaction("print"))" IconEnd="@(new Icons.Filled.Size24.PrintAdd())">
+            <FluentButton OnClick="PrintTransaction" IconEnd="@(new Icons.Filled.Size24.PrintAdd())">
                 @_saveWord Print
             </FluentButton>
         </FluentHeader>
@@ -85,7 +85,7 @@
                             <FluentTextField Label="Ref Inv" @bind-Value="ViewModel.DeliveryOrderForm.Remarks" style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
-                            <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="async (e) => await OpenDialogAsync(new()).ConfigureAwait(false)">
+                            <FluentButton IconEnd="@new Icons.Filled.Size24.Add()" OnClick="OnAddLineClickedAsync">
                                 Add Line
                             </FluentButton>
                         </FluentGridItem>
@@ -98,10 +98,10 @@
                                                 Items="ViewModel.DeliveryOrderForm.Lines?.AsQueryable()">
                                     <PropertyColumn Title="No ." Property="@(c => c.LineNum)" Sortable="true" Tooltip="true"/>
                                     <TemplateColumn Tooltip="true" Title="Action">
-                                        <FluentButton Style="color:#BC2F32" OnClick="(e) => DeleteLine(ViewModel.DeliveryOrderForm.Lines!.IndexOf(context))" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
+                                        <FluentButton Style="color:#BC2F32" OnClick="() => OnDeleteButtonClick(context)" IconEnd="@(new Icons.Regular.Size24.Delete().WithColor(Color.Error))">
                                             Delete
                                         </FluentButton>
-                                        <FluentButton OnClick="(e) => OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Edit().WithColor(Color.Info))">
+                                        <FluentButton OnClick="() => OpenDialogAsync(context)" IconEnd="@(new Icons.Regular.Size24.Edit().WithColor(Color.Info))">
                                             Edit
                                         </FluentButton>
                                     </TemplateColumn>

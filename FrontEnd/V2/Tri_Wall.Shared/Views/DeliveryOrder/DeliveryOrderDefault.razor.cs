@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Components.Web;
 using Tri_Wall.Shared.Models.DeliveryOrder;
 using Tri_Wall.Shared.Models.Gets;
 using Tri_Wall.Shared.Services;
@@ -34,6 +35,27 @@ public partial class DeliveryOrderDefault
         ViewModel.LoadingCommand.ExecuteAsync(null).ConfigureAwait(false);
     }
 
+    private async Task OnAddLineClickedAsync(MouseEventArgs e)
+    {
+        await OpenDialogAsync(new()).ConfigureAwait(false);
+    }
+    private async Task HandleSaveTransactionClick()
+    {
+        await OnSaveTransaction().ConfigureAwait(false);
+    }
+    private void OnDeleteButtonClick(DeliveryOrderLine line)
+    {
+        int index = ViewModel.DeliveryOrderForm.Lines!.IndexOf(line);
+        DeleteLine(index);
+    }
+    private void DeleteLine(int index)
+    {
+        ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
+    }
+    async Task PrintTransaction(MouseEventArgs e)
+    {
+        await OnSaveTransaction("print").ConfigureAwait(false);
+    }
     async Task OpenDialogAsync(DeliveryOrderLine deliveryOrderLine)
     {
         var dictionary = new Dictionary<string, object>
@@ -104,11 +126,7 @@ public partial class DeliveryOrderDefault
         }
     }
 
-    private void DeleteLine(int index)
-    {
-        ViewModel.DeliveryOrderForm.Lines!.RemoveAt(index);
-    }
-
+    
     async Task OnSaveTransaction(string type = "")
     {
         await ErrorHandlingHelper.ExecuteWithHandlingAsync(async () =>
