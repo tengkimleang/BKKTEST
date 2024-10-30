@@ -216,7 +216,7 @@ public partial class ReturnComponentDefault
                 SelectedProductionOrder = new List<GetProductionOrder>();
                 ViewModel.ReceiptFromProductionOrderForm = new ReturnComponentProductionHeader();
                 ToastService.ShowSuccess("Success");
-                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry.ToString());
+                if (type == "print") await OnSeleted(ViewModel.PostResponses.DocEntry);
                 _visible = false;
                 ViewModel.IssueProductionLine = new();
                 ViewModel.GetProductionOrderLines = new();
@@ -363,6 +363,7 @@ public partial class ReturnComponentDefault
                         Price = line.Price,
                         WhsCode = line.WhsCode,
                         UomName = "Manual None",
+                        ManageItem = "N"
                     });
                 }
             }
@@ -408,7 +409,6 @@ public partial class ReturnComponentDefault
 
     void ProcessItemBatch(ReturnComponentProductionLine line)
     {
-        if (line.Batches != null)
         {
             var tmpManual = new List<ReturnComponentProductionLine>();
 
@@ -515,7 +515,7 @@ public partial class ReturnComponentDefault
                         {
                             x.Qty = Math.Round((Convert.ToDouble(x.QtyPlan) / totalAutoQty) * lineAuto.Qty,
                                 6);
-                            x.Batches?.ForEach(y =>
+                            x.Batches.ForEach(y =>
                                 y.Qty = Math.Round((Convert.ToDouble(x.QtyPlan) / totalAutoQty) * lineAuto.Qty, 6));
                         });
                     tmpManual.Where(z => z is { QtyLost: 0, UomName: "Manual Batch" })
@@ -540,25 +540,23 @@ public partial class ReturnComponentDefault
 
     void ProcessItemSerial(ReturnComponentProductionLine line)
     {
-        if (line.Serials != null)
+        foreach (var lineManual in line.Serials)
         {
-            foreach (var lineManual in line.Serials)
+            ViewModel.ReceiptFromProductionOrderForm.Lines.Add(new ReturnComponentProductionLine
             {
-                ViewModel.ReceiptFromProductionOrderForm.Lines.Add(new ReturnComponentProductionLine
-                {
-                    DocNum = line.DocNum,
-                    BaseLineNum = line.BaseLineNum,
-                    ItemCode = line.ItemCode,
-                    ItemName = line.ItemName,
-                    Qty = lineManual.Qty,
-                    QtyRequire = line.QtyRequire,
-                    QtyPlan = line.QtyPlan,
-                    QtyManual = lineManual.Qty,
-                    Price = line.Price,
-                    WhsCode = line.WhsCode,
-                    Serials = line.Serials,
-                });
-            }
+                DocNum = line.DocNum,
+                BaseLineNum = line.BaseLineNum,
+                ItemCode = line.ItemCode,
+                ItemName = line.ItemName,
+                Qty = lineManual.Qty,
+                QtyRequire = line.QtyRequire,
+                QtyPlan = line.QtyPlan,
+                QtyManual = lineManual.Qty,
+                Price = line.Price,
+                WhsCode = line.WhsCode,
+                Serials = line.Serials,
+                ManageItem = line.ManageItem
+            });
         }
     }
 
