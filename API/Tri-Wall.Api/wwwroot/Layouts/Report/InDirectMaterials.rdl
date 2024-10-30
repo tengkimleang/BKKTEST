@@ -300,7 +300,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="ItemCode1">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -354,7 +353,6 @@
                               </Style>
                             </Image>
                             <Textbox Name="ItemCode2">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -416,7 +414,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox13">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -693,7 +690,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox11">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -725,7 +721,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox12">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -754,7 +749,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox15">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -783,7 +777,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Quantity">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>

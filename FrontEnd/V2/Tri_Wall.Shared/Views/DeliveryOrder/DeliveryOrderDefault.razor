@@ -85,7 +85,7 @@
                             <FluentTextField Label="Ref Inv" @bind-Value="ViewModel.DeliveryOrderForm.Remarks" style="width: 100%;"></FluentTextField>
                         </FluentGridItem>
                         <FluentGridItem xs="12" sm="12" lg="12" xl="12" Justify="JustifyContent.FlexEnd">
-                            <FluentButton IconEnd="@new Icons.Filled.Size24.Add()" OnClick="OnAddLineClickedAsync">
+                            <FluentButton IconEnd="@(new Icons.Filled.Size24.Add())" OnClick="OnAddLineClickedAsync">
                                 Add Line
                             </FluentButton>
                         </FluentGridItem>

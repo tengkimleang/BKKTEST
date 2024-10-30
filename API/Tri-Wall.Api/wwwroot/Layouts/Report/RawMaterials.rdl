@@ -288,7 +288,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="ItemCode1">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -342,7 +341,6 @@
                               </Style>
                             </Image>
                             <Textbox Name="Textbox5">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -374,7 +372,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="ItemCode2">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -435,7 +432,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox8">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -496,7 +492,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox12">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -756,7 +751,6 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Width">
-                              <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
