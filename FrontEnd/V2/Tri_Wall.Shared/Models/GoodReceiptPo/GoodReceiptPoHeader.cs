@@ -12,6 +12,6 @@ public class GoodReceiptPoHeader
     public DateTime? DocDate { get; set; }
     public DateTime? TaxDate { get; set; }
     public string Remarks { get; set; } = string.Empty;
-    public bool IsDraft { get; set; }
+    public bool IsDraft { get; set; } = false;
     public List<GoodReceiptPoLine>? Lines { get; set; }
 }

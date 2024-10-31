@@ -15,9 +15,9 @@ public class AddGoodReturnCommandHandler(IUnitOfWork unitOfWork)
         var oCompany = unitOfWork.Connect();
         return ErrorHandlingHelper.ExecuteWithHandlingAsync(() =>
         {
-            Company oCompany = unitOfWork.Connect();
             unitOfWork.BeginTransaction(oCompany);
-            var oPurchaseReturn = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oPurchaseReturns);
+            var oPurchaseReturn = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseReturns);
+            if (request.IsDraft) oPurchaseReturn.DocObjectCode = BoObjectTypes.oPurchaseReturns;
             oPurchaseReturn.CardCode = request.CustomerCode;
             oPurchaseReturn.ContactPersonCode = request.ContactPersonCode;
             oPurchaseReturn.NumAtCard = request.NumAtCard;
@@ -68,7 +68,6 @@ public class AddGoodReturnCommandHandler(IUnitOfWork unitOfWork)
                 return Task.FromResult(new PostResponse(oCompany.GetLastErrorCode().ToString(),
                     oCompany.GetLastErrorDescription(), "", "", "").ToErrorOr());
             }
-
             unitOfWork.Commit(oCompany);
             return Task.FromResult(new PostResponse("", "", "", "", oCompany.GetNewObjectKey()).ToErrorOr());
         }, unitOfWork, oCompany);

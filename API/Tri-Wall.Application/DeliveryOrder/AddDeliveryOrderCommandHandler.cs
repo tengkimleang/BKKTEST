@@ -16,7 +16,9 @@ public class AddDeliveryOrderCommandHandler(IUnitOfWork unitOfWork)
         return ErrorHandlingHelper.ExecuteWithHandlingAsync(() =>
         {
             unitOfWork.BeginTransaction(oCompany);
-            var oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
+            // var oDeliveryOrder = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oDeliveryNotes);
+            var oDeliveryOrder = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oDeliveryNotes);
+            if (request.IsDraft) oDeliveryOrder.DocObjectCode = BoObjectTypes.oDeliveryNotes;
             oDeliveryOrder.CardCode = request.CustomerCode;
             oDeliveryOrder.ContactPersonCode = request.ContactPersonCode;
             oDeliveryOrder.NumAtCard = request.NumAtCard;

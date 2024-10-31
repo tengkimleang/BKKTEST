@@ -70,6 +70,7 @@ Content-Type: application/json
 ###
 
 POST {{API_HostAddress}}/deliveryOrders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImp0aSI6ImMzMmU5Yjk3LTA5YTYtNDQ2ZS1hNzY3LTI1MTc3OGQ0Y2VhMyIsImlkIjoiYWRtaW4xMC8xMC8yMDI0IDA4OjU3OjM2IiwibmJmIjoxNzI4NTUwNjU2LCJleHAiOjE3MjkxNTU0NTYsImlhdCI6MTcyODU1MDY1Nn0.LDkCBkie3VRThQ2KOxsDHz6AOGa3DlpeCWlJ5KiNlUo
 Content-Type: application/json
 
 {

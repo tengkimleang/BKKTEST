@@ -21,7 +21,7 @@ public class AddInventoryTransferCommandHandler(IUnitOfWork unitOfWork) : IReque
             oCompany.ThrowIfNull("Company is null");
             unitOfWork.BeginTransaction(oCompany);
             var oGoodReceiptPo = (StockTransfer)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oStockTransfer);
-            if (!request.IsDraft) oGoodReceiptPo.DocObjectCode = BoObjectTypes.oStockTransfer;
+            if (request.IsDraft) oGoodReceiptPo.DocObjectCode = BoObjectTypes.oStockTransfer;
             oGoodReceiptPo.Series = request.Series;
             oGoodReceiptPo.DocDate = request.DocDate;
             oGoodReceiptPo.TaxDate = request.TaxDate;

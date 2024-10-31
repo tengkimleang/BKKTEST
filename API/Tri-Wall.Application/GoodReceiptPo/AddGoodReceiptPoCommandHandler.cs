@@ -20,7 +20,7 @@ public class AddGoodReceiptPoCommandHandler(IUnitOfWork unitOfWork)
             oCompany.ThrowIfNull("Company is null");
             unitOfWork.BeginTransaction(oCompany);
             var oGoodReceiptPo = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oPurchaseDeliveryNotes);
-            if (!request.IsDraft) oGoodReceiptPo.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
+            if (request.IsDraft) oGoodReceiptPo.DocObjectCode = BoObjectTypes.oPurchaseDeliveryNotes;
             oGoodReceiptPo.CardCode = request.VendorCode;
             oGoodReceiptPo.ContactPersonCode = request.ContactPersonCode;
             oGoodReceiptPo.Series = request.Series;

@@ -11,6 +11,6 @@ public class DeliveryOrderHeader
     public DateTime? DocDate { get; set; }
     public DateTime? TaxDate { get; set; }
     public string Remarks { get; set; } = string.Empty;
-    public bool IsDraft { get; set; }
+    public bool IsDraft { get; set; } = false;
     public List<DeliveryOrderLine>? Lines { get; set; }
 }

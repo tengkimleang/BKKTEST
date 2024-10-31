@@ -20,7 +20,7 @@ public class AddIssueForProductionCommandHandler(IUnitOfWork unitOfWork)
             oCompany.ThrowIfNull("Company is null");
             unitOfWork.BeginTransaction(oCompany);
             var oIssueForProduction = (Documents)oCompany.GetBusinessObject((request.IsDraft) ? BoObjectTypes.oDrafts : BoObjectTypes.oInventoryGenExit);
-            if (!request.IsDraft) oIssueForProduction.DocObjectCode = BoObjectTypes.oInventoryGenExit;
+            if (request.IsDraft) oIssueForProduction.DocObjectCode = BoObjectTypes.oInventoryGenExit;
             oIssueForProduction.Series = request.Series;
             oIssueForProduction.Reference2 = request.Remarks;
             oIssueForProduction.DocDate = request.DocDate;
