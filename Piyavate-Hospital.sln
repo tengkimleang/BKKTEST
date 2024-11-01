@@ -1,0 +1,104 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{877F7FC4-2DE3-4EE7-A796-A0878B56069B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEndApp_V2", "FrontEndApp_V2", "{3766879F-7240-416D-A83B-8902C86444EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{B027D5AA-D092-4BB8-A8CE-A5B69C35D4DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{7C452D42-4F3A-422B-84CD-8D6AC64FA509}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackEndApp", "BackEndApp", "{5940487F-775B-4BE2-A648-69B15F11FEF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.Shared", "FrontEnd\V2\Piyavate_Hospital.Shared\Piyavate_Hospital.Shared.csproj", "{A01B9065-862A-4D04-BA06-262A7BF09BB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.WebApp.Server", "FrontEnd\V2\Piyavate_Hospital.WebApp.Server\Piyavate_Hospital.WebApp.Server\Piyavate_Hospital.WebApp.Server.csproj", "{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.WebApp.Client", "FrontEnd\V2\Piyavate_Hospital.WebApp.Server\Piyavate_Hospital.WebApp.Server.Client\Piyavate_Hospital.WebApp.Client.csproj", "{1712FBB2-28DC-4935-B292-163BE228F3F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.Api", "API\Piyavate_Hospital.Api\Piyavate_Hospital.Api.csproj", "{46A88A82-E497-4488-A921-E798CAF60B6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.Application", "API\Piyavate_Hospital.Application\Piyavate_Hospital.Application.csproj", "{5EDBA195-3323-4D32-B374-AA2DCD4DA350}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.Domain", "API\Piyavate_Hospital.Domain\Piyavate_Hospital.Domain.csproj", "{9CB42922-B81B-418C-B3FA-60AF3FC1BF78}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piyavate_Hospital.Infrastructure", "API\Piyavate_Hospital.Infrastructure\Piyavate_Hospital.Infrastructure.csproj", "{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Piyavate_Hospital.Script", "Piyavate_Hospital.Script", "{74423135-93F5-45C6-972D-B090EFCD703F}"
+	ProjectSection(SolutionItems) = preProject
+		API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_MATERIALS_PHASE2_OIGN_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_MATERIALS_PHASE2_OIGN_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_WORK_IN_PROCESS_OIGN_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_WORK_IN_PROCESS_OIGN_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_FINISHED_GOODS_OIGN_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\ReceiptFG&ReturnComponent\_USP_CALL_FINISHED_GOODS_OIGN_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_MATERIALS_PHASE2_GRPO_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_MATERIALS_PHASE2_GRPO_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_RAW_MATERIALS_GRPO_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_RAW_MATERIALS_GRPO_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_RAW_IN_DIRECT_GRPO_LAYOUT_BARCODE.sql = API\Piyavate_Hospital.Script\Hana\Layout\GoodReceiptPo\_USP_CALL_RAW_IN_DIRECT_GRPO_LAYOUT_BARCODE.sql
+		API\Piyavate_Hospital.Script\Hana\_USP_CALLTRANS_EWTRANSACTION.sql = API\Piyavate_Hospital.Script\Hana\_USP_CALLTRANS_EWTRANSACTION.sql
+		API\Piyavate_Hospital.Script\SQL\USP_CALLTRANSCATION_POSKOFI_REAKSMEY.sql = API\Piyavate_Hospital.Script\SQL\USP_CALLTRANSCATION_POSKOFI_REAKSMEY.sql
+		API\Piyavate_Hospital.Script\SQL\USP_KOFI_BARCODE_PRINTING.sql = API\Piyavate_Hospital.Script\SQL\USP_KOFI_BARCODE_PRINTING.sql
+		API\Piyavate_Hospital.Script\SQL\USP_CALLTRANSCATION_POSKOFI.sql = API\Piyavate_Hospital.Script\SQL\USP_CALLTRANSCATION_POSKOFI.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Piyavate_Hospital.SapSdk", "Piyavate_Hospital.SapSdk", "{25A13258-545C-431C-BC7D-764A2E4AC9FA}"
+	ProjectSection(SolutionItems) = preProject
+		API\Piyavate_Hospital.SapSdk\SAPBusinessOneSDK.dll = API\Piyavate_Hospital.SapSdk\SAPBusinessOneSDK.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A01B9065-862A-4D04-BA06-262A7BF09BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01B9065-862A-4D04-BA06-262A7BF09BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01B9065-862A-4D04-BA06-262A7BF09BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01B9065-862A-4D04-BA06-262A7BF09BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1712FBB2-28DC-4935-B292-163BE228F3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1712FBB2-28DC-4935-B292-163BE228F3F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1712FBB2-28DC-4935-B292-163BE228F3F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1712FBB2-28DC-4935-B292-163BE228F3F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46A88A82-E497-4488-A921-E798CAF60B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46A88A82-E497-4488-A921-E798CAF60B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46A88A82-E497-4488-A921-E798CAF60B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46A88A82-E497-4488-A921-E798CAF60B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EDBA195-3323-4D32-B374-AA2DCD4DA350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EDBA195-3323-4D32-B374-AA2DCD4DA350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EDBA195-3323-4D32-B374-AA2DCD4DA350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EDBA195-3323-4D32-B374-AA2DCD4DA350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CB42922-B81B-418C-B3FA-60AF3FC1BF78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CB42922-B81B-418C-B3FA-60AF3FC1BF78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CB42922-B81B-418C-B3FA-60AF3FC1BF78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CB42922-B81B-418C-B3FA-60AF3FC1BF78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{877F7FC4-2DE3-4EE7-A796-A0878B56069B} = {5940487F-775B-4BE2-A648-69B15F11FEF1}
+		{B027D5AA-D092-4BB8-A8CE-A5B69C35D4DE} = {3766879F-7240-416D-A83B-8902C86444EA}
+		{7C452D42-4F3A-422B-84CD-8D6AC64FA509} = {3766879F-7240-416D-A83B-8902C86444EA}
+		{A01B9065-862A-4D04-BA06-262A7BF09BB1} = {7C452D42-4F3A-422B-84CD-8D6AC64FA509}
+		{B5AFA268-446B-4E3D-81C3-E301BE0FE0B1} = {B027D5AA-D092-4BB8-A8CE-A5B69C35D4DE}
+		{1712FBB2-28DC-4935-B292-163BE228F3F6} = {B027D5AA-D092-4BB8-A8CE-A5B69C35D4DE}
+		{46A88A82-E497-4488-A921-E798CAF60B6F} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+		{5EDBA195-3323-4D32-B374-AA2DCD4DA350} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+		{9CB42922-B81B-418C-B3FA-60AF3FC1BF78} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+		{86AD8E8C-CB6E-4417-8D39-3C90C1EBB518} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+		{74423135-93F5-45C6-972D-B090EFCD703F} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+		{25A13258-545C-431C-BC7D-764A2E4AC9FA} = {877F7FC4-2DE3-4EE7-A796-A0878B56069B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CDE2C3B7-8256-4E7C-8718-081888F37065}
+	EndGlobalSection
+EndGlobal
